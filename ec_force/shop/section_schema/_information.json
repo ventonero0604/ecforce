@@ -1,0 +1,78 @@
+{
+  "id": "information",
+  "type": "information-section",
+  "name": {
+    "ja": "ニュース"
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "head",
+      "label": {
+        "ja": "見出し"
+      }
+    },
+    {
+      "type": "text",
+      "id": "subhead",
+      "label": {
+        "ja": "小見出し"
+      }
+    },
+    {
+      "type": "selector",
+      "id": "information_slug",
+      "label": {
+        "ja": "表示するカテゴリー"
+      },
+      "option_model": "information_category"
+    },
+    {
+      "type": "selector",
+      "id": "information_design",
+      "label": {
+        "ja": "デザイン"
+      },
+      "options" : [
+        {
+          "value": "news",
+          "label": {
+            "ja": "リスト表示"
+          }
+        },
+        {
+          "value": "column",
+          "label": {
+            "ja": "グリッド表示"
+          }
+        },
+        {
+          "value": "media",
+          "label": {
+            "ja": "メディア風表示"
+          }
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "information_size",
+      "label": {
+        "ja": "表示件数"
+      },
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "unit": {
+        "ja": "件"
+      }
+    },
+    {
+      "type": "checkbox",
+      "id": "view_more",
+      "label": {
+        "ja": "もっと見るボタン"
+      }
+    }
+  ]
+}

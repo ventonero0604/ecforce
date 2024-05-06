@@ -1,0 +1,35 @@
+{% if shop_form_settings['optin_order'] %}
+  <div class="p-checkout__list__block u-color__border--border">
+    <div class="p-checkout__list__block__inner">
+      <table class="c-form_table">
+        <tbody>
+          <tr>
+            <th></th>
+            <td>
+              <div class="c-form_table__newsletter">
+                <label class="c-form_table__checkbox">
+                  <input name="order[customer_attributes][optin]" type="hidden" value="0">
+                  <input class="u-color__border--input" {% if order.customer %}{% if order.customer.optin %}checked="checked"{% endif %}{% else %}{% if shop_form_settings['optin_default_order'] %}checked="checked"{% endif %}{% endif %} id="optin" name="order[customer_attributes][optin]" type="checkbox">
+                  <span class="c-form_table__checkbox__frame u-color__btn"></span>
+                  <span class="c-form_table__checkbox__text u-text--body">{{ 'customer.general.optin_text.value' | t }}</span>
+                </label>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% elsif customer_signed_in == true %}
+  {% if current_customer.optin == true %}
+    <input name="order[customer_attributes][optin]" type="hidden" value="1">
+  {% else %}
+    <input name="order[customer_attributes][optin]" type="hidden" value="0">
+  {% endif %}
+{% else %}
+  {% if shop_form_settings['optin_default_order'] == true %}
+    <input name="order[customer_attributes][optin]" type="hidden" value="1">
+  {% else %}
+    <input name="order[customer_attributes][optin]" type="hidden" value="0">
+  {% endif %}
+{% endif %}

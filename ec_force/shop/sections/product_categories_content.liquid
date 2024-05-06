@@ -1,0 +1,32 @@
+<section class="p-category_list" data-section-id='product_categories_content' data-section-type='product_categories_content-section'>
+  {% if product_categories.size == 0 %}
+    <header class="p-page_header">
+      <div class="p-page_header__inner">
+        <h1 class="p-page_header__inner__title u-text--head">{{ 'product_categories.general.categories.value' | t }}</h1>
+      </div>
+    </header>
+    <div class="l-container__row u-margin__top--60">
+      <p class="u-text--body" style="text-align: center;">{{ 'product_categories.general.empty.value' | t }}</p>
+    </div>
+  {% else %}
+    <ul class="p-category_list__list">
+      {% for category in product_categories %}
+        <li class="p-category_list__list__item medium-up--one-{{ section.settings.product_category_size }}">
+          <div class="c-category_item">
+            {% if category.thumbnail.url %}
+              {% assign thumbnail = category.thumbnail.url %}
+            {% else %}
+              {% assign thumbnail = 'missing' | image_url %}
+            {% endif %}
+            <div class="c-category_item__img" style="background-image: url('{{ thumbnail }}');">
+            </div>
+            <div class="c-category_item__title u-text--subhead">{{ category.name }}</div>
+            <div class="c-category_item__desc u-text--body">{{ category.description }}</div>
+            <a class="c-category_item__btn u-text--btn u-color__btn--bg" href="/shop/product_categories/{{ category.slug }}">{{ 'products.general.view_product.value' | t }}</a>
+          </div>
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</section>
+

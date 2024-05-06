@@ -1,0 +1,59 @@
+{% if section.disabled == "true" or section.disabled == true %}
+  <section data-section-id="{{id}}" data-section-type="{{section.type}}" style="display: none;">
+{% else %}
+  <section data-section-id="{{id}}" data-section-type="{{section.type}}">
+{% endif %}
+{% case section.settings.style %}
+{% when "grid" %}
+  {% assign layout = "grid" %}
+{% when "flex" %}
+  {% assign layout = "flex" %}
+{% endcase %}
+  <div class="p-category_panel">
+    <header class="p-category_panel__title">
+      <h2 class="p-category_panel__title__en  u-text--head">{{ section.settings.head | escape }}</h2>
+      <span class="p-category_panel__title__jp u-text--subhead">{{ section.settings.subhead | escape }}</span>
+    </header>
+    {% comment %}
+    既存のレイアウト ... .p-category_panel__content--flex
+    新しいレイアウト ... .p-category_panel__content--grid
+    {% endcomment %}
+    <div class="p-category_panel__container p-category_panel__container--{{ layout }}">
+      <div class="p-category_panel__content">
+      {% for product_category in product_categories limit:section.settings.category_size %}
+        {% if product_category.product_category_visibility %}
+          {% if product_category.thumbnail.url %}
+            {% assign category_thumbnail = product_category.thumbnail.url %}
+          {% else %}
+            {% assign category_thumbnail = missing_image %}
+          {% endif %}
+          <div class="p-category_panel__block  p-category_panel__block--{{ section.settings.category_size }}">
+            <p class="p-category_panel__image">
+              <img src="{{ category_thumbnail }}">
+            </p>
+            <div class="p-category_panel__info">
+              <h2 class="p-category_panel__category u-text--subhead{% if layout == 'flex' %}--overlay{% endif %}">{{ product_category.name }}</h2>
+              <a class="p-category_panel__btn u-color__btn--bg--overlay u-text--btn--overlay" href="/shop/product_categories/{{ product_category.slug }}">{{ 'products.general.view_product.value' | t }}</a>
+            </div>
+            <a class="p-category_panel__link" href="/shop/product_categories/{{ product_category.slug }}"></a>
+          </div>
+        {% endif %}
+      {% endfor %}
+      {% if preview_count and customize_preview_mode %}
+        {% for i in (preview_count..section.settings.category_size) %}
+            <div class="p-category_panel__block p-category_panel__block--{{ section.settings.category_size }}">
+              <p class="p-category_panel__image">
+                <img src="{{ theme_file_root_path }}/assets/images/category.jpg">
+              </p>
+              <div class="p-category_panel__info">
+                <h2 class="p-category_panel__category u-text--subhead{% if layout == 'flex' %}--overlay{% endif %}">ここにカテゴリーが入ります</h2>
+                <a class="p-category_panel__btn u-color__btn--bg--overlay u-text--btn--overlay" href="#">{{ 'products.general.view_product.value' | t }}</a>
+              </div>
+              <a class="p-category_panel__link" href="#"></a>
+            </div>
+        {% endfor %}
+      {% endif %}
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,45 @@
+{{ 'shop/info' | javascript_include_tag }}
+
+<main class="l-container" role="main">
+  <div class="l-container__row u-margin__top--60">
+    <header class="p-page_header">
+      <div class="p-page_header__inner">
+        <h1 class="p-page_header__inner__title u-text--head">{{ 'contact.general.faq.value' | t }}</h1>
+      </div>
+    </header>
+  </div>
+  <div class="l-container__row u-margin__top--60 u-margin__bottom--100">
+    <section class="p-faq">
+      <div class="p-faq__inner">
+        <div class="p-faq__inner__list u-color__border--border">
+          <!-- よくあるご質問項目一覧 -->
+          {% for faq in faqs %}
+            <dl class="p-faq__inner__list__item u-color__border--border">
+              <!-- よくあるご質問項目 タイトル -->
+              <dt class="p-faq__inner__list__item__question u-color--head">
+                <span class="u-text--subhead">Q</span>
+                <pre class="u-text--strong">{{ faq.title }}</pre>
+                <i class="u-icon--plus"></i>
+                <i class="u-icon--minus"></i>
+              </dt>
+              <!-- よくあるご質問 項目内容 -->
+              <dd class="p-faq__inner__list__item__answer">
+                <span class="u-text--subhead">A</span>
+                <pre class="u-text--body">{{ faq.text }}</pre>
+              </dd>
+            </dl>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+{% content_for meta_description %}
+{% endcontent_for %}
+
+{% content_for meta_keywords %}
+{% endcontent_for %}
+
+{% content_for title %}
+{% endcontent_for %}

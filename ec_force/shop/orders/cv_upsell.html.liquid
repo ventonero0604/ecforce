@@ -1,0 +1,47 @@
+{{ 'shop/orders' | javascript_include_tag }}
+{{ 'shop/orders' | stylesheet_link_tag }}
+
+{% assign template = template_for_shop_upsell %}
+
+{% content_for title %}
+  {{ template['title'] }}
+{% endcontent_for %}
+
+{% content_for meta_description %}
+  {{ template['meta_description'] }}
+{% endcontent_for %}
+
+{% content_for meta_keywordsle %}
+  {{ template['meta_keywords'] }}
+{% endcontent_for %}
+
+{% content_for header_content %}
+  {{ template['header_content'] }}
+{% endcontent_for %}
+
+{% assign use_timer = false %}
+{% if request_path != complete_shop_order_path && order.cv_upsell? and order.completed? != true and shop_form_settings['shop_cv_upsell_countdown'] %}
+  {% assign use_timer = true %}
+{% endif %}
+
+{% for content in template['content'] %}
+  {% if content == 'FORM_PERFORM' %}
+    {% include 'ec_force/shop/orders/form_perform.html' %}
+  {% elsif content == 'FORM_CV_XSELL' %}
+    {% include 'ec_force/shop/orders/form_cv_xsell.html' %}
+  {% else %}
+    {{ content }}
+  {% endif %}
+{% endfor %}
+
+{% content_for footer_content %}
+  {{ template['footer_content'] }}
+{% endcontent_for %}
+
+{% assign css_path = '/shop_templates/' | append: template['id'] %}
+{% assign css_full_path = css_path | append: '/css.css' %}
+{{ css_full_path | stylesheet_link_tag }}
+
+{% assign javascript_path = '/shop_templates/' | append: template['id'] %}
+{% assign javascript_full_path = javascript_path | append: '/javascript.js' %}
+{{ javascript_full_path | javascript_include_tag }}

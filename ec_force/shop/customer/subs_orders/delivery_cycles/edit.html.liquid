@@ -1,0 +1,551 @@
+{{ 'shop/customer/subs_orders/delivery_cycles' | javascript_include_tag }}
+
+<main class="l-container" role="main">
+  <div id='delivery-cycles-edit-view' class="p-delivery_cycle js-delivery_cycle">
+    <div class="l-container__row u-margin__top--60 u-margin__bottom--100">
+      <div class="p-account">
+        <div class="p-account__inner">
+          <div class="p-account__inner__menu u-color__border--border">
+            {% include 'ec_force/shop/snippets/sidebar.html' %}
+          </div>
+          <div class="p-account__inner__content">
+            <ul class="c-breadcrumbs">
+              <li class="c-breadcrumbs__item u-text--link">
+                <a class="c-breadcrumbs__item__inner" href="/shop/customer">{{ 'account.general.mypage.value' | t }}</a>
+              </li>
+              <li class="c-breadcrumbs__item u-text--link">
+                <a class="c-breadcrumbs__item__inner" href="/shop/customer/subs_orders">{{ 'subs_orders.general.subs_orders.value' | t }}</a>
+              </li>
+              <li class="c-breadcrumbs__item u-text--link">
+                <a class="c-breadcrumbs__item__inner" href="/shop/customer/subs_orders/{{ subs_order.number }}">{{ 'subs_orders.general.recurring_detail.value' | t }}</a>
+              </li>
+              <li class="c-breadcrumbs__item u-text--body">
+                <span class="c-breadcrumbs__item__inner">{{ 'delivery.delivery_cycle.change_delivery_cycle.value' | t }}</span>
+              </li>
+            </ul>
+            <!-- フラッシュメッセージ -->
+            {{ 'notice' | flash: 'control-alert alert-success', 'text u-color__bg--bg u-color__text--alert' }}
+            {{ 'alert' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+            {{ 'error' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+            <div class="p-delivery_cycle__error control-alert alert-danger">
+              <p class="text u-color__bg--bg u-color__text--alert">{{ 'delivery.delivery_cycle.please_selected_product.value' | t }}</p>
+            </div>
+            <div class="p-account__inner__content__title">
+              <h1 class="u-text--head">
+                {{ 'delivery.delivery_cycle.change_delivery_cycle.value' | t }}：{{ subs_order.number }}
+              </h1>
+            </div>
+            <form class="form-horizontal" action="/shop/customer/subs_orders/{{ subs_order.number }}/delivery_cycles" accept-charset="UTF-8" method="post">
+              <input type="hidden" name="_method" value="put">
+              <div class="p-subscription_detail">
+                {%- comment -%}変更する商品を選択{%- endcomment -%} 
+                <div class="p-delivery_cycle__step p-delivery_cycle__step--1">
+                  <div class="p-subscription_detail__block">
+                    <div class="p-subscription_detail__block__head">
+                      <h2 class="p-subscription_detail__block__head__title u-text--subhead">
+                        <span class="c-encircled_number">
+                          <span class="c-encircled_number__content">1</span>
+                        </span>
+                        {{ 'delivery.delivery_cycle.please_selected_product.value' | t }}
+                      </h2>
+                    </div>
+                    <div class="p-delivery_cycle__changeable">
+                      {% for order_item in subs_order.delivery_cycle_changeable_order_items %}
+                        <label class="c-product_item js-delivery_cycle__product">
+                          <div class="c-product_item__inner__eyecatch">
+                            <div class="c-checkbox"><input type="checkbox" name="order_item_ids[]" class="js-delivery_cycle__checkbox order_item_id validate[required]" value="{{ order_item.id }}"></div>
+                            <div class="c-product_item__inner__image">
+                              {% if order_item.variant.thumbnails.first.url %}
+                                {% assign thumbnail = order_item.variant.thumbnails.first.url %}
+                              {% elsif order_item.master.thumbnails.url %}
+                                {% assign thumbnail = order_item.master.thumbnails.url %}
+                              {% elsif order_item.thumbnail.url %}
+                                {% assign thumbnail = order_item.thumbnail.url %}
+                              {% else %}
+                                {% assign thumbnail = 'missing' | image_url %}
+                              {% endif %}
+                              <div class="c-product_item__inner__eyecatch__img" style="background-size:contain;background-image:url('{{ thumbnail }}')"></div>
+                            </div>
+                          </div>
+                          <div class="c-product_item__inner__content">
+                            <div class="c-product_item__inner__title u-text--subhead">{{ order_item.variant.name }}</div>
+                            <div class="c-product_item__inner__price u-text--body" style="word-break: break-all;">
+                              <span>&yen;
+                                {% if order_item.set_sale_method_product_price? %}
+                                  {{ order_item.subtotal_price_only_set_item | number_with_delimiter }}
+                                {% elsif order_item.distribution_club_sale_method_product_price? %}
+                                  {{ order_item.subtotal_price_only_distribution_item | number_with_delimiter }}
+                                {% else %}
+                                  {{ order_item.price | number_with_delimiter }}
+                                {% endif %}
+                              </span>
+                              <span>&nbsp;({{ 'products.price.tax_included.value' | t }}</span>
+                              <span>&yen;
+                                {% if order_item.set_sale_method_product_price? %}
+                                  {{ order_item.price_include_tax_only_set_item | number_with_delimiter }}
+                                {% elsif order_item.distribution_club_sale_method_product_price? %}
+                                  {{ order_item.price_include_tax_only_distribution_item | number_with_delimiter }}
+                                {% else %}
+                                  {{ order_item.price_include_tax | number_with_delimiter }}
+                                {% endif %}
+                              </span>
+                              <span>)</span>
+                            </div>
+                            <div class="c-product_item__inner__quantity u-text--body">{{ 'products.stock.quantity.value' | t }}：{{ order_item.quantity }}</div>
+                          </div>
+                        </label>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+                {%- comment -%}配送サイクルの設定{%- endcomment -%} 
+                <div class="p-delivery_cycle__step p-delivery_cycle__step--2">
+                  <div class="p-subscription_detail__block">
+                    <div class="p-subscription_detail__block__head">
+                      <h2 class="p-subscription_detail__block__head__title u-text--subhead">
+                        <span class="c-encircled_number">
+                          <span class="c-encircled_number__content">2</span>
+                        </span>
+                        {{ 'delivery.delivery_cycle.please_selected_delivery_cycle.value' | t }}
+                      </h2>
+                    </div>
+                    <div class="p-delivery_cycle__schedule">
+                      {% if base_info.delivery_cycle_changeable? %}
+                        <table class="c-form_table">
+                          <tbody>
+                            <!-- 配送サイクルの指定 -->
+                            <tr>
+                              <th class="u-text--body">{{ 'delivery.delivery_cycle.delivery_cycle.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+                              <td>
+                                <label class="c-form_table__select">
+                                  <select class="u-text--input u-color__input--bg u-color__border--input" id="payment_schedule" name="payment_schedule">
+                                    {% if available_payment_schedules contains 'date' %}
+                                      <option value="date" {% if subs_order.payment_schedule == "date" %}selected{% endif %}>{{ 'delivery.delivery_cycle.specify_by_date.value' | t }}</option>
+                                    {% endif %}
+                                    {% if available_payment_schedules contains 'term' %}
+                                      <option value="term" {% if subs_order.payment_schedule == "term" %}selected{% endif %}>{{ 'delivery.delivery_cycle.specify_by_term.value' | t }}</option>
+                                    {% endif %}
+                                    {% if available_payment_schedules contains 'day_of_week' %}
+                                      <option value="day_of_week" {% if subs_order.payment_schedule == "day_of_week" %}selected{% endif %}>{{ 'delivery.delivery_cycle.specify_by_day_of_week.value' | t }}</option>
+                                    {% endif %}
+                                  </select>
+                                </label>
+                              </td>
+                            </tr>
+                            <!-- 日付で指定 -->
+                            <tr id='container_delivery_schedule_by_date'>
+                              <th class="u-text--body"></th>
+                              <td>
+                                <div class="c-form_table__tel">
+                                  <label class="c-form_table__select">
+                                    <select class="u-text--input u-color__input--bg u-color__border--input validate[required]" name="scheduled_to_be_delivered_every_x_month" id="subs_order_scheduled_to_be_delivered_every_x_month">
+                                      {% if subs_order.available_delivery_dates.size > 0 %}
+                                        {% assign months = subs_order.available_delivery_dates | map: 'month' %}
+                                        {% for m in months %}
+                                          <option value="{{ m }}" {% if m == subs_order.scheduled_to_be_delivered_every_x_month %}selected{% endif %}>{{ m }}{{ 'delivery.delivery_cycle.months.value' | t }}</option>
+                                        {% endfor %}
+                                      {% else %}
+                                        {% for m in (1..12) %}
+                                          <option value="{{ m }}" {% if subs_order.scheduled_to_be_delivered_every_x_month == m %}selected{% endif %}>{{ m }}{{ 'delivery.delivery_cycle.months.value' | t }}</option>
+                                        {% endfor %}
+                                      {% endif %}
+                                    </select>
+                                  </label>
+                                  <span class="u-text--body">{{ 'delivery.delivery_cycle.every_time.value' | t }}</span>
+                                  <label class="c-form_table__select">
+                                    <select class="u-text--input u-color__input--bg u-color__border--input validate[required]" name="scheduled_to_be_delivered_on_xth_day" id="subs_order_scheduled_to_be_delivered_on_xth_day">
+                                      {% for d in (1..28) %}
+                                        <option value="{{ d }}" {% if subs_order.scheduled_to_be_delivered_on_xth_day == d %}selected{% endif %}>{{ d }}{{ 'customer.general.day.value' | t }}</option>
+                                      {% endfor %}
+                                      <option value="99" {% if subs_order.scheduled_to_be_delivered_on_xth_day == 99 %}selected{% endif %}>{{ 'delivery.delivery_cycle.last_day.value' | t }}</option>
+                                    </select>
+                                  </label>
+                                  <span class="u-text--body">{{ 'delivery.delivery_cycle.delivery_to_day.value' | t }}</span>
+                                </div>
+                              </td>
+                            </tr>
+                            <!-- 間隔で指定 -->
+                            <tr id='container_delivery_schedule_by_term'>
+                              <th class="u-text--body"></th>
+                              <td>
+                                <div class="c-form_table__tel">
+                                  <label class="c-form_table__select">
+                                    <select class="u-text--input u-color__input--bg u-color__border--input validate[required]" name="scheduled_to_be_delivered_every_x_day" id="subs_order_scheduled_to_be_delivered_every_x_day">
+                                      {% if subs_order.available_delivery_intervals.size > 0 %}
+                                        {% assign intervals = subs_order.available_delivery_intervals | map: 'day' %}
+                                        {% for interval in intervals %}
+                                          <option value="{{ interval }}" {% if interval == subs_order.scheduled_to_be_delivered_every_x_day %}selected{% endif %}>{{ interval }}</option>
+                                        {% endfor %}
+                                      {% else %}
+                                        {% assign least_interval = subs_order_settings['require_at_least_x_days_between_1st_and_2nd_orders'] %}
+                                        {% for interval in (least_interval..30) %}
+                                          <option value="{{ interval }}" {% if interval == subs_order.scheduled_to_be_delivered_every_x_day %}selected{% endif %}>{{ interval }}</option>
+                                        {% endfor %}
+                                        <option value="60" {% if subs_order.scheduled_to_be_delivered_every_x_day == 60 %}selected{% endif %}>60</option>
+                                        <option value="90" {% if subs_order.scheduled_to_be_delivered_every_x_day == 90 %}selected{% endif %}>90</option>
+                                      {% endif %}
+                                    </select>
+                                  </label>
+                                  <span class="u-text--body">{{ 'delivery.delivery_cycle.delivered_every_other_day.value' | t }}</span>
+                                </div>
+                              </td>
+                            </tr>
+                            <!-- 曜日で指定 -->
+                            <tr id='container_delivery_schedule_by_day_of_week'>
+                              <th class="u-text--body"></th>
+                              <td>
+                                <div class="c-form_table__tel">
+                                  <label class="c-form_table__select">
+                                    <select class="u-text--input u-color__input--bg u-color__border--input validate[required]" name="scheduled_to_be_delivered_every_x_month" id="subs_order_scheduled_to_be_delivered_every_x_month">
+                                      {% if subs_order.available_delivery_dates.size > 0 %}
+                                        {% assign months = subs_order.available_delivery_dates | map: 'month' %}
+                                        {% for m in months %}
+                                          <option value="{{ m }}" {% if subs_order.scheduled_to_be_delivered_every_x_month == m %}selected{% endif %}>{{ m }}{{ 'delivery.delivery_cycle.months.value' | t }}</option>
+                                        {% endfor %}
+                                      {% else %}
+                                        {% for m in (1..12) %}
+                                          <option value="{{ m }}" {% if subs_order.scheduled_to_be_delivered_every_x_month == m %}selected{% endif %}>{{ m }}{{ 'delivery.delivery_cycle.months.value' | t }}</option>
+                                        {% endfor %}
+                                      {% endif %}
+                                    </select>
+                                  </label>
+                                  <span class="u-text--body">{{ 'delivery.delivery_cycle.every_time.value' | t }}</span>
+                                  <label class="c-form_table__select">
+                                    <select class="u-text--input u-color__input--bg u-color__border--input validate[required]" name="scheduled_to_be_delivered_on_xth_day_of_week" id="subs_order_scheduled_to_be_delivered_on_xth_day_of_week">
+                                      {% for n in (1..4) %}
+                                        <option value="{{ n }}" {% if subs_order.scheduled_to_be_delivered_on_xth_day_of_week == n %}selected{% endif %}>{{ n }}</option>
+                                      {% endfor %}
+                                    </select>
+                                  </label>
+                                  <span class="u-text--body">{{ 'delivery.delivery_cycle.th.value' | t }}</span>
+                                  <label class="c-form_table__select">
+                                    <select class="u-text--input u-color__input--bg u-color__border--input validate[required]" name="scheduled_to_be_delivered_every_x_day_of_week" id="subs_order_scheduled_to_be_delivered_every_x_day_of_week">
+                                      {% for d in (0..6) %}
+                                        <option value="{{ d }}" {% if subs_order.scheduled_to_be_delivered_every_x_day_of_week == d %}selected{% endif %}>{{ day_of_weeks[d] }}</option>
+                                      {% endfor %}
+                                    </select>
+                                  </label>
+                                  <span class="u-text--body">{{ 'delivery.delivery_cycle.delivery_to_weekday.value' | t }}</span>
+                                </div>
+                              </td>
+                            </tr>
+                            {%- comment -%}次回配送予定日をサイクルに合わせる{%- endcomment -%}
+                            {% if base_info.scheduled_to_be_delivered_at_based_on_last_order? %}
+                              <tr>
+                                <th class="u-text--body">{{ 'delivery.next.recalculate_scheduled_to_be_delivered_at_based_on_last_order.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+                                <td>
+                                  <div class="c-form_table__gender">
+                                    <label class="c-form_table__radio">
+                                      <input class="u-text--input u-color__input--bg u-color__border--input" checked name="recalculate_scheduled_to_be_delivered_at_based_on_last_order" type="radio" value="1">
+                                      <span class="c-form_table__radio__frame u-color__btn--bg"></span>
+                                      <span class="c-form_table__radio__text u-text--body">{{ 'general.general.yes.value' | t }}</span>
+                                    </label>
+                                    <label class="c-form_table__radio">
+                                      <input class="u-text--input u-color__input--bg u-color__border--input" name="recalculate_scheduled_to_be_delivered_at_based_on_last_order" type="radio" value="0">
+                                      <span class="c-form_table__radio__frame u-color__btn--bg"></span>
+                                      <span class="c-form_table__radio__text u-text--body">{{ 'general.general.no.value' | t }}</span>
+                                    </label>
+                                  </div>
+                                </td>
+                              </tr>
+                            {% endif %}
+                          </tbody>
+                        </table>
+                      {% endif %}
+                      {%- comment -%}変更内容確認ボタン{%- endcomment -%}
+                      <div class="p-delivery_cycle__control">
+                        <button type="button" class="p-delivery_cycle__button u-text--btn u-color__btn--bg js-delivery_cycle__confirm">変更内容を確認する</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {%- comment -%}変更内容を確認{%- endcomment -%} 
+                <div class="p-delivery_cycle__step p-delivery_cycle__step--3" id="js-delivery_cycle__view--confirm">
+                  <div class="p-subscription_detail__block">
+                    <div class="p-subscription_detail__block__head">
+                      <h2 class="p-subscription_detail__block__head__title u-text--subhead">
+                        <span class="c-encircled_number">
+                          <span class="c-encircled_number__content">3</span>
+                        </span>
+                        {{ 'delivery.delivery_cycle.please_confirm_delivery_cycle.value' | t }}
+                      </h2>
+                    </div>
+                  </div>
+                  <div class="p-subscription_detail__block">
+                    <div class="p-delivery_cycle__confirm u-text--body">
+                      <div class="p-delivery_cycle__cycle">
+                        <h2 class="p-delivery_cycle__text p-delivery_cycle__text--head js-delivery_cycle__schedule">
+                          <p data-payment_schedule class="js-delivery_cycle__schedule"></p>
+                        </h2>
+                        <p class="p-delivery_cycle__text p-delivery_cycle__text--scheduled_to_be_delivered_at u-text--subhead--overlay">
+                          {{ 'delivery.delivery_cycle.next_delivered_at.value' | t }}{{ 'delivery.delivery_cycle.fixed_after_change.value' | t }}
+                        </p>
+                        <div class="js-delivery_cycle__products">
+                          <p class="p-delivery_cycle__text p-delivery_cycle__text--products u-text--subhead">{{ 'delivery.delivery_cycle.delivery_products.value' | t }}</p>
+                          <ul class="p-delivery_cycle__list js-delivery_cycle__list" id="js-delivery_cycle__list--new">
+                            <li class="p-delivery_cycle__item js-delivery_cycle__item"></li>
+                          </ul>
+                        </div>
+                        <div class="c-billing_list u-color__bg--bg js-delivery_cycle__billing-list --new">
+                          <div class="c-billing_list__title u-text--subhead u-color__border--border">{{ 'orders.amount.order_amount.value' | t }}</div>
+                          <ul class="c-billing_list__detail u-color__border--border">
+                            <!-- 小計 -->
+                            <li class="c-billing_list__detail__item">
+                              <dl class="c-billing_list__detail__item__row">
+                                <dt class="c-billing_list__detail__item__row__title u-text--body">{{ 'orders.amount.subtotal.value' | t }}</dt>
+                                <dd class="c-billing_list__detail__item__row__price u-text--body">
+                                  &yen;
+                                  <span class="js-delivery_cycle__subtotal"></span>
+                                </dd>
+                              </dl>
+                            </li>
+                            <!-- 消費税 -->
+                            <li class="c-billing_list__detail__item">
+                              <dl class="c-billing_list__detail__item__row">
+                                <dt class="c-billing_list__detail__item__row__title u-text--body">{{ 'orders.amount.tax.value' | t }}</dt>
+                                <dd class="c-billing_list__detail__item__row__price u-text--body">
+                                  &yen;
+                                  <span class="js-delivery_cycle__tax"></span>
+                                </dd>
+                              </dl>
+                            </li>
+                          </ul>
+                          <!-- 合計 -->
+                          <div class="c-billing_list__total">
+                            <div class="c-billing_list__total__title u-text--subhead">{{ 'orders.amount.total.value' | t }}</div>
+                            <div class="c-billing_list__total__price u-text--subhead">
+                              &yen;
+                              <span class="js-delivery_cycle__total"></span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="p-delivery_cycle__cycle">
+                        <h2 class="p-delivery_cycle__text p-delivery_cycle__text--head">
+                          <p data-payment_schedule="{{ subs_order.payment_schedule }}">
+                            {%- if subs_order.payment_schedule == 'term' -%}
+                              {{ subs_order.scheduled_to_be_delivered_every_x_day }}{{ 'delivery.delivery_cycle.delivered_every_other_day.value' | t }}
+                            {%- elsif subs_order.payment_schedule == 'date' -%}
+                              {{ subs_order.scheduled_to_be_delivered_every_x_month }}{{ 'delivery.delivery_cycle.every_other_month.value' | t }}
+                              {%- if subs_order.scheduled_to_be_delivered_on_xth_day == 99 -%}
+                                {{ 'delivery.delivery_cycle.last_day.value' | t }}{{ 'delivery.delivery_cycle.delivery_to.value' | t }}
+                              {%- else -%}
+                                {{ subs_order.scheduled_to_be_delivered_on_xth_day }}{{ 'delivery.delivery_cycle.delivery_to_day.value' | t }}
+                              {%- endif -%}
+                            {%- elsif subs_order.payment_schedule == 'day_of_week' -%}
+                              {{ subs_order.scheduled_to_be_delivered_every_x_month }}{{ 'delivery.delivery_cycle.every_other_month.value' | t }}{{ subs_order.scheduled_to_be_delivered_on_xth_day_of_week }}{{ 'delivery.delivery_cycle.th.value' | t }}{{ subs_order.human_scheduled_to_be_delivered_every_x_day_of_week }}{{ 'delivery.delivery_cycle.delivery_to_weekday.value' | t }}
+                            {%- endif -%}
+                            <wbr>{{ 'delivery.delivery_cycle.conventional.value' | t }}
+                          </p>
+                        </h2>
+                        <p class="p-delivery_cycle__text p-delivery_cycle__text--scheduled_to_be_delivered_at u-text--subhead--overlay">
+                          {{ 'delivery.delivery_cycle.next_delivered_at.value' | t }}{{ subs_order.scheduled_to_be_delivered_at | date: "%Y/%m/%d" }}
+                        </p>
+                        <div class="js-delivery_cycle__products js-delivery_cycle__products">
+                          <p class="p-delivery_cycle__text p-delivery_cycle__text--products u-text--subhead">{{ 'delivery.delivery_cycle.delivery_products.value' | t }}</p>
+                          <ul class="p-delivery_cycle__list js-delivery_cycle__list" id="js-delivery_cycle__list--current">
+                          {% for order_item in subs_order.delivery_cycle_changeable_order_items %}
+                            <li class="p-delivery_cycle__item js-delivery_cycle__item" data-order-item-id={{ order_item.id }}>
+                              <div class="c-product_item">
+                                <div class="c-product_item__inner__eyecatch">
+                                  <div class="c-product_item__inner__image">
+                                    {% if order_item.variant.thumbnails.first.url %}
+                                      {% assign thumbnail = order_item.variant.thumbnails.first.url %}
+                                    {% elsif order_item.master.thumbnails.url %}
+                                      {% assign thumbnail = order_item.master.thumbnails.url %}
+                                    {% elsif order_item.thumbnail.url %}
+                                      {% assign thumbnail = order_item.thumbnail.url %}
+                                    {% else %}
+                                      {% assign thumbnail = 'missing' | image_url %}
+                                    {% endif %}
+                                    <div class="c-product_item__inner__eyecatch__img" style="background-size:contain;background-image:url('{{ thumbnail }}')"></div>
+                                  </div>
+                                </div>
+                                <div class="c-product_item__inner__content">
+                                  <div class="c-product_item__inner__title u-text--subhead">{{ order_item.variant.name }}</div>
+                                  <div class="c-product_item__inner__price u-text--body" style="word-break: break-all;">
+                                    <span>
+                                      &yen;
+                                      <span class="js-delivery_cycle__price --without-tax">
+                                        {% if order_item.set_sale_method_product_price? %}
+                                          {{ order_item.subtotal_price_only_set_item | number_with_delimiter }}
+                                        {% elsif order_item.distribution_club_sale_method_product_price? %}
+                                          {{ order_item.subtotal_price_only_distribution_item | number_with_delimiter }}
+                                        {% else %}
+                                          {{ order_item.price | number_with_delimiter }}
+                                        {% endif %}
+                                      </span>
+                                    </span>
+                                    <span>&nbsp;({{ 'products.price.tax_included.value' | t }}</span>
+                                    <span>
+                                      &yen;
+                                      <span class="js-delivery_cycle__price --include-tax">
+                                        {% if order_item.set_sale_method_product_price? %}
+                                          {{ order_item.price_include_tax_only_set_item | number_with_delimiter }}
+                                        {% elsif order_item.distribution_club_sale_method_product_price? %}
+                                          {{ order_item.price_include_tax_only_distribution_item | number_with_delimiter }}
+                                        {% else %}
+                                          {{ order_item.price_include_tax | number_with_delimiter }}
+                                        {% endif %}
+                                      </span>
+                                    </span>
+                                    <span>)</span>
+                                  </div>
+                                  <div class="c-product_item__inner__quantity u-text--body">{{ 'products.stock.quantity.value' | t }}：{{ order_item.quantity }}</div>
+                                </div>
+                              </div>
+                            </li>
+                          {% endfor %}
+                          </ul>
+                        </div>
+                        <div class="c-billing_list u-color__bg--bg js-delivery_cycle__billing-list --current">
+                          <div class="c-billing_list__title u-text--subhead u-color__border--border">{{ 'orders.amount.order_amount.value' | t }}</div>
+                          <ul class="c-billing_list__detail u-color__border--border">
+                            <!-- 小計 -->
+                            <li class="c-billing_list__detail__item">
+                              <dl class="c-billing_list__detail__item__row">
+                                <dt class="c-billing_list__detail__item__row__title u-text--body">{{ 'orders.amount.subtotal.value' | t }}</dt>
+                                <dd class="c-billing_list__detail__item__row__price u-text--body">
+                                  &yen;
+                                  <span class="js-delivery_cycle__subtotal --current">{{ subs_order.subtotal | number_with_delimiter }}</span>
+                                </dd>
+                              </dl>
+                            </li>
+                            <!-- 消費税 -->
+                            <li class="c-billing_list__detail__item">
+                              <dl class="c-billing_list__detail__item__row">
+                                <dt class="c-billing_list__detail__item__row__title u-text--body">{{ 'orders.amount.tax.value' | t }}</dt>
+                                <dd class="c-billing_list__detail__item__row__price u-text--body">
+                                  &yen;
+                                  <span class="js-delivery_cycle__tax --current">{{ subs_order.tax | number_with_delimiter }}</span>
+                                </dd>
+                              </dl>
+                            </li>
+                          </ul>
+                          <!-- 合計 -->
+                          <div class="c-billing_list__total">
+                            <div class="c-billing_list__total__title u-text--subhead">{{ 'orders.amount.total.value' | t }}</div>
+                            <div class="c-billing_list__total__price u-text--subhead">
+                              &yen;
+                              <span class="js-delivery_cycle__total --current">{{ subs_order.total | number_with_delimiter }}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="p-delivery_cycle__control">
+                      <button type="button" class="p-delivery_cycle__button u-text--btn u-color__btn--bg js-modal__open" data-target-modal-id="js-delivery_cycle__modal--confirm" data-disable-with="{{ 'general.action.saving.value' | t }}">{{ 'delivery.delivery_cycle.change_to_delivery_cycle.value' | t }}</button>
+                      <a class="p-account__inner__content__form__bottom__link u-text--link" href="/shop/customer/subs_orders/{{ subs_order.number }}">{{ 'general.action.fix_input_content.value' | t }}</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {%- comment -%}最終確認モーダル{%- endcomment -%}
+              <dialog class="c-modal u-text--body" id="js-delivery_cycle__modal--confirm">
+                <div class="p-delivery_cycle__modal">
+                  <h2 class="c-modal__title u-text--body">{{ 'delivery.delivery_cycle.is_really_delivery_cycle_title.value' | t }}</h2>
+                  <div class="c-modal__content">
+                    {{ 'delivery.delivery_cycle.confirm_delivery_cycle_text.value' | t }}
+                  </div>
+                  <div class="c-modal__control">
+                    <button type="button" class="c-modal__button--cancel c-modal__button js-modal__close">{{ 'general.action.cancel.value' | t }}</button>
+                    <button type="submit" name="commit" class="js-delivery_cycle__submit c-modal__button--ok c-modal__button js-modal__close" data-disable-with="{{ 'general.action.saving.value' | t }}">{{ 'general.action.change.value' | t }}</button>
+                  </div>
+                </div>
+              </dialog>
+              {%- comment -%}すべての商品を選択したときの警告モーダル{%- endcomment -%}
+              <dialog class="c-modal u-text--body" id="js-delivery_cycle__modal--alert">
+                <span class="js-modal__open" data-target-modal-id="js-delivery_cycle__modal--alert"></span>
+                <div class="p-delivery_cycle__modal">
+                  <h2 class="c-modal__title u-text--body">{{ 'delivery.delivery_cycle.all_products_selected_alert_title.value' | t }}</h2>
+                  <div class="c-modal__content">
+                    <p>{{ 'delivery.delivery_cycle.all_products_selected_alert_text.value' | t }}</p>
+                    <p class="p-delivery_cycle__text--edit_subs_order u-text--link"><a href="/shop/customer/subs_orders/{{ subs_order.number }}/edit#shipping-cycle-edit-view">{{ 'subs_orders.general.fix_recurring.value' | t }}</a></p>
+                  </div>
+                  <div class="c-modal__control">
+                    <button type="button" class="c-modal__button--cancel c-modal__button js-modal__close">{{ 'delivery.delivery_cycle.fix_selected_products.value' | t }}</button>
+                  </div>
+                </div>
+              </dialog>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<template id="js-delivery_cycle__template--billing-list">
+  <div class="c-billing_list u-color__bg--bg js-delivery_cycle__billing-list">
+    <div class="c-billing_list__title u-text--subhead u-color__border--border">{{ 'orders.amount.order_amount.value' | t }}</div>
+    <ul class="c-billing_list__detail u-color__border--border">
+      <!-- 小計 -->
+      <li class="c-billing_list__detail__item">
+        <dl class="c-billing_list__detail__item__row">
+          <dt class="c-billing_list__detail__item__row__title u-text--body">{{ 'orders.amount.subtotal.value' | t }}</dt>
+          <dd class="c-billing_list__detail__item__row__price u-text--body">
+            &yen;
+            <span class="js-delivery_cycle__subtotal"></span>
+          </dd>
+        </dl>
+      </li>
+      <!-- 消費税 -->
+      <li class="c-billing_list__detail__item">
+        <dl class="c-billing_list__detail__item__row">
+          <dt class="c-billing_list__detail__item__row__title u-text--body">{{ 'orders.amount.tax.value' | t }}</dt>
+          <dd class="c-billing_list__detail__item__row__price u-text--body">
+            &yen;
+            <span class="js-delivery_cycle__tax"></span>
+          </dd>
+        </dl>
+      </li>
+    </ul>
+    <!-- 合計 -->
+    <div class="c-billing_list__total">
+      <div class="c-billing_list__total__title u-text--subhead">{{ 'orders.amount.total.value' | t }}</div>
+      <div class="c-billing_list__total__price u-text--subhead">
+        &yen;
+        <span class="js-delivery_cycle__total"></span>
+      </div>
+    </div>
+  </div>
+</template>
+
+<template id="js-delivery_cycle__template--schedule">
+                                      
+  <p data-payment_schedule="date">
+    <span 
+      data-name="scheduled_to_be_delivered_every_x_month"
+      data-append_text="{{ 'delivery.delivery_cycle.every_other_month.value' | t }}"></span>
+    <span 
+      data-name="scheduled_to_be_delivered_on_xth_day"
+      data-append_text="{{ 'delivery.delivery_cycle.delivery_to_day.value' | t }}"
+      data-json-value='{
+        "99": "{{ 'delivery.delivery_cycle.last_day.value' | t | slice: 0, 1 }}"
+      }'></span>
+  </p>
+
+  <p data-payment_schedule="term">
+    <span 
+      data-name="scheduled_to_be_delivered_every_x_day"
+      data-append_text="{{ 'delivery.delivery_cycle.delivered_every_other_day.value' | t }}"></span>
+  </p>
+
+  <p data-payment_schedule="day_of_week">
+    <span
+      data-name="scheduled_to_be_delivered_every_x_month"
+      data-append_text="{{ 'delivery.delivery_cycle.every_other_month.value' | t }}"></span>
+    <br />
+    <span
+      data-name="scheduled_to_be_delivered_on_xth_day_of_week"
+      data-append_text="{{ 'delivery.delivery_cycle.th.value' | t }}"></span>
+    <br />
+    <span
+      data-name="scheduled_to_be_delivered_every_x_day_of_week"
+      data-append_text="{{ 'delivery.delivery_cycle.delivery_to_weekday.value' | t }}"
+      data-json-value='[
+        {%- for d in (0..6) -%}"{{ day_of_weeks[d] }}"{%- unless forloop.last -%},{%-endunless-%}{%- endfor -%}
+      ]'></span>
+  </p>
+
+</template>

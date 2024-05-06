@@ -1,0 +1,176 @@
+{% if section.disabled == "true" or section.disabled == true %}
+  <section data-section-id="{{id}}" data-section-type="{{section.type}}" style="display: none;">
+{% else %}
+  <section data-section-id="{{id}}" data-section-type="{{section.type}}">
+{% endif %}
+  {% if sale_rankings.size > 0 %}
+    <div class="l-container__row u-margin__top--80 u-margin__bottom--80">
+      <div class="p-new_product">
+        <header class="p-new_product__title">
+          <h2 class="p-new_product__title__en u-text--head">{{ section.settings.head | escape }}</h2>
+          <span class="p-new_product__title__jp u-text--subhead">{{ section.settings.subhead | escape }}</span>
+        </header>
+
+        {% assign sale_ranking_size_int = section.settings.sale_ranking_size | plus: 0 %}
+
+        <div class="p-new_product__slider">
+          <div class="p-new_product__slider__track">
+            <ul class="p-new_product__slider__track__list temp-new_product_slider">
+              {% for sale_ranking in sale_rankings %}
+                <li class="p-new_product__slider__track__list__item medium-up--one-{{section.settings.sale_ranking_size}}{% if sale_rankings.size == 1 %} forced-single-row{% endif %}" id="new_product_{{ forloop.index }}">
+                  {% comment %}TOP3に入る商品かどうか{% endcomment %}
+                  {% assign sale_ranking_rank_int = sale_ranking.rank | plus: 0 %}
+                  {% assign is_top_three = false %}
+                  {% if sale_ranking_rank_int <= 3 %}
+                    {% assign is_top_three = true %}
+                  {% endif %}
+
+                  {% assign is_new = sale_ranking.product.product_is_new? %}
+                  {% assign is_sold = sale_ranking.product.out_of_stock_for_sale? %}
+
+                  <div class="c-product_item">
+                    <a class="c-product_item__link" href="/shop/products/{{ sale_ranking.product.master.sku }}"></a>
+                    <div class="c-product_item__inner__eyecatch">
+                      {% if sale_ranking.product.thumbnail.url %}
+                        {% assign thumbnail = sale_ranking.product.thumbnail.url %}
+                      {% else %}
+                        {% assign thumbnail = 'missing' | image_url  %}
+                      {% endif %}
+                      <div class="c-product_item__inner__eyecatch__img" style="background-size:contain;background-image:url({{ thumbnail }})"></div>
+
+                      <div class="c-product_item__inner__eyecatch__tags">
+                        <div class="c-product_ranking"{% if is_top_three %}data-is-top-three=true{% endif %}>
+                          <span class="c-product_ranking__text">{{ sale_ranking.rank }}</span>
+                        </div>
+                        {% if is_new %}
+                          <div class="c-product_item__inner__eyecatch__tags__new">{{ 'products.general.new.value' | t }}</div>
+                        {% endif %}
+                        {% if is_sold %}
+                          <div class="c-product_item__inner__eyecatch__tags__soldout">{{ 'products.stock.sold_out.value' | t }}</div>
+                        {% endif %}
+                      </div>
+
+                      <div class="c-product_item__actions">
+                        {% unless is_sold %}
+                          {% if settings.settings.icon.settings.add_cart_async and sale_ranking.product.not_set? %}
+                            <button class="btn-add-async c-product_item__form--cart c-product_item__button c-product_item__button--cart u-color__btn--text u-color__btn--bg" data-variant-id="{{sale_ranking.product.master.id}}" data-quantity="{{sale_ranking.product.master.min_quantity}}">
+                              <i class="u-icon--cart"></i>
+                            </button>
+                          {% else %}
+                            <form class="c-product_item__form c-product_item__form--cart" action="/shop/cart/add" method="post">
+                              {% authenticity_token_tag %}
+                              <input name="variant_id" type="hidden" value="{{ sale_ranking.product.master.id }}">
+                              <input name="quantity" type="hidden" value="{{ sale_ranking.product.master.min_quantity }}">
+                              <button class="c-product_item__button c-product_item__button--cart u-color__btn--text u-color__btn--bg" type="submit">
+                                <i class="u-icon--cart"></i>
+                              </button>
+                            </form>
+                          {% endif %}
+                        {% endunless %}
+
+                        {% assign is_favorite = sale_ranking.product.id | check_current_customer_favorite %}
+                        {% if is_favorite %}
+                          <form
+                            class="c-product_item__form c-product_item__form--favorite"
+                            action="/shop/products/{{ sale_ranking.product.master.sku }}/unfavorite?customer_return_to=%2Fshop%2Fproducts%2F{{ sale_ranking.product.master.sku }}"
+                            method="post">
+                            {% authenticity_token_tag %}
+                            <button class="c-product_item__button c-product_item__button--favorite u-color__btn u-color__btn--text--bg" type="submit">
+                              <i class="u-icon--heart"></i>
+                            </button>
+                          </form>
+                        {% else %}
+                          <form
+                            class="c-product_item__form c-product_item__form--favorite"
+                            action="/shop/products/{{ sale_ranking.product.master.sku }}/favorite?customer_return_to=%2Fshop%2Fproducts%2F{{ sale_ranking.product.master.sku }}"
+                            method="post">
+                            {% authenticity_token_tag %}
+                            <button class="c-product_item__button c-product_item__button--favorite u-color__btn--text u-color__btn--bg" type="submit">
+                              <i class="u-icon--heart"></i>
+                            </button>
+                          </form>
+                        {% endif %}
+                      </div>
+                    </div>
+                    <div class="c-product_item__inner__content">
+                      {% if section.settings.product_name == true or section.settings.product_name == 'true' %}
+                        <div class="c-product_item__inner__title u-text--subhead">{{ sale_ranking.product.name }}</div>
+                      {% endif %}
+                      {% if section.settings.product_category_name == true or section.settings.product_category_name == 'true' %}
+                        <div class="c-product_item__inner__category u-text--subhead">
+                          {% assign _category = '' %}
+                          {% for category in sale_ranking.product.product_categories %}
+                            {% if category.product_category_visibility %}
+                              {% unless _category == '' %}
+                                {% assign _category = _category | append: ', ' %}
+                              {% endunless %}
+                              {% assign _category = _category | append: category.name %}
+                            {% endif %}
+                          {% endfor %}
+                          {{ _category }}
+                        </div>
+                      {% endif %}
+                      {% if section.settings.product_price == true or section.settings.product_price == 'true' %}
+                        {% if sale_ranking.product.master.list_price > sale_ranking.product.first_price %}
+                          <div class="c-product_item__inner__price u-text--body">
+                            <span class="origin">&yen;{{ sale_ranking.product.master.list_price | number_with_delimiter }}</span>
+                            <span class="sale u-color__text--alert">&yen;{{ sale_ranking.product.first_price | number_with_delimiter }}</span>
+                            <span>&nbsp;({{ 'products.price.tax_included.value' | t }}</span>
+                            <span id="sale u-color__text--alert">&yen;{{ sale_ranking.product.first_price_include_tax | number_with_delimiter }}</span>
+                            <span>)</span>
+                          </div>
+                        {% else %}
+                          <div class="c-product_item__inner__price u-text--body">
+                            <span class="price">&yen;{{ sale_ranking.product.first_price | number_with_delimiter }}</span>
+                            <span>&nbsp;({{ 'products.price.tax_included.value' | t }}</span>
+                            <span id="price">&yen;{{ sale_ranking.product.first_price_include_tax | number_with_delimiter }}</span>
+                            <span>)</span>
+                          </div>
+                        {% endif %}
+                      {% endif %}
+                      {% if section.settings.product_show == true or section.settings.product_show == 'true' %}
+                        {% if sale_ranking.product.parsed_description %}
+                          <div class="c-product_item__inner__price u-text--body">
+                            <div class="product_description">
+                              {% if smartphone %}
+                                {{ sale_ranking.product.parsed_description_mobile | strip_html | strip_newlines }}
+                              {% else %}
+                                {{ sale_ranking.product.parsed_description | strip_html | strip_newlines }}
+                              {% endif %}
+                            </div>
+                          </div>
+                        {% endif %}
+                      {% endif %}
+
+                      {%- comment -%}バッジ表示開始{%- endcomment -%}
+                      {% if pre_order_badge_flg_hash[sale_ranking.product.master.id] or delivery_group_badge_flg_hash[sale_ranking.product.id] or concurrent_purchase_group_badge_flg_hash[sale_ranking.product.id] %}
+                        <div class="c-product_item__inner__badge u-text--body">
+                          <ul class="c-cart_item__badges">
+                            {% if pre_order_badge_flg_hash[sale_ranking.product.master.id] %}
+                              <li class="c-badge">{{ 'products.pre_order.display_mark.value' | t }}</li>
+                            {% endif %}
+                            {% for delivery_group_name in sale_ranking.product.delivery_group_names %}
+                              <li class="c-badge c-badge--delivery-group">{{ delivery_group_name }}</li>
+                            {% endfor %}
+                            {% for concurrent_purchase_badge_name in sale_ranking.product.concurrent_purchase_badge_names %}
+                              <li class="c-badge c-badge--concurrent-purchase-group">{{ concurrent_purchase_badge_name }}</li>
+                            {% endfor %}
+                          </ul>
+                        </div>
+                      {% endif %}
+                      {%- comment -%}バッジ表示終了{%- endcomment -%}
+                    </div>
+                  </div>
+                </li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+
+        <div class="p-new_product__more">
+          <a class="p-new_product__more__btn u-text--btn u-color__btn--bg" href="/shop/sale_ranking">{{ 'general.action.view_more.value' | t }}</a>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  </section>

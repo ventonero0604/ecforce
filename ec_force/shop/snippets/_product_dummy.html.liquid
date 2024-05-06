@@ -1,0 +1,31 @@
+<div class="c-product_item" id="product-show-view">
+  <a class="c-product_item__inner" href="#"></a>
+    <div class="c-product_item__inner__eyecatch">
+      {% assign thumbnail = 'missing' | image_url  %}
+      <div class="c-product_item__inner__eyecatch__img" style="background-size:contain;background-image:url({{ thumbnail }})"></div>
+
+        <form
+          class="c-product_item__inner__eyecatch__favorite"
+          action="#"
+          method="post">
+          <button class="c-product_item__inner__eyecatch__favorite__btn u-color__btn--text u-color__btn--bg" type="submit">
+            <i class="u-icon--heart"></i>
+          </button>
+        </form>
+    </div>
+    <div class="c-product_item__inner__title u-text--subhead">商品名が表示されます</div>
+    <div class="c-product_item__inner__category u-text--subhead">
+      カテゴリ1, カテゴリ2
+    </div>
+
+      <div class="c-product_item__inner__price u-text--body">
+        <span class="origin">&yen;10,000</span>
+        <span class="sale u-color__text--alert">&yen;8,000</span>
+        <span>&nbsp;({{ 'products.price.tax_included.value' | t }}</span>
+        <span id="sale u-color__text--alert">&yen;8,800</span>
+        <span>)</span>
+      </div>
+      <div class="c-product_item__inner__price u-text--body">
+        <div class="product_description">商品詳細が表示されます</div>
+      </div>
+</div>

@@ -1,0 +1,266 @@
+{% if section.disabled == true or section.disabled == 'true' %}
+  {% assign visibility_value = "none" %}
+{% endif %}
+
+<section class="p-product_list" data-section-id="{{ id }}" data-section-type="{{ section.type }}" style="display: {{ visibility_value }};">
+    {% unless smartphone %}
+      {% assign product_size = section.settings.product_size | plus: 0 %}
+      {% if product_size < 3 %}
+        {% assign side = '_side' %}
+      {% endif %}
+
+      {% if product_size == 1 %}
+        {% assign size = 'single' %}
+      {% elsif product_size == 2 %}
+        {% assign size = 'double' %}
+      {% endif %}
+    {% endunless %}
+    <div id="add_product_async_view">
+      <div id="cart-addition-failure" class="p-product_alert" style="display:none;">
+        <div class="control-alert alert-danger">
+          <div class="text u-color__bg--bg u-color__text--alert">
+            <div>
+              <p id="addition-failure-message"></p>
+              <p id="btn-show-addition-failure-details" class="p-product_alert__details_show_btn" style="display:none;">さらに詳しく</p>
+            </div>
+            <div>
+              <p id="addition-failure-details" class="p-product_alert__details" style="display:none;"></p>
+              <p id="btn-hide-addition-failure-details" class="p-product_alert__details_hide_btn" style="display:none;">閉じる</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% paginate products_all %}
+        <div class="l-container__row u-margin__top--100 u-margin_sp__top--80">
+          <header>
+            <div class="p-category_tool__inner">
+              {% include 'ec_force/shop/snippets/product_sort.html' %}
+            </div>
+          </header>
+        </div>
+        <div class="l-container__row u-margin__top--60">
+          {% if labels.size > 0 %}
+            <div class="c-search_cond u-text--subhead">
+              <div class="c-search_cond__inner">
+                <div class="c-search_cond__label">
+                  <span>絞り込み条件：</span>
+                </div>
+                <div class="c-search_cond__values">
+                  {% for label in labels %}
+                    <div class="c-search_cond__condition u-color__border--border">
+                      <span class="c-search_cond__condition__val">{{ label }}</span>
+                    </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+          <ul class="p-product_list__list">
+            {% for product in paginate.collection %}
+              {% assign is_new = product.product_is_new? %}
+              {% assign is_sold = product.out_of_stock_for_sale? %}
+              <li class="c-product_{{size}} p-product_list__list__item medium-up--one-{{section.settings.product_size}}">
+                <div class="c-product_item{{side}}">
+                  <a class="c-product_item__link" href="/shop/products/{{ product.master.sku }}"></a>
+                  <div class="c-product_item__inner__eyecatch{{side}}">
+                    {% if product.thumbnail.url %}
+                      {% assign thumbnail = product.thumbnail.url %}
+                    {% else %}
+                      {% assign thumbnail = 'missing' | image_url  %}
+                    {% endif %}
+                    <div class="c-product_item__inner__eyecatch__img{{side}}" style="background-size:contain;background-image:url({{ thumbnail }})"></div>
+
+                    {% if is_new or is_sold %}
+                      <div class="c-product_item__inner__eyecatch__tags">
+                        {% if is_new %}
+                          <div class="c-product_item__inner__eyecatch__tags__new">{{ 'products.general.new.value' | t }}</div>
+                        {% endif %}
+
+                        {% if is_sold %}
+                          <div class="c-product_item__inner__eyecatch__tags__soldout">{{ 'products.stock.sold_out.value' | t }}</div>
+                        {% endif %}
+                      </div>
+                    {% endif %}
+                    <div class="c-product_item__actions">
+                      {% unless is_sold %}
+                        {% if settings.current %}
+                          {% assign add_cart_async = settings.current.settings.icon.settings.add_cart_async %}
+                        {% else %}
+                          {% assign add_cart_async = settings.settings.icon.settings.add_cart_async %}
+                        {% endif %}
+                        {% if add_cart_async and product.not_set? %}
+                          <button class="btn-add-async c-product_item__form--cart c-product_item__button c-product_item__button--cart u-color__btn--text u-color__btn--bg" data-variant-id="{{product.master.id}}" data-quantity="{{product.master.min_quantity}}">
+                            <i class="u-icon--cart"></i>
+                          </button>
+                        {% else %}
+                          <form class="c-product_item__form c-product_item__form--cart" action="/shop/cart/add" method="post">
+                            {% authenticity_token_tag %}
+                            <input name="variant_id" type="hidden" value="{{ product.master.id }}">
+                            <input name="quantity" type="hidden" value="{{ product.master.min_quantity }}">
+                            <button class="c-product_item__button c-product_item__button--cart u-color__btn--text u-color__btn--bg" type="submit">
+                              <i class="u-icon--cart"></i>
+                            </button>
+                          </form>
+                        {% endif %}
+                      {% endunless %}
+                      {% assign is_favorite = product.id | check_current_customer_favorite %}
+                      {% if is_favorite %}
+                        <form
+                          class="c-product_item__form c-product_item__form--favorite"
+                          action="/shop/products/{{ product.master.sku }}/unfavorite?customer_return_to=%2Fshop%2Fproducts%2F{{ product.master.sku }}"
+                          method="post">
+                          {% authenticity_token_tag %}
+                          <button class="c-product_item__button c-product_item__button--favorite u-color__btn u-color__btn--text--bg" type="submit">
+                            <i class="u-icon--heart"></i>
+                          </button>
+                        </form>
+                      {% else %}
+                        <form
+                          class="c-product_item__form c-product_item__form--favorite"
+                          action="/shop/products/{{ product.master.sku }}/favorite?customer_return_to=%2Fshop%2Fproducts%2F{{ product.master.sku }}"
+                          method="post">
+                          {% authenticity_token_tag %}
+                          <button class="c-product_item__button c-product_item__button--favorite u-color__btn--text u-color__btn--bg" type="submit">
+                            <i class="u-icon--heart"></i>
+                          </button>
+                        </form>
+                      {% endif %}
+                    </div>
+                  </div>
+                  <div class="c-product_item__inner__content{{side}}">
+                    {% if section.settings.product_name == true or section.settings.product_name == 'true' %}
+                      <div class="c-product_item__inner__title u-text--subhead">{{ product.name }}</div>
+                    {% endif %}
+                    {% comment -%}バッジ表示開始{%- endcomment %}
+                    {% if pre_order_badge_flg_hash[product.master.id] or delivery_group_badge_flg_hash[product.id] or concurrent_purchase_group_badge_flg_hash[product.id] %}
+                      <div class="c-product_item__inner__badge u-text--body">
+                        <ul class="c-cart_item__badges">
+                          {% if pre_order_badge_flg_hash[product.master.id] %}
+                            <li class="c-badge">{{ 'products.pre_order.display_mark.value' | t }}</li>
+                          {% endif %}
+                          {% for delivery_group_name in product.delivery_group_names %}
+                            <li class="c-badge c-badge--delivery-group">{{ delivery_group_name }}</li>
+                          {% endfor %}
+                          {% for concurrent_purchase_badge_name in product.concurrent_purchase_badge_names %}
+                            <li class="c-badge c-badge--concurrent-purchase-group">{{ concurrent_purchase_badge_name }}</li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                    {% endif %}
+                    {%- comment -%}バッジ表示終了{%- endcomment %}
+                    {% comment %}レビュー{% endcomment %}
+                    {% if base_info.use_review? %}
+                      {% assign is_readable = product.id | check_review_reading_rule %}
+                      {% if is_readable %}
+                        {% assign star_avg = product.review_average_score %}
+                        {% if star_avg > 0 %}
+                          {% assign num_of_star_avg = star_avg | floor %}
+                          <div class="review">
+                            {% if section.settings.product_review_star_show == true or section.settings.product_review_star_show == 'true' %}
+                              <span class="u-text--body">{{ star_avg }}</span>
+                              <span class="c-product_item__inner__star">
+                                {% for i in (1..num_of_star_avg) %}
+                                  ★
+                                {% endfor %}
+                              </span>
+                            {% endif %}
+                            {% if section.settings.product_review_count_show == true or section.settings.product_review_count_show == 'true' %}
+                              <span class="u-text--body">({{ product.review_count | number_with_delimiter }})</span>
+                            {% endif %}
+                          </div>
+                        {% endif %}
+                      {% endif %}
+                    {% endif %}
+                    {% comment %}商品価格{% endcomment %}
+                    {% if section.settings.product_price == true or section.settings.product_price == 'true' %}
+                      <div class="c-product_item__inner__price u-text--body">
+                        {% if product.set.set_sale_method_product_price? %}
+                          {% if product.master.list_price > product.set.lowest_price %}
+                            <span class="origin">&yen;{{ product.master.list_price | number_with_delimiter }}</span>
+                            <span class="sale u-color__text--alert">&yen;{{ product.set.lowest_price | number_with_delimiter }}~</span>
+                            <span>&nbsp;({{ 'products.price.tax_included.value' | t }}</span>
+                            <span id="sale u-color__text--alert">&yen;{{ product.set.lowest_price_include_tax | number_with_delimiter }}~</span>
+                            <span>)</span>
+                          {% else %}
+                            <span class="price">&yen;{{ product.set.lowest_price | number_with_delimiter }}~</span>
+                            <span>&nbsp;({{ 'products.price.tax_included.value' | t }}</span>
+                            <span id="price">&yen;{{ product.set.lowest_price_include_tax | number_with_delimiter }}~</span>
+                            <span>)</span>
+                          {% endif %}
+                        {% elsif product.master.list_price > product.first_price %}
+                          <span class="origin">&yen;{{ product.master.list_price | number_with_delimiter }}</span>
+                          <span class="sale u-color__text--alert">&yen;{{ product.first_price | number_with_delimiter }}</span>
+                          <span>&nbsp;({{ 'products.price.tax_included.value' | t }}</span>
+                          <span id="sale u-color__text--alert">&yen;{{ product.first_price_include_tax | number_with_delimiter }}</span>
+                          <span>)</span>
+                        {% else %}
+                          <span class="price">&yen;{{ product.first_price | number_with_delimiter }}</span>
+                          <span>&nbsp;({{ 'products.price.tax_included.value' | t }}</span>
+                          <span id="price">&yen;{{ product.first_price_include_tax | number_with_delimiter }}</span>
+                          <span>)</span>
+                        {% endif %}
+                      </div>
+                    {% endif %}
+                    {% comment %}商品詳細{% endcomment %}
+                    {% if section.settings.product_show == true or section.settings.product_show == 'true' %}
+                      {% if product.parsed_description %}
+                        <div class="c-product_item__inner__price u-text--body" style="word-break: break-all;">
+                          {% assign product_show_description_size = section.settings.product_show_description_size | times: 1 %}
+                          {% if smartphone %}
+                            {% assign parsed_description_mobile = product.parsed_description_mobile | strip_html | strip_newlines %}
+                            {% if parsed_description_mobile.size > product_show_description_size %}
+                              {{ parsed_description_mobile | truncate: product_show_description_size, '' | append: '...' }}
+                            {% else %}
+                              {{ parsed_description_mobile | truncate: product_show_description_size, '' }}
+                            {% endif %}
+                          {% else %}
+                            {% assign parsed_description = product.parsed_description | strip_html | strip_newlines %}
+                            {% if parsed_description.size > product_show_description_size %}
+                              {{ parsed_description | truncate: product_show_description_size, '' | append: '...' }}
+                            {% else %}
+                              {{ parsed_description | truncate: product_show_description_size, '' }}
+                            {% endif %}
+                          {% endif %}
+                        </div>
+                      {% endif %}
+                    {% endif %}
+                  </div>
+                </div>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div class="l-container__row u-margin__top--80 u-margin__bottom--100">
+          <div class="c-pagination">
+            <ul class="c-pagination__list u-color__border--border u-color--head">
+              {% if paginate.previous %}
+                <li class="c-pagination__list__item">
+                  <a class="c-pagination__list__item__prev" href="{{ paginate.previous.url }}">
+                    <i class="u-icon--arrow"></i>
+                  </a>
+                </li>
+              {% endif %}
+              {% for page in paginate.parts %}
+                <li class="c-pagination__list__item u-color__border--main {% if paginate.current_page == page.title %} is-active{% endif %}">
+                  {% if paginate.current_page == page.title %}
+                    <span class="c-pagination__list__item__page">{{ page.title }}</span>
+                  {% elsif page.is_link %}
+                    <a class="c-pagination__list__item__page" href="{{ page.url }}">{{ page.title }}</a>
+                  {% else %}
+                    <span class="c-pagination__list__item__page">{{ page.title }}</span>
+                  {% endif %}
+                </li>
+              {% endfor %}
+              {% if paginate.next %}
+                <li class="c-pagination__list__item">
+                  <a class="c-pagination__list__item__next" href="{{ paginate.next.url }}">
+                    <i class="u-icon--arrow"></i>
+                  </a>
+                </li>
+              {% endif %}
+            </ul>
+          </div>
+        </div>
+      {% endpaginate %}
+    </div>
+  </section>

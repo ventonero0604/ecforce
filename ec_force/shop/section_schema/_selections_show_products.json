@@ -1,0 +1,112 @@
+{
+  "id": "selections_show_products",
+  "type": "selections_show_products-section",
+  "name": {
+    "ja": "商品"
+  },
+  "settings": [
+    {
+      "type": "header",
+      "id": "item",
+      "label": {
+        "ja": "表示項目"
+      }
+    },
+    {
+      "type": "checkbox",
+      "id": "product_name",
+      "label": {
+        "ja": "商品名表示"
+      },
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "product_show",
+      "label": {
+        "ja": "商品詳細表示"
+      },
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "product_price",
+      "label": {
+        "ja": "商品価格表示"
+      },
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "product_review_star_show",
+      "label": {
+        "ja": "レビュー評価表示"
+      },
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "product_review_count_show",
+      "label": {
+        "ja": "レビュー件数表示"
+      },
+      "default": true
+    },
+    {
+      "type": "header",
+      "id": "count",
+      "label": {
+        "ja": "表示件数"
+      }
+    },
+    {
+      "type": "range",
+      "id": "product_size",
+      "label": {
+        "ja": "行あたりの商品表示件数"
+      },
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "unit": {
+        "ja": "件"
+      },
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "product_line_size",
+      "label": {
+        "ja": "表示行数"
+      },
+      "min": 1,
+      "max": 10,
+      "step": 1,
+      "unit": {
+        "ja": "行"
+      },
+      "default": 10
+    },
+    {
+      "type": "header",
+      "id": "view_setting",
+      "label": {
+        "ja": "表示設定"
+      }
+    },
+    {
+      "type": "range",
+      "id": "product_show_description_size",
+      "label": {
+        "ja": "詳細文字数制限"
+      },
+      "min": 1,
+      "max": 100,
+      "step": 1,
+      "unit": {
+        "ja": "文字"
+      },
+      "default": 50
+    }
+  ]
+}

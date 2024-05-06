@@ -1,0 +1,690 @@
+{
+  "id": "products_show_content",
+  "type": "products_show_content-section",
+  "name": {
+    "ja": "コンテンツ"
+  },
+  "settings": [
+    {
+      "type": "label",
+      "id": "category",
+      "label": {
+        "ja": "カテゴリ"
+      },
+      "sort": true
+    },
+    {
+      "type": "label",
+      "id": "name",
+      "label": {
+        "ja": "商品名"
+      },
+      "sort": true
+    },
+    {
+      "type": "checkbox",
+      "id": "maker",
+      "label": {
+        "ja": "メーカー"
+      },
+      "sort": true
+    },
+    {
+      "type": "checkbox",
+      "id": "detail",
+      "label": {
+        "ja": "商品詳細"
+      },
+      "sort": true
+    },
+    {
+      "type": "checkbox",
+      "id": "review",
+      "label": {
+        "ja": "レビュー評価"
+      },
+      "sort": true
+    },
+    {
+      "type": "label",
+      "id": "price",
+      "label": {
+        "ja": "価格"
+      },
+      "sort": true
+    },
+    {
+      "type": "checkbox",
+      "id": "co_selling_product",
+      "label": {
+        "ja": "併売商品"
+      },
+      "sort": true
+    },
+    {
+      "type": "label",
+      "id": "variants",
+      "label": {
+        "ja": "規格"
+      },
+      "sort": true
+    },
+    {
+      "type": "checkbox",
+      "id": "quantity",
+      "label": {
+        "ja": "数量セレクタ"
+      },
+      "sort": true
+    },
+    {
+      "type": "image_content",
+      "id": "stock_items",
+      "label": {
+        "ja": "在庫数"
+      },
+      "add_block": false,
+      "image_block": {
+        "type": "image_block",
+        "min_blocks": 1,
+        "settings": [
+          {
+            "type": "checkbox",
+            "id": "block_visibility",
+            "label": {
+              "ja": "表示"
+            }
+          },
+          {
+            "type": "text",
+            "id": "units",
+            "label": {
+              "ja": "在庫の表示単位※任意"
+            }
+          }
+        ]
+      },
+      "sort": true
+    },
+    {
+      "type": "checkbox",
+      "id": "campaign_countdown",
+      "label": {
+        "ja": "キャンペーンカウントダウン"
+      },
+      "sort": true
+    },
+    {
+      "type": "checkbox",
+      "id": "add_cart_async",
+      "label": {
+        "ja": "カート追加ボタン（画面遷移なし）"
+      },
+      "sort": true
+    },
+    {
+      "type": "label",
+      "id": "purchase",
+      "label": {
+        "ja": "カート追加ボタン（画面遷移あり）"
+      },
+      "sort": true
+    },
+    {
+      "type": "label",
+      "id": "favorite",
+      "label": {
+        "ja": "お気に入りに追加"
+      },
+      "sort": true
+    },
+    {
+      "type": "label",
+      "id": "sku_detail",
+      "label": {
+        "ja": "SKU詳細"
+      },
+      "sort": true
+    },
+    {
+      "type": "checkbox",
+      "id": "sns",
+      "label": {
+        "ja": "SNSシェア"
+      },
+      "sort": true
+    },
+    {
+      "type": "image_content",
+      "id": "caution",
+      "label": {
+        "ja": "注意喚起文"
+      },
+      "add_block": false,
+      "image_block": {
+        "type": "image_block",
+        "min_blocks": 1,
+        "settings": [
+          {
+            "type": "checkbox",
+            "id": "block_visibility",
+            "label": {
+              "ja": "表示"
+            }
+          },
+          {
+            "type": "checkbox",
+            "id": "collapse",
+            "label": {
+              "ja": "開閉表示（モバイルのみ）"
+            }
+          },
+          {
+            "type": "text",
+            "id": "collapse_label",
+            "label": {
+              "ja": "開閉見出し"
+            }
+          }
+        ]
+      },
+      "sort": true
+    },
+    {
+      "type": "image_content",
+      "id": "option01",
+      "label": {
+        "ja": "自由入力1"
+      },
+      "add_block": false,
+      "image_block": {
+        "type": "image_block",
+        "min_blocks": 1,
+        "settings": [
+          {
+            "type": "checkbox",
+            "id": "block_visibility",
+            "label": {
+              "ja": "表示"
+            }
+          },
+          {
+            "type": "checkbox",
+            "id": "collapse",
+            "label": {
+              "ja": "開閉表示（モバイルのみ）"
+            }
+          },
+          {
+            "type": "text",
+            "id": "collapse_label",
+            "label": {
+              "ja": "開閉見出し"
+            }
+          }
+        ]
+      },
+      "sort": true
+    },
+    {
+      "type": "image_content",
+      "id": "option02",
+      "label": {
+        "ja": "自由入力2"
+      },
+      "add_block": false,
+      "image_block": {
+        "type": "image_block",
+        "min_blocks": 1,
+        "settings": [
+          {
+            "type": "checkbox",
+            "id": "block_visibility",
+            "label": {
+              "ja": "表示"
+            }
+          },
+          {
+            "type": "checkbox",
+            "id": "collapse",
+            "label": {
+              "ja": "開閉表示（モバイルのみ）"
+            }
+          },
+          {
+            "type": "text",
+            "id": "collapse_label",
+            "label": {
+              "ja": "開閉見出し"
+            }
+          }
+        ]
+      },
+      "sort": true
+    },
+    {
+      "type": "image_content",
+      "id": "option03",
+      "label": {
+        "ja": "自由入力3"
+      },
+      "add_block": false,
+      "image_block": {
+        "type": "image_block",
+        "min_blocks": 1,
+        "settings": [
+          {
+            "type": "checkbox",
+            "id": "block_visibility",
+            "label": {
+              "ja": "表示"
+            }
+          },
+          {
+            "type": "checkbox",
+            "id": "collapse",
+            "label": {
+              "ja": "開閉表示（モバイルのみ）"
+            }
+          },
+          {
+            "type": "text",
+            "id": "collapse_label",
+            "label": {
+              "ja": "開閉見出し"
+            }
+          }
+        ]
+      },
+      "sort": true
+    },
+    {
+      "type": "image_content",
+      "id": "option04",
+      "label": {
+        "ja": "自由入力4"
+      },
+      "add_block": false,
+      "image_block": {
+        "type": "image_block",
+        "min_blocks": 1,
+        "settings": [
+          {
+            "type": "checkbox",
+            "id": "block_visibility",
+            "label": {
+              "ja": "表示"
+            }
+          },
+          {
+            "type": "checkbox",
+            "id": "collapse",
+            "label": {
+              "ja": "開閉表示（モバイルのみ）"
+            }
+          },
+          {
+            "type": "text",
+            "id": "collapse_label",
+            "label": {
+              "ja": "開閉見出し"
+            }
+          }
+        ]
+      },
+      "sort": true
+    },
+    {
+      "type": "image_content",
+      "id": "option05",
+      "label": {
+        "ja": "自由入力5"
+      },
+      "add_block": false,
+      "image_block": {
+        "type": "image_block",
+        "min_blocks": 1,
+        "settings": [
+          {
+            "type": "checkbox",
+            "id": "block_visibility",
+            "label": {
+              "ja": "表示"
+            }
+          },
+          {
+            "type": "checkbox",
+            "id": "collapse",
+            "label": {
+              "ja": "開閉表示（モバイルのみ）"
+            }
+          },
+          {
+            "type": "text",
+            "id": "collapse_label",
+            "label": {
+              "ja": "開閉見出し"
+            }
+          }
+        ]
+      },
+      "sort": true
+    },
+    {
+      "type": "image_content",
+      "id": "option06",
+      "label": {
+        "ja": "自由入力6"
+      },
+      "add_block": false,
+      "image_block": {
+        "type": "image_block",
+        "min_blocks": 1,
+        "settings": [
+          {
+            "type": "checkbox",
+            "id": "block_visibility",
+            "label": {
+              "ja": "表示"
+            }
+          },
+          {
+            "type": "checkbox",
+            "id": "collapse",
+            "label": {
+              "ja": "開閉表示（モバイルのみ）"
+            }
+          },
+          {
+            "type": "text",
+            "id": "collapse_label",
+            "label": {
+              "ja": "開閉見出し"
+            }
+          }
+        ]
+      },
+      "sort": true
+    },
+    {
+      "type": "image_content",
+      "id": "option07",
+      "label": {
+        "ja": "自由入力7"
+      },
+      "add_block": false,
+      "image_block": {
+        "type": "image_block",
+        "min_blocks": 1,
+        "settings": [
+          {
+            "type": "checkbox",
+            "id": "block_visibility",
+            "label": {
+              "ja": "表示"
+            }
+          },
+          {
+            "type": "checkbox",
+            "id": "collapse",
+            "label": {
+              "ja": "開閉表示（モバイルのみ）"
+            }
+          },
+          {
+            "type": "text",
+            "id": "collapse_label",
+            "label": {
+              "ja": "開閉見出し"
+            }
+          }
+        ]
+      },
+      "sort": true
+    },
+    {
+      "type": "image_content",
+      "id": "option08",
+      "label": {
+        "ja": "自由入力8"
+      },
+      "add_block": false,
+      "image_block": {
+        "type": "image_block",
+        "min_blocks": 1,
+        "settings": [
+          {
+            "type": "checkbox",
+            "id": "block_visibility",
+            "label": {
+              "ja": "表示"
+            }
+          },
+          {
+            "type": "checkbox",
+            "id": "collapse",
+            "label": {
+              "ja": "開閉表示（モバイルのみ）"
+            }
+          },
+          {
+            "type": "text",
+            "id": "collapse_label",
+            "label": {
+              "ja": "開閉見出し"
+            }
+          }
+        ]
+      },
+      "sort": true
+    },
+    {
+      "type": "image_content",
+      "id": "option09",
+      "label": {
+        "ja": "自由入力9"
+      },
+      "add_block": false,
+      "image_block": {
+        "type": "image_block",
+        "min_blocks": 1,
+        "settings": [
+          {
+            "type": "checkbox",
+            "id": "block_visibility",
+            "label": {
+              "ja": "表示"
+            }
+          },
+          {
+            "type": "checkbox",
+            "id": "collapse",
+            "label": {
+              "ja": "開閉表示（モバイルのみ）"
+            }
+          },
+          {
+            "type": "text",
+            "id": "collapse_label",
+            "label": {
+              "ja": "開閉見出し"
+            }
+          }
+        ]
+      },
+      "sort": true
+    },
+    {
+      "type": "image_content",
+      "id": "option10",
+      "label": {
+        "ja": "自由入力10"
+      },
+      "add_block": false,
+      "image_block": {
+        "type": "image_block",
+        "min_blocks": 1,
+        "settings": [
+          {
+            "type": "checkbox",
+            "id": "block_visibility",
+            "label": {
+              "ja": "表示"
+            }
+          },
+          {
+            "type": "checkbox",
+            "id": "collapse",
+            "label": {
+              "ja": "開閉表示（モバイルのみ）"
+            }
+          },
+          {
+            "type": "text",
+            "id": "collapse_label",
+            "label": {
+              "ja": "開閉見出し"
+            }
+          }
+        ]
+      },
+      "sort": true
+    },
+    {
+      "type": "image_content",
+      "id": "common_html_01",
+      "label": {
+        "ja": "共通HTML1"
+      },
+      "add_block": false,
+      "image_block": {
+        "type": "image_block",
+        "min_blocks": 1,
+        "settings": [
+          {
+            "type": "textarea",
+            "id": "html",
+            "maxlength": 5000,
+            "label": {
+              "ja": "共通HTML"
+            }
+          }
+        ]
+      },
+      "sort": true
+    },
+    {
+      "type": "image_content",
+      "id": "common_html_02",
+      "label": {
+        "ja": "共通HTML2"
+      },
+      "add_block": false,
+      "image_block": {
+        "type": "image_block",
+        "min_blocks": 1,
+        "settings": [
+          {
+            "type": "textarea",
+            "id": "html",
+            "maxlength": 5000,
+            "label": {
+              "ja": "共通HTML"
+            }
+          }
+        ]
+      },
+      "sort": true
+    },
+    {
+      "type": "image_content",
+      "id": "common_html_03",
+      "label": {
+        "ja": "共通HTML3"
+      },
+      "add_block": false,
+      "image_block": {
+        "type": "image_block",
+        "min_blocks": 1,
+        "settings": [
+          {
+            "type": "textarea",
+            "id": "html",
+            "maxlength": 5000,
+            "label": {
+              "ja": "共通HTML"
+            }
+          }
+        ]
+      },
+      "sort": true
+    },
+    {
+      "type": "checkbox",
+      "id": "extra_text_from_product_category",
+      "label": {
+        "ja": "商品テキスト(商品カテゴリ)"
+      },
+      "sort": true
+    },
+    {
+      "type":"selector",
+      "id": "product_thumbnail_display_type",
+      "label": {
+        "ja": "画像表示形式"
+      },
+      "options" : [
+        {
+          "value": "slideshow",
+          "label": {
+            "ja": "スライドショーで表示"
+          }
+        },
+        {
+          "value": "vertical",
+          "label": {
+            "ja": "縦に並べて表示"
+          }
+        }
+      ]
+    },
+    {
+      "type": "range",
+      "id": "vertical_display_y_margin",
+      "label": {
+        "ja": "画像の縦間隔"
+      },
+      "min": 0,
+      "max": 100,
+      "step": 10,
+      "unit": {
+        "ja": "px"
+      }
+    },
+    {
+      "type": "checkbox",
+      "id": "right_area_fixed",
+      "label": {
+        "ja": "右側要素の固定化(PCのみ)"
+      }
+    },
+    {
+      "type": "text",
+      "id": "share_title",
+      "label": {
+        "ja": "シェア見出し"
+      }
+    },
+    {
+      "type": "link",
+      "id": "languages_link",
+      "link_url": "/admin/themes/{theme.id}/languages?type=General#section-general-action",
+      "link_text": {
+        "ja": "ショップ管理から設定してください"
+      },
+      "label": {
+        "ja": "ボタンの文言変更"
+      }
+    }
+  ]
+}

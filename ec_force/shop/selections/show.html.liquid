@@ -1,0 +1,44 @@
+{{ 'shop/selections' | javascript_include_tag }}
+
+<main class="l-container js-main-container" role="main" id="add_product_async_view">
+  {{ 'notice' | flash: 'control-alert alert-success', 'text u-color__bg--bg u-color__text--alert' }}
+  {{ 'alert' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+  <div id="cart-addition-failure" class="p-product_alert" style="display:none;">
+    <div class="control-alert alert-danger">
+      <div class="text u-color__bg--bg u-color__text--alert">
+        <div>
+          <p id="addition-failure-message"></p>
+          <p id="btn-show-addition-failure-details" class="p-product_alert__details_show_btn" style="display:none;">さらに詳しく</p>
+        </div>
+
+        <div>
+          <p id="addition-failure-details" class="p-product_alert__details" style="display:none;"></p>
+          <p id="btn-hide-addition-failure-details" class="p-product_alert__details_hide_btn" style="display:none;">閉じる</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{ content_for_selection }}
+</main>
+
+
+{% comment %} メタ情報 {% endcomment %}
+{% content_for title %}
+  {% if selection.meta_title %}
+    {{ selection.meta_title }}
+  {% else %}
+    {{ selection.title }}
+  {% endif %}
+{% endcontent_for %}
+
+{% content_for meta_description %}
+  {{ selection.meta_description }}
+{% endcontent_for %}
+
+{% content_for meta_keywords %}
+  {{ selection.meta_keyword }}
+{% endcontent_for %}
+
+{% content_for og_image %}
+  {{ og_image }}
+{% endcontent_for %}

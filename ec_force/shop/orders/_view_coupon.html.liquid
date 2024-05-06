@@ -1,0 +1,17 @@
+{% if shop_form_settings['coupon'] %}
+  <div id='view-coupon' class="p-checkout__list__block u-color__border--border">
+    <div class="p-checkout__list__block__inner">
+      <h2 class="p-checkout__list__block__inner__title u-text--subhead">{{ 'orders.coupon.use_coupon.value' | t }}</h2>
+      <table class="c-form_table">
+        <tbody>
+          <tr>
+            <th class="u-text--body">{{ 'orders.coupon.coupon_code.value' | t }}</th>
+            <td>
+              <input class="u-text--input u-color__input--bg u-color__border--input" type="text" name="order[coupon_code]" value="{{ order.coupon.code }}">
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endif %}

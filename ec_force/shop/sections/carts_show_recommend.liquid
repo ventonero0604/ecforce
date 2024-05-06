@@ -1,0 +1,153 @@
+<section class="p-recommend_product" data-section-id="{{id}}" data-section-type="{{section.type}}">
+  {% if section.settings.recommend == true or section.settings.recommend == 'true' %}
+    <div class="p-recommend_product__inner">
+      <header class="p-recommend_product__inner__title">
+        <h2 class="p-recommend_product__inner__title__en u-text--head">{{ section.settings.head | escape }}</h2>
+        <span class="p-recommend_product__inner__title__jp u-text--subhead">{{ section.settings.subhead | escape }}</span>
+      </header>
+      {% if customize_preview_mode %}
+        {% assign products = item.product.active_related_products %}
+      {% else %}
+        {% assign products = order.related_products %}
+      {% endif %}
+      {% if products.size > 0 %}
+        <div class="p-product_slider slick">
+          <ul class="p-product_slider__list">
+            {% comment %} auto pick up active products {% endcomment %}
+            {% for product in products limit:20 %}
+              <li id="carts_show_recommend_{{ forloop.index }}" class="p-product_slider__item">
+                {% comment %}
+                  Liquidはサーバーサイドのレンダリングしか考慮されていない
+                  そのため, Ajaxでのレンダリングはincludeが使えないのでファイルの中身を直書きしている
+                  以下 `ec_force/shop/snippets/_product.html.liquid` の中身
+                {% endcomment %}
+                {% assign is_new = product.product_is_new? %}
+                {% assign is_sold = product.out_of_stock_for_sale? %}
+                <div class="c-product_item">
+                  <a class="c-product_item__link" href="/shop/products/{{ product.master.sku }}"></a>
+                  <div class="c-product_item__inner__eyecatch">
+                    {% if product.thumbnail.url %}
+                      {% assign thumbnail = product.thumbnail.url %}
+                    {% else %}
+                      {% assign thumbnail = 'missing' | image_url  %}
+                    {% endif %}
+                    <div class="c-product_item__inner__eyecatch__img" style="background-size:contain;background-image:url({{ thumbnail }})"></div>
+                    {% if is_new or is_sold %}
+                      <div class="c-product_item__inner__eyecatch__tags">
+                        {% if is_new %}
+                          <div class="c-product_item__inner__eyecatch__tags__new">{{ 'products.general.new.value' | t }}</div>
+                        {% endif %}
+
+                        {% if is_sold %}
+                          <div class="c-product_item__inner__eyecatch__tags__soldout">{{ 'products.stock.sold_out.value' | t }}</div>
+                        {% endif %}
+                      </div>
+                    {% endif %}
+
+                    <div class="c-product_item__actions">
+                      {% unless is_sold %}
+                        <form class="c-product_item__form c-product_item__form--cart" action="/shop/cart/add" method="post">
+                          {% authenticity_token_tag %}
+                          <input name="variant_id" type="hidden" value="{{ product.master.id }}">
+                          <input name="quantity" type="hidden" value="{{ product.master.min_quantity }}">
+                          <button class="c-product_item__button c-product_item__button--cart u-color__btn--text u-color__btn--bg" type="submit">
+                            <i class="u-icon--cart"></i>
+                          </button>
+                        </form>
+                      {% endunless %}
+
+                      {% assign is_favorite = product.id | check_current_customer_favorite %}
+                      {% if is_favorite %}
+                        <form
+                          class="c-product_item__form c-product_item__form--favorite"
+                          action="/shop/products/{{ product.master.sku }}/unfavorite?customer_return_to=%2Fshop%2Fproducts%2F{{ product.master.sku }}"
+                          method="post">
+                          {% authenticity_token_tag %}
+                          <button class="c-product_item__button c-product_item__button--favorite u-color__btn u-color__btn--text--bg" type="submit">
+                            <i class="u-icon--heart"></i>
+                          </button>
+                        </form>
+                      {% else %}
+                        <form
+                          class="c-product_item__form c-product_item__form--favorite"
+                          action="/shop/products/{{ product.master.sku }}/favorite?customer_return_to=%2Fshop%2Fproducts%2F{{ product.master.sku }}"
+                          method="post">
+                          {% authenticity_token_tag %}
+                          <button class="c-product_item__button c-product_item__button--favorite u-color__btn--text u-color__btn--bg" type="submit">
+                            <i class="u-icon--heart"></i>
+                          </button>
+                        </form>
+                      {% endif %}
+                    </div>
+                  </div>
+                  <div class="c-product_item__inner__content">
+                    <div class="c-product_item__inner__title">{{ product.name }}</div>
+                    <div class="c-product_item__inner__category">
+                      {% assign _category = '' %}
+                      {% for category in product.product_categories %}
+                        {% if category.product_category_visibility %}
+                          {% unless _category == '' %}
+                            {% assign _category = _category | append: ', ' %}
+                          {% endunless %}
+                          {% assign _category = _category | append: category.name %}
+                        {% endif %}
+                      {% endfor %}
+                      {{ _category }}
+                    </div>
+                    {% comment %} <div class="c-product_item__inner__star">★★★★★</div> {% endcomment %}
+                    {% if product.master.list_price > product.first_price %}
+                      <div class="c-product_item__inner__price u-color__text--sub">
+                        <span class="origin">&yen;{{ product.master.list_price | number_with_delimiter }}</span>
+                        <span class="sale u-color__text--alert">&yen;{{ product.first_price | number_with_delimiter }}</span>
+                        <span>&nbsp;({{ 'products.price.tax_included.value' | t }}</span>
+                        <span id="sale u-color__text--alert">&yen;{{ product.first_price_include_tax | number_with_delimiter }}</span>
+                        <span>)</span>
+                      </div>
+                    {% else %}
+                      <div class="c-product_item__inner__price u-color__text--sub">
+                        <span class="price">&yen;{{ product.first_price | number_with_delimiter }}</span>
+                        <span>&nbsp;({{ 'products.price.tax_included.value' | t }}</span>
+                        <span id="price">&yen;{{ product.first_price_include_tax | number_with_delimiter }}</span>
+                        <span>)</span>
+                      </div>
+                    {% endif %}
+                    {% if product.parsed_description %}
+                      <div class="c-product_item__inner__price u-text--body">
+                        <div class="product_description">
+                          {% if smartphone %}
+                            {{ product.parsed_description_mobile | strip_html | strip_newlines }}
+                          {% else %}
+                            {{ product.parsed_description | strip_html | strip_newlines }}
+                          {% endif %}
+                        </div>
+                      </div>
+                    {% endif %}
+                    {%- comment -%}バッジ表示開始{%- endcomment -%}
+                    {% if pre_order_badge_flg_hash[product.master.id] or delivery_group_badge_flg_hash[product.id] or concurrent_purchase_group_badge_flg_hash[product.id] %}
+                      <div class="c-product_item__inner__badge u-text--body">
+                        <ul class="c-cart_item__badges">
+                          {% if pre_order_badge_flg_hash[product.master.id] %}
+                            <li class="c-badge">{{ 'products.pre_order.display_mark.value' | t }}</li>
+                          {% endif %}
+                          {% for delivery_group_name in product.delivery_group_names %}
+                            <li class="c-badge c-badge--delivery-group">{{ delivery_group_name }}</li>
+                          {% endfor %}
+                          {% for concurrent_purchase_badge_name in product.concurrent_purchase_badge_names %}
+                            <li class="c-badge c-badge--concurrent-purchase-group">{{ concurrent_purchase_badge_name }}</li>
+                          {% endfor %}
+                        </ul>
+                      </div>
+                    {% endif %}
+                    {%- comment -%}バッジ表示終了{%- endcomment -%}
+                  </div>
+                </div>
+                {% comment %}ここまで `ec_force/shop/snippets/_product.html.liquid` の中身{% endcomment %}
+              </li>
+            {% endfor %}
+          </ul>
+          <div class="p-product_slider__nav"></div>
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+</section>

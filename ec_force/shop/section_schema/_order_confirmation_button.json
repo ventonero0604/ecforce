@@ -1,0 +1,16 @@
+{
+  "id": "order_confirmation_button",
+  "type": "order_confirmation_button-section",
+  "name": {
+    "ja": "注文完了ボタン"
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "floating_view",
+      "label": {
+        "ja": "フローティング表示(モバイル限定)"
+      }
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "id": "product_categories_show_first_view",
+  "type": "product_categories_show_first_view-section",
+  "name": {
+    "ja": "ファーストビュー"
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "image",
+      "label": {
+        "ja": "商品カテゴリーサムネイル画像表示"
+      }
+    }
+  ]
+}

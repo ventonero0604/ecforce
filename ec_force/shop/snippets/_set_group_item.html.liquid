@@ -1,0 +1,55 @@
+<div class="c-product_item product" id="set_group_item_template" style='display:none'>
+    <form>
+        <input class='variant-id set_group_item_variant_id' name='variant_id' type='hidden' value=''>
+        <input class='product-id set_group_item_product_id' name='product_id' type='hidden' value=''>
+        <div class="c-product_item__inner__eyecatch">
+            <div class="c-product_item__inner__eyecatch__img set_group_item_img" style="background-size:contain; display:none;"></div>
+            <div class="c-product_item__inner__eyecatch__tags set_group_item_tags" style='display:none'>
+                <div class="c-product_item__inner__eyecatch__tags__new u-color__bg--base set_group_item_tags_new" style='display:none'>{{ 'products.general.new.value' | t }}</div>
+                <div class="c-product_item__inner__eyecatch__tags__soldout set_group_item_tags_sold_out" style='display:none'>{{ 'products.stock.sold_out.value' | t }}</div>
+            </div>
+        </div>
+        <div class="c-product_item__inner__title u-text--subhead set_group_item_name" style='display:none'></div>
+        <div class="c-product_item__inner__category u-text--subhead set_group_item_category" style='display:none'></div>
+        <div class="c-product_item__inner__price u-text--body" id="sale_template" style='display:none'>
+        <span class="origin">&yen;
+          <span class="origin_price"></span>
+        </span>
+            <span class="sale u-color__text--alert">&yen;
+          <span class="first_price"></span>
+        </span>
+            <span>&nbsp;({{ 'products.price.tax_included.value' | t }}</span>
+            <span id="sale u-color__text--alert">&yen;
+          <span class="first_price_include_tax"></span>
+        </span>
+            <span>)</span>
+        </div>
+        <div class="c-product_item__inner__price u-text--body" id="price_template" style='display:none'>
+        <span class="price">&yen;
+          <span class="first_price"></span>
+        </span>
+            <span>&nbsp;({{ 'products.price.tax_included.value' | t }}</span>
+            <span id="price">&yen;
+          <span class="first_price_include_tax"></span>
+        </span>
+            <span>)</span>
+        </div>
+        <div class="fieldset">
+            <div id="option_types">
+                <div class="c-product_item__inner__variants option_template option_template_basic_theme" style='display:none'>
+                    <label class="label"></label>
+                    <div class="select_wrap u-color__border--input">
+                        <i class="u-icon--arrow"></i>
+                        <select>
+                            <option value=''>選択してください</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="c-product_item__inner__control">
+            <span class="btn-cut u-color__text--sub u-color__border--input"><i class="u-icon--minus"></i><span>削除</span></span>
+            <span class="btn-add u-color__text--sub u-color__border--input"><i class="u-icon--plus"></i><span>追加</span></span>
+        </div>
+    </form>
+</div>

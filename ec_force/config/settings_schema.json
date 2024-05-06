@@ -1,0 +1,814 @@
+{
+  "theme": {
+    "name": "develop",
+    "description": "",
+    "feature": "取り扱う商品数が少ないショップ様向けのテーマとなります。\nブランドストーリーを重視する商品に適した構成となっています。",
+    "version": "1.14.0",
+    "created_by": "ecforce",
+    "price": "0",
+    "presets": "only_a_few_items"
+  },
+  "menus": [
+    {
+      "id": "color",
+      "name": {
+        "ja": "色"
+      },
+      "settings": [
+        {
+          "type": "header",
+          "id": "header_color_text",
+          "label": {
+            "ja": "テキスト"
+          }
+        },
+        {
+          "type": "color",
+          "id": "color_head_text",
+          "label": {
+            "ja": "見出し"
+          }
+        },
+        {
+          "type": "color",
+          "id": "color_body_text",
+          "label": {
+            "ja": "本文"
+          }
+        },
+        {
+          "type": "color",
+          "id": "color_overlay_text",
+          "label": {
+            "ja": "画像オーバーレイ"
+          }
+        },
+        {
+          "type": "header",
+          "id": "header_color_button",
+          "label": {
+            "ja": "ボタン"
+          }
+        },
+        {
+          "type": "color",
+          "id": "color_btn_bg",
+          "label": {
+            "ja": "背景"
+          }
+        },
+        {
+          "type": "color",
+          "id": "color_btn_text",
+          "label": {
+            "ja": "テキスト"
+          }
+        },
+        {
+          "type": "header",
+          "id": "header_color_input",
+          "label": {
+            "ja": "入力フォーム"
+          }
+        },
+        {
+          "type": "color",
+          "id": "color_input_text",
+          "label": {
+            "ja": "テキスト"
+          }
+        },
+        {
+          "type": "color",
+          "id": "color_input_border",
+          "label": {
+            "ja": "ボーダー"
+          }
+        },
+        {
+          "type": "header",
+          "id": "header_color_bg",
+          "label": {
+            "ja": "ページ"
+          }
+        },
+        {
+          "type": "color",
+          "id": "color_all_bg",
+          "label": {
+            "ja": "背景"
+          }
+        },
+        {
+          "type": "color",
+          "id": "color_main_border",
+          "label": {
+            "ja": "ボーダー"
+          }
+        }
+      ]
+    },
+    {
+      "id": "font",
+      "name": {
+        "ja": "文字体裁"
+      },
+      "settings": [
+        {
+          "type": "font_selector",
+          "id": "title_fontfamily",
+          "label": {
+            "ja": "見出しフォント"
+          },
+          "options": [
+            {
+              "id": "Yu-Gothic-Pr6N-R",
+              "value": "游ゴシック",
+              "label": {
+                "ja": "游ゴシック"
+              }
+            },
+            {
+              "id": "Yu-Gothic-Pr6N-R-Bold",
+              "value": "游ゴシック Bold",
+              "label": {
+                "ja": "游ゴシック Bold"
+              }
+            },
+            {
+              "id": "Yu-Mincho",
+              "value": "游明朝",
+              "label": {
+                "ja": "游明朝"
+              }
+            },
+            {
+              "id": "Yu-Mincho-Bold",
+              "value": "游明朝 Bold",
+              "label": {
+                "ja": "游明朝 Bold"
+              }
+            },
+            {
+              "id": "Meiryo-Regular",
+              "value": "メイリオ",
+              "label": {
+                "ja": "メイリオ"
+              }
+            },
+            {
+              "id": "Meiryo-Bold",
+              "value": "メイリオ Bold",
+              "label": {
+                "ja": "メイリオ Bold"
+              }
+            },
+            {
+              "id": "Arial-Pro-Regular",
+              "value": "Arial",
+              "label": {
+                "ja": "Arial"
+              }
+            },
+            {
+              "id": "Arial-Pro-Bold",
+              "value": "Arial Bold",
+              "label": {
+                "ja": "Arial Bold"
+              }
+            }
+          ]
+        },
+        {
+          "type": "range",
+          "id": "font_head",
+          "label": {
+            "ja": "見出しサイズ"
+          },
+          "min": 20,
+          "max": 36,
+          "step": 1,
+          "unit": {
+            "ja": "px"
+          }
+        },
+        {
+          "type": "font_selector",
+          "id": "subtitle_fontfamily",
+          "label": {
+            "ja": "小見出しフォント"
+          },
+          "options": [
+            {
+              "id": "Yu-Gothic-Pr6N-R",
+              "value": "游ゴシック",
+              "label": {
+                "ja": "游ゴシック"
+              }
+            },
+            {
+              "id": "Yu-Gothic-Pr6N-R-Bold",
+              "value": "游ゴシック Bold",
+              "label": {
+                "ja": "游ゴシック Bold"
+              }
+            },
+            {
+              "id": "Yu-Mincho",
+              "value": "游明朝",
+              "label": {
+                "ja": "游明朝"
+              }
+            },
+            {
+              "id": "Yu-Mincho-Bold",
+              "value": "游明朝 Bold",
+              "label": {
+                "ja": "游明朝 Bold"
+              }
+            },
+            {
+              "id": "Meiryo-Regular",
+              "value": "メイリオ",
+              "label": {
+                "ja": "メイリオ"
+              }
+            },
+            {
+              "id": "Meiryo-Bold",
+              "value": "メイリオ Bold",
+              "label": {
+                "ja": "メイリオ Bold"
+              }
+            },
+            {
+              "id": "Arial-Pro-Regular",
+              "value": "Arial",
+              "label": {
+                "ja": "Arial"
+              }
+            },
+            {
+              "id": "Arial-Pro-Bold",
+              "value": "Arial Bold",
+              "label": {
+                "ja": "Arial Bold"
+              }
+            }
+          ]
+        },
+        {
+          "type": "range",
+          "id": "font_subhead",
+          "label": {
+            "ja": "小見出しサイズ"
+          },
+          "min": 16,
+          "max": 26,
+          "step": 1,
+          "unit": {
+            "ja": "px"
+          }
+        },
+        {
+          "type": "font_selector",
+          "id": "body_fontfamily",
+          "label": {
+            "ja": "本文とリンクとボタンのフォント"
+          },
+          "options": [
+            {
+              "id": "Yu-Gothic-Pr6N-R",
+              "value": "游ゴシック",
+              "label": {
+                "ja": "游ゴシック"
+              }
+            },
+            {
+              "id": "Yu-Gothic-Pr6N-R-Bold",
+              "value": "游ゴシック Bold",
+              "label": {
+                "ja": "游ゴシック Bold"
+              }
+            },
+            {
+              "id": "Yu-Mincho",
+              "value": "游明朝",
+              "label": {
+                "ja": "游明朝"
+              }
+            },
+            {
+              "id": "Yu-Mincho-Bold",
+              "value": "游明朝 Bold",
+              "label": {
+                "ja": "游明朝 Bold"
+              }
+            },
+            {
+              "id": "Meiryo-Regular",
+              "value": "メイリオ",
+              "label": {
+                "ja": "メイリオ"
+              }
+            },
+            {
+              "id": "Meiryo-Bold",
+              "value": "メイリオ Bold",
+              "label": {
+                "ja": "メイリオ Bold"
+              }
+            },
+            {
+              "id": "Arial-Pro-Regular",
+              "value": "Arial",
+              "label": {
+                "ja": "Arial"
+              }
+            },
+            {
+              "id": "Arial-Pro-Bold",
+              "value": "Arial Bold",
+              "label": {
+                "ja": "Arial Bold"
+              }
+            }
+          ]
+        },
+        {
+          "type": "range",
+          "id": "font_body",
+          "label": {
+            "ja": "本文とリンクとボタンのサイズ"
+          },
+          "min": 12,
+          "max": 20,
+          "step": 1,
+          "unit": {
+            "ja": "px"
+          }
+        }
+      ]
+    },
+    {
+      "id": "sns",
+      "name": {
+        "ja": "SNS"
+      },
+      "settings": [
+        {
+          "type": "header",
+          "id": "sns_share",
+          "label": {
+            "ja": "SNSシェア先"
+          }
+        },
+        {
+          "type": "checkbox",
+          "id": "facebook",
+          "label": {
+            "ja": "Facebook"
+          }
+        },
+        {
+          "type": "checkbox",
+          "id": "twitter",
+          "label": {
+            "ja": "Twitter"
+          }
+        },
+        {
+          "type": "checkbox",
+          "id": "line",
+          "label": {
+            "ja": "LINE"
+          }
+        }
+      ]
+    },
+    {
+      "id": "favicon",
+      "name": {
+        "ja": "ファビコン"
+      },
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "favicon",
+          "label": {
+            "ja": "ファビコン画像"
+          }
+        }
+      ]
+    },
+    {
+      "id": "action",
+      "name": {
+        "ja": "動作"
+      },
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "effect",
+          "label": {
+            "ja": "画面遷移エフェクト有効"
+          }
+        }
+      ]
+    },
+    {
+      "id": "icon",
+      "name": {
+        "ja": "アイコン"
+      },
+      "settings": [
+        {
+          "type": "header",
+          "id": "favorite_icon_setting",
+          "label": {
+            "ja": "お気に入りアイコン"
+          }
+        },
+        {
+          "type": "checkbox",
+          "id": "favorite_icon",
+          "label": {
+            "ja": "表示"
+          }
+        },
+        {
+          "type": "header",
+          "id": "cart_icon_setting",
+          "label": {
+            "ja": "カート追加アイコン"
+          }
+        },
+        {
+          "type": "checkbox",
+          "id": "cart_icon",
+          "label": {
+            "ja": "表示"
+          }
+        },
+        {
+          "type": "checkbox",
+          "id": "add_cart_async",
+          "label": {
+            "ja": "画面遷移しないでカート追加"
+          }
+        }
+      ]
+    },
+    {
+      "id": "search",
+      "name": {
+        "ja": "検索"
+      },
+      "settings": [
+        {
+          "type": "checkbox",
+          "id": "search_sales_price",
+          "label": {
+            "ja": "販売価格の検索"
+          },
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "search_in_stock",
+          "label": {
+            "ja": "在庫あり検索"
+          },
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "search_with_review",
+          "label": {
+            "ja": "レビューあり検索"
+          },
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "search_label",
+          "label": {
+            "ja": "ラベル検索"
+          },
+          "default": false
+        }
+      ]
+    },
+    {
+      "id": "product_sort",
+      "name": {
+        "ja": "商品並び替え"
+      },
+      "settings": [
+        {
+          "type": "header",
+          "id": "view_items",
+          "label": {
+            "ja": "表示対象"
+          }
+        },
+        {
+          "type": "checkbox",
+          "id": "recommend_sort",
+          "label": {
+            "ja": "おすすめ順"
+          },
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "high_price_sort",
+          "label": {
+            "ja": "価格の高い順"
+          },
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "low_price_sort",
+          "label": {
+            "ja": "価格の安い順"
+          },
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "new_release_sort",
+          "label": {
+            "ja": "発売日降順"
+          },
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "old_release_sort",
+          "label": {
+            "ja": "発売日昇順"
+          },
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "review_sort",
+          "label": {
+            "ja": "レビュー評価順"
+          },
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "sale_sort",
+          "label": {
+            "ja": "人気順"
+          },
+          "default": false
+        },
+        {
+          "type": "link",
+          "id": "body",
+          "link_url": "/admin/themes/{theme.id}/languages?type=General",
+          "link_text": {
+            "ja": "ショップ管理から設定してください"
+          },
+          "label": {
+            "ja": "項目名変更"
+          }
+        },
+        {
+          "type": "selector",
+          "id": "sort_default",
+          "label": {
+            "ja": "初期表示の並び順"
+          },
+          "options": [
+            {
+              "value": "recommend_sort",
+              "label": {
+                "ja": "おすすめ順"
+              }
+            },
+            {
+              "value": "high_price_sort",
+              "label": {
+                "ja": "価格の高い順"
+              }
+            },
+            {
+              "value": "low_price_sort",
+              "label": {
+                "ja": "価格の安い順"
+              }
+            },
+            {
+              "value": "new_release_sort",
+              "label": {
+                "ja": "発売日降順"
+              }
+            },
+            {
+              "value": "old_release_sort",
+              "label": {
+                "ja": "発売日昇順"
+              }
+            },
+            {
+              "value": "review_sort",
+              "label": {
+                "ja": "レビュー評価順"
+              }
+            },
+            {
+              "value": "sale_sort",
+              "label": {
+                "ja": "人気順"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "guest_menu",
+      "name": {
+        "ja": "ハンバーガーメニュー（未ログイン）"
+      },
+      "settings": [
+        {
+          "type": "header",
+          "id": "menu",
+          "label": {
+            "ja": "表示設定"
+          }
+        },
+        {
+          "type": "checkbox",
+          "id": "display_menu",
+          "label": {
+            "ja": "メニューを表示する"
+          },
+          "default": true
+        },
+        {
+          "type": "header",
+          "id": "menu_item",
+          "label": {
+            "ja": "表示項目"
+          }
+        },
+        {
+          "type": "checkbox",
+          "id": "all_products_menu",
+          "label": {
+            "ja": "すべての商品"
+          },
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "product_categories_menu",
+          "label": {
+            "ja": "商品カテゴリ"
+          },
+          "default": false
+        },
+        {
+          "type": "header",
+          "id": "add_menu_header",
+          "label": {
+            "ja": "追加メニュー"
+          }
+        },
+        {
+          "type": "image_content",
+          "id": "add_menus",
+          "label": {
+            "ja": "メニュー"
+          },
+          "image_block": {
+            "type": "image_block",
+            "min_blocks": 0,
+            "max_blocks": 20,
+            "settings": [
+              {
+                "type": "text",
+                "id": "link_text",
+                "label": {
+                  "ja": "リンクテキスト"
+                }
+              },
+              {
+                "type": "text",
+                "id": "link_url",
+                "label": {
+                  "ja": "リンク先URL"
+                }
+              },
+              {
+                "type": "checkbox",
+                "id": "add_divider",
+                "label": {
+                  "ja": "リンクの下に区切り線を追加"
+                },
+                "default": false
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "member_menu",
+      "name": {
+        "ja": "ハンバーガーメニュー（ログイン）"
+      },
+      "settings": [
+        {
+          "type": "header",
+          "id": "menu",
+          "label": {
+            "ja": "表示設定"
+          }
+        },
+        {
+          "type": "checkbox",
+          "id": "display_menu",
+          "label": {
+            "ja": "メニューを表示する"
+          },
+          "default": true
+        },
+        {
+          "type": "header",
+          "id": "menu_item",
+          "label": {
+            "ja": "表示項目"
+          }
+        },
+        {
+          "type": "checkbox",
+          "id": "all_products_menu",
+          "label": {
+            "ja": "すべての商品"
+          },
+          "default": false
+        },
+        {
+          "type": "checkbox",
+          "id": "product_categories_menu",
+          "label": {
+            "ja": "商品カテゴリ"
+          },
+          "default": false
+        },
+        {
+          "type": "header",
+          "id": "add_menu_header",
+          "label": {
+            "ja": "追加メニュー"
+          }
+        },
+        {
+          "type": "image_content",
+          "id": "add_menus",
+          "label": {
+            "ja": "メニュー"
+          },
+          "image_block": {
+            "type": "image_block",
+            "min_blocks": 0,
+            "max_blocks": 20,
+            "settings": [
+              {
+                "type": "text",
+                "id": "link_text",
+                "label": {
+                  "ja": "リンクテキスト"
+                }
+              },
+              {
+                "type": "text",
+                "id": "link_url",
+                "label": {
+                  "ja": "リンク先URL"
+                }
+              },
+              {
+                "type": "checkbox",
+                "id": "add_divider",
+                "label": {
+                  "ja": "リンクの下に区切り線を追加"
+                },
+                "default": false
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

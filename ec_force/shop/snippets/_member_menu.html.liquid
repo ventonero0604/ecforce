@@ -1,0 +1,13 @@
+{% assign display_menu = settings.settings.member_menu.settings.display_menu %}
+<div
+  data-section-id="member_menu"
+  class="l-header__inner__block__item--menu"
+  {% if display_menu == false or display_menu == 'false' %}
+    style="visibility: hidden"
+  {% endif %}>
+  <button type="button">
+    <span class="l-header__inner__block__link">
+      <i class="u-icon--menu"></i>
+    </span>
+  </button>
+</div>

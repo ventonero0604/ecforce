@@ -1,0 +1,70 @@
+{
+  "id": "concept",
+  "type": "concept-section",
+  "name": {
+    "ja": "コンセプト"
+  },
+  "settings": [
+    {
+      "type": "selector",
+      "id": "layout",
+      "label": {
+        "ja": "テキスト表示位置"
+      },
+      "options" : [
+        {
+          "value": "1",
+          "label": {
+            "ja": "中央"
+          }
+        },
+        {
+          "value": "2",
+          "label": {
+            "ja": "下"
+          }
+        },
+        {
+          "value": "3",
+          "label": {
+            "ja": "左"
+          }
+        },
+        {
+          "value": "4",
+          "label": {
+            "ja": "右"
+          }
+        }
+      ]
+    },
+    {
+      "type": "image_picker",
+      "id": "concept",
+      "label": {
+        "ja": "画像"
+      }
+    },
+    {
+      "type": "text",
+      "id": "concept_title_text",
+      "label": {
+        "ja": "見出し"
+      }
+    },
+    {
+      "type": "text",
+      "id": "concept_message_text",
+      "label": {
+        "ja": "本文"
+      }
+    },
+    {
+      "type": "color",
+      "id": "color_concept_bg",
+      "label": {
+        "ja": "背景"
+      }
+    }
+  ]
+}

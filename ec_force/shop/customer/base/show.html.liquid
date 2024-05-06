@@ -1,0 +1,229 @@
+
+{{ 'shop/customer/base' | javascript_include_tag }}
+
+<main id="customers-view" class="l-container" role="main">
+  <div class="l-container__row u-margin__top--60 u-margin__bottom--100">
+    {{ 'notice' | flash: 'control-alert alert-success', 'text u-color__bg--bg u-color__text--alert' }}
+    {{ 'alert' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+    <div class="p-account">
+      <div class="p-account__inner">
+        {% comment %} {{ 'notice' | flash: 'alert alert-success', 'text' }}
+        {{ 'alert' | flash: 'alert alert-danger', 'text' }} {% endcomment %}
+        <div class="p-account__inner__menu u-color__border--border">
+        {% include 'ec_force/shop/snippets/sidebar.html' %}
+        </div>
+        <div class="p-account__inner__content">
+          <ul class="c-breadcrumbs">
+            <li class="c-breadcrumbs__item u-text--body">
+              <span class="c-breadcrumbs__item__inner">{{ 'account.general.mypage.value' | t }}</span>
+            </li>
+          </ul>
+          <h1 class="p-account__inner__content__title u-text--head">
+            {{ 'account.general.mypage.value' | t }}
+          </h1>
+          <div class="p-mypage">
+            <div class="p-mypage__name u-text--body">
+              {{ current_customer.billing_address.name01 }}
+              {% unless shop_form_settings['name_1_field'] %}
+                &nbsp;{{ current_customer.billing_address.name02 }}
+              {% endunless %}
+              &nbsp;{{ 'customer.general.title.value' | t }}
+            </div>
+            <!-- LINE ID 連携 -->
+            {% if line_settings['display_btn'] == '1' and current_customer.line_id? == false %}
+              <div class="alert">
+                {{ line_settings['information_context'] }}
+              </div>
+              <!-- LINE ID 連携ボタン（リンク） -->
+              <div class="line_new_ec">
+                <div class="button-container">
+                  <a class="button btn-line line-token-set-btn" href="#">
+                    <span class="before-btn-line" style="background-image:url('{{ theme_file_root_path }}/assets/images/login-line.png')"></span>
+                    {{ 'account.line.line_id.value' | t }}
+                    <span class="after-btn-line"></span>
+                  </a>
+                </div>
+              </div>
+            {% endif %}
+            <div class="p-mypage__block">
+              <!-- ご利用中の定期購入 -->
+              <div class="p-mypage__block__title u-text--subhead">{{ 'subs_orders.general.exist_subs_order.value' | t }}</div>
+              <ul class="p-mypage__block__subscription">
+                {% assign subs_order_cnt = 0 %}
+                {% for subs_order in customer.subs_orders %}
+                  {% if subs_order.scheduled_to_be_delivered_at and subs_order.state == 'active' %}
+                    {% unless enabled_pre_order and subs_order.orders.first.unshipped_pre_order? %}
+                      {% assign subs_order_cnt = subs_order_cnt | plus : 1 %}
+                      <li class="p-mypage__block__subscription__item u-color__bg--bg">
+                        <div class="p-mypage__block__subscription__item__label u-text--body">{{ 'delivery.next.scheduled.value' | t }}</div>
+                        <div class="p-mypage__block__subscription__item__date u-text--body">{{ subs_order.scheduled_to_be_delivered_at | date: "%Y.%m.%d" }}{{ 'delivery.next.to_delivery_plan_products.value' | t }}</div>
+                        <a class="p-mypage__block__subscription__item__btn u-text--btn u-color__btn--bg" href="/shop/customer/subs_orders/{{ subs_order.number }}">{{ 'general.action.view_detail.value' | t }}</a>
+                      </li>
+                    {% endunless %}
+                  {% endif %}
+                {% endfor %}
+                {% if subs_order_cnt == 0 %}
+                  <li class="p-history_list__item u-text--body">
+                    <p>{{ 'subs_orders.general.no_recurring_product.value' | t }}</p>
+                  </li>
+                {% endif %}
+              </ul>
+            </div>
+            <!-- 最近の購入履歴 -->
+            <div class="p-mypage__block">
+              <div class="p-mypage__block__title u-text--subhead">{{ 'orders.history.recent_purchase_history.value' | t }}</div>
+              <ul class="p-history_list">
+                {% if orders.size > 0 %}
+                  {% for order in orders limit: 3 %}
+                    <li class="p-history_list__item">
+                      <div class="p-history_list__item__header u-color__bg--bg">
+                        <div class="p-history_list__item__header__id u-text--subhead">{{ order.number }}</div>
+                        <time class="p-history_list__item__header__date u-text--body">{{ order.completed_at | date:'%Y/%m/%d' }}</time>
+                        <a class="p-history_list__item__header__btn u-text--btn u-color__btn--bg" href="/shop/customer/orders/{{ order.number }}">{{ 'orders.general.view_order_detail.value' | t }}</a>
+                      </div>
+                      <div class="p-history_list__item__detail">
+                        <div class="p-history_detail__list --order-items">
+                          <!-- 注文商品一覧 -->
+                          {% for item in order.order_items %}
+                            {%- comment -%}order_itemsにギフト商品が含まれてしまうので避ける{%- endcomment -%}
+                            {% if item.variant.gift? %}{% continue %}{% endif %}
+                            <div class="c-cart_item u-color__border--border">
+                              <a class="c-cart_item__img" href="/shop/products/{{ item.product.master.sku }}">
+                                {% if item.variant.thumbnails.first.url %}
+                                  {% assign thumbnail = item.variant.thumbnails.first.url  %}
+                                {% elsif item.product.master.thumbnails.url %}
+                                  {% assign thumbnail = item.product.master.thumbnails.url  %}
+                                {% elsif item.product.thumbnail.url %}
+                                  {% assign thumbnail = item.product.thumbnail.url  %}
+                                {% else %}
+                                  {% assign thumbnail = 'missing' | image_url  %}
+                                {% endif %}
+                                <div class="c-cart_item__img__inner" style="background-image:url('{{ thumbnail }}')"></div>
+                              </a>
+                              <div class="c-cart_item__info">
+                                <div class="c-cart_item__info__status">
+                                  <div class="c-cart_item__info__status__payment u-text--body">{{ order.payment.human_state_name }}</div>
+                                  <div class="c-cart_item__info__status__shipping u-text--body">{{ order.human_state_name }}</div>
+                                </div>
+                                <div class="c-cart_item__info__category u-text--body">
+                                  {% assign _category = '' %}
+                                  {% for category in item.product.product_categories %}
+                                    {% if category.product_category_visibility %}
+                                      {% unless _category == '' %}
+                                        {% assign _category = _category | append: ', ' %}
+                                      {% endunless %}
+                                      {% assign _category = _category | append: category.name %}
+                                    {% endif %}
+                                  {% endfor %}
+                                  {{ _category }}
+                                </div>
+                                <a class="c-cart_item__info__title u-text--subhead" href="/shop/products/{{ item.product.master.sku }}">{{ item.product.name }}</a>
+                                <div class="c-cart_item__info__variant u-text--body">
+                                  {% assign option_cnt = 0 %}
+                                    {% for option_value in item.variant.option_values %}
+                                      {% unless option_cnt == 0 %}
+                                        &nbsp;/&nbsp;
+                                      {% endunless %}
+                                      {{ option_value.option_type.presentation }}：{{ option_value.presentation }}
+                                      {% assign option_cnt = option_cnt | plus: 1 %}
+                                    {% endfor %}
+                                </div>
+                                <div class="c-cart_item__info__total">
+                                  <div class="c-cart_item__info__total__quantity u-text--body">{{ 'products.stock.quantity.value' | t }}：{{ item.quantity }}</div>
+                                  <div class="c-cart_item__info__total__price u-text--body">&yen;{{ item.subtotal_price_integer | number_with_delimiter }}</div>
+                                </div>
+                              </div>
+                            </div>
+                          {% endfor %}
+                        </div>
+                        {% if gift_order_items.size > 0 %}
+                          <div class="p-history_detail__list --gift-items">
+                            <div class="p-history_detail__block__head">
+                              <h2 class="p-history_detail__block__head__title u-text--subhead">{{ 'orders.gift.title.value' | t }}</h2>
+                            </div>
+                            <!-- ギフト商品一覧 -->
+                            {% for gift_oi in gift_order_items %}
+                              {% for gift_relation in gift_oi.gift_target_relations %}
+                                {% if forloop.first %}
+                                  <div class="c-cart_item u-color__border--border">
+                                    <div class="c-cart_item__img --no-hover">
+                                      {% if gift_oi.available_thumbnail %}
+                                        {% assign src = gift_oi.available_thumbnail %}
+                                      {% else %}
+                                        {% assign src = 'missing' | image_url %}
+                                      {% endif %}
+                                      <div class="c-cart_item__img__inner" style="background-image:url('{{ src }}')"></div>
+                                    </div>
+                                    <div class="c-cart_item__info">
+                                      <!-- ギフト商品名 -->
+                                      <p class="c-cart_item__info__title --no-hover u-text--subhead">{{ gift_oi.variant.name }}</p>
+                                      <div class="c-cart_item__info__variant u-text--body">
+                                        {% for option_value in gift_oi.variant.option_values %}
+                                          {{ option_value.option_type.presentation }}：{{ option_value.presentation }}
+                                          {% unless forloop.last %}&nbsp;/&nbsp;{% endunless %}
+                                        {% endfor %}
+                                      </div>
+                                      <div class="c-cart_item__info__total">
+                                        <div class="c-cart_item__info__total__quantity u-text--body">{{ 'products.stock.quantity.value' | t }}：{{ gift_oi.quantity }}</div>
+                                        <div class="c-cart_item__info__total__price u-text--body">&yen;{{ gift_oi.subtotal_with_campaign_discount_integer | number_with_delimiter }}</div>
+                                      </div>
+                                      <p class="c-cart_item__toggle-gift-target-items js-gift__toggle u-text--subhead">
+                                        {{ 'orders.gift.target_item.value' | t }}
+                                        <span class="c-cart_item__toggle-icon">
+                                          <i class="u-icon--minus"></i>
+                                          <i class="u-icon--plus"></i>
+                                        </span>
+                                      </p>
+                                      <div class="c-cart_item__gift-target-items">
+                                {% endif %}
+                                        <div class="c-cart_item__info">
+                                          <!-- 対象の商品名 -->
+                                          <a class="c-cart_item__info__title u-text--subhead" href="/shop/products/{{ gift_relation.variant.sku }}">{{ gift_relation.variant.name }}</a>
+                                          <div class="c-cart_item__info__variant u-text--body">
+                                            {% for option_value in gift_relation.variant.option_values %}
+                                              {{ option_value.option_type.presentation }}：{{ option_value.presentation }}
+                                              {% unless forloop.last %}&nbsp;/&nbsp;{% endunless %}
+                                            {% endfor %}
+                                          </div>
+                                          {% if gift_oi.gift.noshi? %}
+                                            {% if gift_relation.description_part_of_noshi != blank %}
+                                              <p class="c-cart_item__text u-text--body">表書き：{{ gift_relation.description_part_of_noshi }}</p>
+                                            {% endif %}
+                                            {% if gift_relation.name_part_of_noshi != blank %}
+                                              <p class="c-cart_item__text u-text--body">名入れ：{{ gift_relation.name_part_of_noshi | escape }}</p>
+                                            {% endif %}
+                                          {% endif %}
+                                          <div class="c-cart_item__info__total">
+                                            <div class="c-cart_item__info__total__quantity u-text--body">{{ 'products.stock.quantity.value' | t }}：{{ gift_relation.gift_quantity }}</div>
+                                          </div>
+                                        </div>
+                                {% if forloop.last %}
+                                      </div>
+                                    </div>
+                                  </div>
+                                {% endif %}
+                              {% endfor %}
+                            {% endfor %}
+                          </div>
+                        {% endif %}
+                      </div>
+                    </li>
+                  {% endfor %}
+                {% else %}
+                  <li class="p-history_list__item u-text--body">
+                    <p>{{ 'orders.history.still_not_order.value' | t }}</p>
+                  </li>
+                {% endif %}
+              </ul>
+            </div>
+          </div>
+          {% if false %}
+            {% unless current_customer.one_d_color_answers == blank %}
+              {% include 'ec_force/shop/customer/base/one_d_color_answer_results.html' %}
+            {% endunless %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

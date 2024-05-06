@@ -1,0 +1,27 @@
+{% if pickup_store_is_available %}
+  <div id="view-how-to-receive" class="p-checkout__list__block u-color__border--border">
+    <div class="p-checkout__list__block__inner">
+      <h2 class="p-checkout__list__block__inner__title u-text--subhead">{{ 'orders.pickup_store.how_to_receive.value' | t }}</h2>
+      <table class="c-form_table">
+        <tbody>
+          <tr>
+            <td>
+              <div class="c-form_table__how_to_receive">
+                <label>
+                  <input type="radio" name="how_to_receive" id="pickup-at-store" {% if pickup_at_store_is_checked %}checked{% endif %}>
+                  <span class="frame u-color__bg--base u-color__border--border"></span>
+                  <span class="u-text--body">{{ 'orders.pickup_store.pickup_at_store.value' | t }}</span>
+                </label>
+                <label>
+                  <input type="radio" name="how_to_receive" id="delivery-to-address" {% if delivery_to_address_is_checked %}checked{% endif %}>
+                  <span class="frame u-color__bg--base u-color__border--border"></span>
+                  <span class="u-text--body">{{ 'orders.pickup_store.delivery_to_address.value' | t }}</span>
+                </label>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endif %}

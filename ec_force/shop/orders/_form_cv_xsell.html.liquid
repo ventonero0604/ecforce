@@ -1,0 +1,446 @@
+{% comment %} サンクスオファー {% endcomment %}
+<div id="cv-xsells-view">
+{% comment %} サンクスオファー商品表示 {% endcomment %}
+{% if order.show_cv_xsell_form_at_shop? == true %}
+
+  <div id="form_cv_xsell">
+    {%- comment -%} キャンペーン対象商品 {%- endcomment -%}
+    <div class="l-container__row">
+      <div class="p-campaign default-hide {% unless use_timer %}use-border{% endunless %}" id="xsell-select-view">
+        <div class="p-product_slider slick --row-2">
+          <ul class="p-product_slider__list" data-slides="5">
+          {% for product in order.cv_xsell_active_products %}
+            <li class="p-product_slider__item cv_xsell_product_img" id="cv-xsell-product-{{ product.id }}" data-product-id="{{ product.id }}">
+              {% assign is_new = product.product_is_new? %}
+              {% assign is_sold = product.out_of_stock_for_sale? %}
+              {% assign show_pre_order_label = false %}
+              {% if enabled_pre_order and product.master.pre_order.is_pre_order? and pre_order_settings.display_mark %}
+                {% assign show_pre_order_label = true %}
+              {% endif %}
+              {% assign delivery_group_names = '' %}
+              {% for delivery_group_name in product.delivery_group_names %}
+                {% assign delivery_group_names = delivery_group_names | append: delivery_group_name | append: "," %}
+              {% endfor %}
+              {% assign concurrent_purchase_badge_names = '' %}
+              {% for concurrent_purchase_badge_name in product.concurrent_purchase_badge_names %}
+                {% assign concurrent_purchase_badge_names = concurrent_purchase_badge_names | append: concurrent_purchase_badge_name | append: "," %}
+              {% endfor %}
+
+              <div class="c-product_item js-product-modal">
+                <a class="c-product_item__link" href="#"></a>
+                <div class="c-product_item__inner__eyecatch">
+                  {% assign thumbnail_url = 'missing' | image_url %}
+                  {% if product.master.thumbnails.size > 0 and product.master.thumbnails.first.url != nil %}
+                    {% assign thumbnail_url = product.master.thumbnails.first.url %}
+                  {% elsif product.thumbnail != nil %}
+                    {% assign thumbnail_url = product.thumbnail.url %}
+                  {% endif %}
+
+                  <div class="c-product_item__inner__eyecatch__img" style="background-size:contain;background-image:url({{ thumbnail_url }})"></div>
+
+                    {% if is_new or is_sold %}
+                      <div class="c-product_item__inner__eyecatch__tags">
+                        {% if is_new %}
+                          <div class="c-product_item__inner__eyecatch__tags__new">{{ 'products.general.new.value' | t }}</div>
+                        {% endif %}
+                        {% if is_sold %}
+                          <div class="c-product_item__inner__eyecatch__tags__soldout">{{ 'products.stock.sold_out.value' | t }}</div>
+                        {% endif %}
+                      </div>
+                    {% endif %}
+
+                </div>
+                <div class="c-product_item__inner__content">
+                  <div class="c-product_item__inner__title u-text--subhead">{{ product.name }}</div>
+                  <div class="c-product_item__inner__category u-text--subhead">
+                    {% assign _category = '' %}
+                    {% for category in product.product_categories %}
+                      {% if category.product_category_visibility %}
+                        {% unless _category == '' %}
+                          {% assign _category = _category | append: ', ' %}
+                        {% endunless %}
+                        {% assign _category = _category | append: category.name %}
+                      {% endif %}
+                    {% endfor %}
+                    {{ _category }}
+                  </div>
+                  {% if product.master.list_price > product.first_price %}
+                    <div class="c-product_item__inner__price u-text--body">
+                      <span class="origin">&yen;{{ product.master.list_price | number_with_delimiter }}</span>
+                      <span class="sale u-color__text--alert">&yen;{{ product.first_price | number_with_delimiter }}</span>
+                      <span>&nbsp;({{ 'products.price.tax_included.value' | t }}</span>
+                      <span id="sale u-color__text--alert">&yen;{{ product.first_price_include_tax | number_with_delimiter }}</span>
+                      <span>)</span>
+                    </div>
+                  {% else %}
+                    <div class="c-product_item__inner__price u-text--body">
+                      <span class="price">&yen;{{ product.first_price | number_with_delimiter }}</span>
+                      <span>&nbsp;({{ 'products.price.tax_included.value' | t }}</span>
+                      <span id="price">&yen;{{ product.first_price_include_tax | number_with_delimiter }}</span>
+                      <span>)</span>
+                    </div>
+                  {% endif %}
+                  {% if product.parsed_description %}
+                    <div class="c-product_item__inner__price u-text--body">
+                      <div class="product_description">
+                        {% if smartphone %}
+                          {{ product.parsed_description_mobile }}
+                        {% else %}
+                          {{ product.parsed_description }}
+                        {% endif %}
+                      </div>
+                    </div>
+                  {% endif %}
+                  {%- comment -%}バッジ表示開始{%- endcomment -%}
+                  {% if show_pre_order_label or product.delivery_group_names.size != 0 or product.concurrent_purchase_badge_names.size != 0 %}
+                    <div class="c-product_item__inner__badge u-text--body">
+                      <ul class="c-cart_item__badges">
+                        {% if show_pre_order_label %}
+                          <li class="c-badge">{{ 'products.pre_order.display_mark.value' | t }}</li>
+                        {% endif %}
+                        {% for delivery_group_name in product.delivery_group_names %}
+                          <li class="c-badge c-badge--delivery-group">{{ delivery_group_name }}</li>
+                        {% endfor %}
+                        {% for concurrent_purchase_badge_name in product.concurrent_purchase_badge_names %}
+                          <li class="c-badge c-badge--concurrent-purchase-group">{{ concurrent_purchase_badge_name }}</li>
+                        {% endfor %}
+                      </ul>
+                    </div>
+                  {% endif %}
+                  {%- comment -%}バッジ表示終了{%- endcomment -%}
+                </div>
+              </div>
+              <div class="fieldset form_group_ec">
+                <input type="hidden" name="product-name" value="{{ product.name | escape }}">
+                <input type="hidden" name="product_description" value="{{ product.parsed_description | simple_format }}">
+                <input type="hidden" name="is_pre_order" value="{% if enabled_pre_order and product.master.pre_order.is_pre_order? %}1{% else %}0{% endif %}">
+                <input type="hidden" name="pre_ordered_display_mark" value="{% if pre_order_settings.display_mark %}1{% else %}0{% endif %}">
+                <input type="hidden" name="pre_ordered_delivery_description_modal" value="{{ product.master.pre_order.pre_ordered_delivery_description | escape }}">
+                <input type="hidden" name="pre_ordered_notes" value="{{ pre_order_settings.notes | escape }}">
+                <input type="hidden" name="valid_pre_order" value="{% if product.master.pre_order.within_pre_order_period? == false %}0{% endif %}1">
+                <input type="hidden" name="delivery_group_names" value="{{ delivery_group_names }} ">
+                <input type="hidden" name="concurrent_purchase_badge_names" value="{{ concurrent_purchase_badge_names }} ">
+                <input type="hidden" name="list-price" value="{{ product.master.list_price | number_to_currency }}">
+                <input type="hidden" name="list-price-include-tax" value="(税込価格 {{ product.master.list_price_include_tax | number_to_currency }})">
+                <input type="hidden" name="sales-price" value="{{ product.initial_price | number_to_currency }}">
+                <input type="hidden" name="sales-price-include-tax" value="(税込価格 {{ product.initial_price_include_tax | number_to_currency }})">
+                {% assign maker_name = '-' %}
+                {% assign maker_url = '-' %}
+                {% if product.maker != nil %}
+                  {% if product.maker.name != nil %}
+                    {% assign maker_name = product.maker.name %}
+                  {% endif %}
+                  {% if product.maker.url != nil %}
+                    {% assign maker_url = product.maker.url %}
+                  {% endif %}
+                {% endif %}
+                <input type="hidden" name="maker-name" value="{{ maker_name }}">
+                <input type="hidden" name="maker-url" value="{{ maker_url }}">
+                {% assign categories = '' %}
+                {% for category in product.product_categories %}
+                  {% if category.product_category_visibility %}
+                    {% unless categories == '' %}
+                      {% assign categories = categories | append: ', ' %}
+                    {% endunless %}
+                    {% assign categories = categories | append: category.name %}
+                  {% endif %}
+                {% endfor %}
+                <input type="hidden" name="category" value="{{ categories }}">
+                <input type="hidden" name="variant_description" value="{{ product.master.parsed_description | simple_format }}">
+                {% assign thumbnail_urls = '' %}
+                {% for url in product.master.thumbnail_urls %}
+                  {% assign thumbnail_urls = thumbnail_urls | append: url | append: ',' %}
+                {% endfor %}
+                <input type="hidden" name="variant-image" value="{{ thumbnail_urls }}">
+                <input type="hidden" name="main-thumbnail" value="{{ thumbnail_url }}">
+                <input type="hidden" name="tax" value="{{ product.tax.now_value }}">
+              </div>
+
+            </li>
+          {% endfor %}
+
+        </ul>
+        <div class="p-product_slider__nav"></div>
+      </div>
+    </div>
+  </div>
+  {%- comment -%} 商品購入フォーム {%- endcomment -%}
+  <div class="l-container__row">
+    <form class="form_main_container_ec" action="/shop/order/cv_upsell" method="post" id="form_cv_xsell">
+      <input name="_method" type="hidden" value="put">
+      <input name="authenticity_token" type="hidden" value="{{ authenticity_token_tag }}">
+      <input name="order[take_cv_xsell_offer]" type="hidden" value="1">
+      <input name="preview_order[offer_name]" type="hidden" value="cv_xsell">
+      <div id="view-payment-information">
+        <input id="payment_method_id" name="preview_order[payment_attributes][payment_method_id]" type="hidden" value="{{ order.payment.payment_method_id }}">
+        <input id="payment_times" name="preview_order[payment_attributes][payment_times]" type="hidden" value="{{ order.payment.payment_times }}">
+      </div>
+      <div id="view-shipping-carrier">
+        <input id="shipping_carrier_id" name="preview_order[shipping_carrier_id]" type="hidden" value="{{ order.shipping_carrier_id }}">
+      </div>
+      {%- comment -%} 先ほどの注文に追加する商品 {%- endcomment -%}
+      <div class="p-previous_order u-color__border--border default-hide" id="cv-xsell-table">
+        <h2 class="p-previous_order__title u-font__jp">先ほどの注文に追加する商品</h2>
+        <div class="p-cart_content u-color__border--border">
+          <div class="p-cart_content__inner">
+            <div class="p-cart_content__inner__product">
+              <div class="c-cart_item c-cart_item--table u-color__border--border">
+                <table class="c-cart_item__info">
+                  <tbody class="cv-xsell-variant-body">
+                    <tr class="cv-xsell-variant-row default-hide">
+                    {% comment %} 「先ほどの注文に追加する商品」のテンプレート {% endcomment %}
+                      <td class="variant-image"><div class="c-cart_item__img__inner" style="background-image:url({{ 'missing' | image_url }})"></div></td>
+                      <td class="variant-name-area"></td>
+                      <td class="variant_quantity"></td>
+                      <td class="variant-sum"></td>
+                      <td class="variant_remove">
+                        <button class="cv_xsell_variant_remove"><i class="u-icon--close"></i>削除する</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            {%- comment -%}
+            <!-- 購入金額詳細 -->
+            <div class="p-cart_content__inner__side">
+              <div class="c-billing_list u-color__bg--bg">
+                <div class="c-billing_list__title u-text--subhead u-color__border--border">{{ 'orders.amount.order_amount.value' | t }}</div>
+                <ul class="c-billing_list__detail u-color__border--border">
+                  <li class="c-billing_list__detail__item">
+                    <dl class="c-billing_list__detail__item__row">
+                      <dt class="c-billing_list__detail__item__row__title u-text--body">{{ 'orders.amount.subtotal.value' | t }}</dt>
+                      <dd class="c-billing_list__detail__item__row__price u-text--body">&yen;{{ order.subtotal | number_with_delimiter }}</dd>
+                    </dl>
+                  </li>
+                  <li class="c-billing_list__detail__item">
+                    <dl class="c-billing_list__detail__item__row">
+                      <dt class="c-billing_list__detail__item__row__title u-text--body">{{ 'orders.amount.tax.value' | t }}</dt>
+                      <dd class="c-billing_list__detail__item__row__price u-text--body">&yen;{{ order.subtotal_tax | number_with_delimiter }}</dd>
+                    </dl>
+                    {% if order.subtotal8 > 0 %}
+                      <div class="c-billing_list__detail__item__tax">
+                        <div class="c-billing_list__detail__item__tax__rate u-text--strong">{{ 'orders.amount.10_percent_target.value' | t }}</div>
+                        <ul class="c-billing_list__detail__item__tax__list">
+                          <li class="c-billing_list__detail__item__tax__list__item">
+                            <div class="c-billing_list__detail__item__tax__list__item__title u-text--body">{{ 'orders.amount.subtotal.value' | t }}</div>
+                            <div class="c-billing_list__detail__item__tax__list__item__price u-text--body">&yen;{{ order.subtotal10 | number_with_delimiter }}</div>
+                          </li>
+                          <li class="c-billing_list__detail__item__tax__list__item">
+                            <div class="c-billing_list__detail__item__tax__list__item__title u-text--body">{{ 'orders.amount.tax.value' | t }}</div>
+                            <div class="c-billing_list__detail__item__tax__list__item__price u-text--body">&yen;{{ order.subtotal10_tax | number_with_delimiter }}</div>
+                          </li>
+                        </ul>
+                      </div>
+                      <div class="c-billing_list__detail__item__tax">
+                        <div class="c-billing_list__detail__item__tax__rate u-text--strong">{{ 'orders.amount.8_percent_target.value' | t }}</div>
+                        <ul class="c-billing_list__detail__item__tax__list">
+                          <li class="c-billing_list__detail__item__tax__list__item">
+                            <div class="c-billing_list__detail__item__tax__list__item__title u-text--body">{{ 'orders.amount.subtotal.value' | t }}</div>
+                            <div class="c-billing_list__detail__item__tax__list__item__price u-text--body">&yen;{{ order.subtotal8 | number_with_delimiter }}</div>
+                          </li>
+                          <li class="c-billing_list__detail__item__tax__list__item">
+                            <div class="c-billing_list__detail__item__tax__list__item__title u-text--body">{{ 'orders.amount.tax.value' | t }}</div>
+                            <div class="c-billing_list__detail__item__tax__list__item__price u-text--body">&yen;{{ order.subtotal8_tax | number_with_delimiter }}</div>
+                          </li>
+                        </ul>
+                      </div>
+                    {% endif %}
+                  </li>
+                </ul>
+                <div class="c-billing_list__total">
+                  <div class="c-billing_list__total__title u-text--subhead">{{ 'orders.amount.total.value' | t }}</div>
+                  <div class="c-billing_list__total__price u-text--subhead">&yen;{{ order.subtotal_include_subtotal_tax | number_with_delimiter }}</div>
+                </div>
+              </div>
+            </div>
+            {%- endcomment -%}
+          </div>
+        </div>
+      </div>
+      {%- comment -%} 定期商品の配送スケジュールの選択 {%- endcomment -%}
+      <div class="p-checkout__list default-hide" id="subs-order-settings">
+        {% include 'ec_force/shop/orders/view_payment_schedule.html' %}
+      </div>
+      <div class="p-previous_order__btn default-hide" id="submit_btn">
+        <button class="c-cart_submit__block__submit u-text--btn u-color__btn--bg">購入手続きをする</button>
+      </div>
+    </form>
+  </div>
+
+{% else %}
+
+  {%- comment -%} サンクスオファー商品が表示できない場合 {%- endcomment -%}
+  <div class="p-upsell_not_found">
+    <p class="p-upsell_not_found__message u-text--body">
+      ご紹介できる商品が見つかりませんでした。
+    </p>
+  </div>
+
+{% endif %}
+</div>
+{% comment %} サンクスオファー商品表示終了 {% endcomment %}
+
+{%- comment -%} 購入済みの商品 {%- endcomment -%}
+<div class="default-hide" id="converted-items">
+  <div class="l-container__row">
+    <div class="p-previous_order u-color__border--border">
+      <h2 class="p-previous_order__title u-font__jp">
+        先ほど購入した商品
+      </h2>
+      <ul class="c-cart_list__list u-color__border--border">
+        <!-- 注文商品一覧 -->
+        {% for order_item in order.order_items %}
+          <li class="c-cart_list__list__item u-color__border--border">
+            <a class="c-cart_list__list__item__img" href="/shop/products/{{ order_item.product.master.sku }}" target="_blank">
+              {% assign thumbnail = 'missing' | image_url %}
+              {% if order_item.variant.thumbnails != nil and order_item.variant.thumbnails.first != nil %}
+                {% assign thumbnail = order_item.variant.thumbnails.first.url %}
+              {% elsif order_item.product.thumbnail.url != nil %}
+                {% assign thumbnail = order_item.product.thumbnail.url %}
+              {% endif %}
+              <div class="c-cart_list__list__item__img__inner" style="background-image:url('{{ thumbnail }}')"></div>
+            </a>
+            <div class="c-cart_list__list__item__info">
+              <div class="c-cart_list__list__item__info__category u-text--body">
+                {% assign _category = '' %}
+                {% for category in order_item.product.product_categories %}
+                  {% if category.product_category_visibility %}
+                    {% unless _category == '' %}
+                      {% assign _category = _category | append: ', ' %}
+                    {% endunless %}
+                    {% assign _category = _category | append: category.name %}
+                  {% endif %}
+                {% endfor %}
+                {{ _category }}
+              </div>
+              <!-- 商品名 -->
+              <a class="c-cart_list__list__item__info__title u-text--link" href="/shop/products/{{ order_item.product.master.sku }}" target="_blank">{{ order_item.name_with_tax }}</a>
+              <div class="c-cart_list__list__item__info__variant u-text--body">
+                {% assign option_cnt = 0 %}
+                {% for option_value in order_item.variant.option_values %}
+                  {% unless option_cnt == 0 %}
+                    &nbsp;/&nbsp;
+                  {% endunless %}
+                  {{ option_value.option_type.presentation }}：{{ option_value.presentation }}
+                  {% assign option_cnt = option_cnt | plus: 1 %}
+                {% endfor %}
+              </div>
+              <div class="c-cart_list__list__item__info__total">
+                <!-- 数量 -->
+                <div class="c-cart_list__list__item__info__total__quantity u-text--body">{{ 'products.stock.quantity.value' | t }}：{{ order_item.quantity }}</div>
+                <!-- 単価 (税抜)  -->
+                <div class="c-cart_list__list__item__info__total__price u-text--body">&yen;{{ order_item.subtotal_price_integer | number_with_delimiter }}</div>
+              </div>
+            </div>
+          </li>
+        {% endfor %}
+        <div>
+          <!-- 税率の印の説明 -->
+          {% for symbol_text in order.tax_symbol_texts %}
+          <span class="u-text--body">
+            {{ symbol_text }}
+          </span>
+          {% endfor %}
+        </div>
+      </ul>
+    </div>
+  </div>
+</div>
+{%- comment -%} 購入済みの商品終了 {%- endcomment -%}
+
+  {% comment %} 商品詳細を表示するモーダル本体 {% endcomment %}
+  <div class="c-product_modal default-hide u-font__jp" id="product_details_modal">
+    <div class="c-product_modal__inner">
+      <div class="c-product_modal__inner__content">
+        <div class="c-product_modal__inner__content__body">
+          <div class="c-product_modal__inner__content__body__slide">
+            <div class="c-cv_xsell_slider">
+              {% comment %} メイン画像のスライダー {% endcomment %}
+              <div class="c-cv_xsell_slider__main"><img id="main-thumbnail" /></div>
+              {% comment %} サムネイル画像のスライダー {% endcomment %}
+              <div id="sub-images-view" class="c-cv_xsell_slider__thumbnail"></div>
+            </div>
+          </div>
+          <div class="c-product_modal__inner__content__body__info">
+            <div class="c-product_info">
+              <div class="c-product_info__category u-text--body" id="category"></div>
+              <h1 class="c-product_info__title u-text--head" id="product-name"></h1>
+              <div class="u-text--body" id="maker-name"></div>
+              <div class="c-product_info__description u-text--body" id="product_description"></div>
+              {%- comment -%}バッジ表示開始{%- endcomment -%}
+              {% if show_pre_order_label or product.delivery_group_names.size != 0 %}
+                <div class="c-product_info__badge u-text--body">
+                  {% if enabled_pre_order %}
+                    <div class="c-badge pre-order">
+                      <span id="pre_ordered_display_mark">{{ 'products.pre_order.display_mark.value' | t }}</span>
+                    </div>
+                  {% endif %}
+                  <div class="delivery-group-badge-zone"></div>
+                  <div class="concurrent-purchase-group-badge-zone"></div>
+                </div>
+              {% endif %}
+              {%- comment -%}バッジ表示終了{%- endcomment -%}
+                <div class="c-product_info__price">
+                  <span class="u-text--subhead">
+                      {{ 'products.price.list_price.value' | t }}:
+                      <span id="list-price" class="list_price u-text--subhead"></span>
+                      <span id="list-price-include-tax" class="list_price_include_tax u-text--subhead"></span>
+                      <br>
+                      {{ 'products.price.sales_price.value' | t }}:
+                      <span id="sales-price" class="sales_price u-text--subhead"></span>
+                      <span id="sales-price-include-tax" class="sales_price_include_tax u-text--subhead"></span>
+                  </span>
+                </div>
+                <form class="c-product_info__form">
+                  {% authenticity_token_tag %}
+                  <input id="selected-variant-id" type="hidden" name="selected-variant-id" value=""></input>
+                  <div class="c-product_info__form__variant u-color--input u-color__input--bg u-color__border--input" id="variant-option-types"></div>
+                  <div class="c-product_info__form__quantity">
+                    <label class="c-product_info__form__quantity__label u-text--body">{{ 'products.stock.quantity.value' | t }}</label>
+                    <div class="c-product_info__form__quantity__wrap">
+                      <label class="c-order_quantity">
+                        <input id="quantity-area" name="quantity" class="c-order_quantity__input u-color--input u-color__input--bg u-color__border--input" type="number" value="1" min="1" max="10">
+                        <input class="c-order_quantity__input c-order_quantity__input--disabled u-color--input u-color__input--bg u-color__border--input" type="text" value="在庫なし" disabled>
+                        <button class="u-color--input js-input-quantity-button" id="btn-minus" type="button"><i class="u-icon--minus"></i></button>
+                        <button class="u-color--input js-input-quantity-button" id="btn-plus" type="button"><i class="u-icon--plus"></i></button>
+                      </label>
+                    </div>
+                  </div>
+                  {%- comment -%} カートに追加 {%- endcomment -%}
+                  <button
+                    id="cv_xsell_variant_add"
+                    class="c-product_info__form__submit close u-text--btn u-color__btn--bg"
+                    type="submit"
+                    disabled="true">
+                    {{ 'general.action.add_cart.value' | t }}
+                  </button>
+                  {% if enabled_pre_order %}
+                    <div class="c-product_info__form__invalid-order default-hide" id="invalid_pre_order_description">
+                      <span class="c-product_info__notice">
+                        {{ 'general.message.when_out_of_pre_order_period.value' | t }}
+                      </span>
+                    </div>
+                  {% endif %}
+                </form>
+                {% if enabled_pre_order %}
+                  <p class="c-product_info__description c-product_info__description--preorder">
+                    <span class="c-product_info__notice">
+                      {{ 'delivery.general.pre_ordered_delivery_description_snapshot.value' | t }}：<span id="pre_ordered_delivery_description_modal"></span>
+                    </span>
+                    <span class="c-product_info__notice c-product_info__notice--with-pre-wrap" id="pre_ordered_notes"></span>
+                  </p>
+                {% endif %}
+                <div class="c-product_info__description u-text--body" id="variant_description"></div>
+                {% include 'ec_force/shop/snippets/sns.html' %}
+              </div>
+              {% comment %} 商品詳細からのコピペここまで {% endcomment %}
+          </div>
+        </div>
+        <div class="c-product_modal__inner__content__footer u-color__border--border">
+          <button class="p-account__inner__content__form__bottom__btn u-color__text--base close" type="submit">この画面を閉じる</button>
+        </div>
+      </div>
+    </div>
+    <span class="c-product_modal__close close"><i class="u-icon--close"></i></span>
+  </div>

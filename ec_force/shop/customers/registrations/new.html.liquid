@@ -1,0 +1,322 @@
+{{ 'shop/customers/registrations' | javascript_include_tag }}
+
+{% assign f = shop_form_settings %}
+
+<main class="l-container" role="main" id="customers-registrations-sign-up-view">
+  <div class="l-container__row u-margin__top--60">
+    {{ 'notice' | flash: 'control-alert alert-success', 'text u-color__bg--bg u-color__text--alert' }}
+    {{ 'alert' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+    {{ 'error' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+    <div class="p-account_form__inner__bottom">
+      <a class="p-account_form__inner__bottom__btn u-text--btn u-color__btn--bg" href="/shop/customers/sign_in">{{ 'account.general.registered_member.value' | t }}</a>
+    </div>
+    <header class="p-page_header">
+      <div class="p-page_header__inner">
+        <h1 class="p-page_header__inner__title u-text--head">{{ 'account.general.new_member_registration.value' | t }}</h1>
+        <p class="p-page_header__inner__lead u-text--body"><span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span><span class="u-text--body">{{ 'general.message.input_required.value' | t }}</span></p>
+      </div>
+    </header>
+  </div>
+  <div class="l-container__row u-margin__top--60 u-margin__bottom--100">
+    <form class="p-account_form" role="form" action="/shop/customers" accept-charset="UTF-8" method="post">
+      {% csrf_meta_tags %}
+
+      <div class="p-account_form__inner">
+      {% if customer.error_messages != empty %}
+        <div class="alert alert-danger">
+          {% for error_message in customer.error_messages %}
+            <p class='text u-text--body'>{{ error_message }}</p>
+          {% endfor %}
+        </div>
+      {% endif %}
+        <table class="c-form_table">
+          <tbody>
+            <!-- お名前 -->
+            <tr>
+              <th class="u-text--body">{{ 'customer.general.name.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+              <td>
+                <div class="c-form_table__name {% if shop_form_settings['name_1_field'] %} is-single{% endif %}">
+                  {% if f['name_1_field'] %}
+                    <input class="u-text--input u-color__input--bg u-color__border--input validate[required]" type="text" placeholder="{{ 'customer.placeholder.full_name.value' | t }}" name="customer[billing_address_attributes][name01]" autocomplete="name" id="customer_billing_address_attributes_name01" />
+                  {% else %}
+                    <input class="u-text--input u-color__input--bg u-color__border--input validate[required]" type="text" placeholder="{{ 'customer.placeholder.family_name.value' | t }}" name="customer[billing_address_attributes][name01]" autocomplete="family-name" id="customer_billing_address_attributes_name01" />
+                    <input class="u-text--input u-color__input--bg u-color__border--input validate[required]" type="text" placeholder="{{ 'customer.placeholder.name.value' | t }}" name="customer[billing_address_attributes][name02]" autocomplete="given-name" id="customer_billing_address_attributes_name02" />
+                  {% endif %}
+                </div>
+              </td>
+            </tr>
+            <!-- フリガナ -->
+            <tr>
+              <th class="u-text--body">{{ 'customer.general.kana.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+              <td>
+                <div class="c-form_table__name {% if shop_form_settings['kana_1_field'] %} is-single{% endif %}">
+                  {% if f['kana_1_field'] %}
+                    <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[katakana]]" type="text" placeholder="{{ 'customer.placeholder.full_kana_name.value' | t }}" name="customer[billing_address_attributes][kana01]" id="customer_billing_address_attributes_kana01" />
+                  {% else %}
+                    <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[katakana]]" type="text" placeholder="{{ 'customer.placeholder.family_kana_name.value' | t }}" name="customer[billing_address_attributes][kana01]" id="customer_billing_address_attributes_kana01" />
+                    <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[katakana]]" type="text" placeholder="{{ 'customer.placeholder.kana_name.value' | t }}" name="customer[billing_address_attributes][kana02]" id="customer_billing_address_attributes_kana02" />
+                  {% endif %}
+                </div>
+              </td>
+            </tr>
+            <!-- 郵便番号 -->
+            {% if shop_form_settings['zip_digits'] %}
+              {% assign validate_min_7 = ',minSize[7]' %}
+              {% assign validate_min_3 = ',minSize[3]' %}
+              {% assign validate_min_4 = ',minSize[4]' %}
+            {% endif %}
+            <tr>
+              <th class="u-text--body">{{ 'customer.general.zip.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+              <td>
+                <div class="c-form_table__postcode {% if shop_form_settings['zip_1_field'] %} is-single{% endif %}">
+                  <span class="u-text--body">&#12306;</span>
+                  {% if f['zip_1_field'] %}
+                    <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[integer]{{ validate_min_7 }}]" type="tel" name="customer[billing_address_attributes][zip01]" autocomplete="postal-code" id="customer_billing_address_attributes_zip01" placeholder='{{ 'customer.placeholder.full_zip.value' | t }}' maxlength="7" />
+                  {% else %}
+                    <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[integer]{{ validate_min_3 }}]" type="tel" name="customer[billing_address_attributes][zip01]" autocomplete="postal-code" id="customer_billing_address_attributes_zip01" placeholder='{{ 'customer.placeholder.zip01.value' | t }}' maxlength="3" />
+                    <span class="u-text--body">&ndash;</span>
+                    <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[integer]{{ validate_min_4 }}]" type="tel" name="customer[billing_address_attributes][zip02]" autocomplete="none" id="customer_billing_address_attributes_zip02" placeholder='{{ 'customer.placeholder.zip02.value' | t }}' maxlength="4" />
+                  {% endif %}
+                </div>
+              </td>
+            </tr>
+            <!-- 都道府県 -->
+            <tr>
+              <th class="u-text--body">{{ 'customer.general.prefecture.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+              <td>
+                <label class="c-form_table__select">
+                  <select class="u-text--input u-color__input--bg u-color__border--input validate[required]" name="customer[billing_address_attributes][prefecture_name]" id="customer_billing_address_attributes_prefecture_name">
+                    <option>{{ 'general.message.please_selected_option.value' | t }}</option>
+                    {% for prefecture in prefectures %}
+                      <option value='{{ prefecture.name }}' {% if customer.billing_address.prefecture.id == prefecture.id %}selected{% endif %}>{{ prefecture.name }}</option>
+                    {% endfor %}
+                  </select>
+                </label>
+              </td>
+            </tr>
+            <!-- 住所1 -->
+            <tr>
+              <th class="u-text--body">{{ shop_form_settings['addr01_label'] }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+              <td><input class="u-text--input u-color__input--bg u-color__border--input validate[required]" type="text" placeholder="{{ shop_form_settings['addr01_placeholder'] }}" name="customer[billing_address_attributes][addr01]" id="customer_billing_address_attributes_addr01" /></td>
+            </tr>
+            <!-- 住所2 -->
+            <tr>
+              <th class="u-text--body">{{ shop_form_settings['addr02_label'] }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+              <td>
+                <input class="u-text--input u-color__input--bg u-color__border--input validate[required]" type="text" placeholder="{{ shop_form_settings['addr02_placeholder'] }}" name="customer[billing_address_attributes][addr02]" id="customer_billing_address_attributes_addr02">
+              </td>
+            </tr>
+            <!-- 住所3 -->
+            {% if f['addr03'] %}
+              <tr>
+                <th class="u-text--body">{{ shop_form_settings['addr03_label'] }}</th>
+                <td>
+                  <input class="u-text--input u-color__input--bg u-color__border--input" type="text" placeholder="{{ shop_form_settings['addr03_placeholder'] }}" name="customer[billing_address_attributes][addr03]" id="customer_billing_address_attributes_addr03">
+                </td>
+              </tr>
+            {% endif %}
+            <!-- 電話番号 -->
+            <tr>
+              <th class="u-text--body">{{ 'customer.general.tel.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+              <td>
+                <div class="c-form_table__tel {% if shop_form_settings['tel_1_field'] %} is-single{% endif %}">
+                  {% if f['tel_1_field'] %}
+                    <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[integer]]" type="tel" name="customer[billing_address_attributes][tel01]" autocomplete="tel" id="customer_billing_address_attributes_tel01" placeholder='{{ 'customer.placeholder.full_tel.value' | t }}' maxlength="12" />
+                  {% else %}
+                    <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[integer]]" type="tel" name="customer[billing_address_attributes][tel01]" autocomplete="none" id="customer_billing_address_attributes_tel01" placeholder='{{ 'customer.placeholder.tel01.value' | t }}' maxlength="5" />
+                    <span class="u-text--body">&ndash;</span>
+                    <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[integer]]" type="tel" name="customer[billing_address_attributes][tel02]" autocomplete="none" id="customer_billing_address_attributes_tel02" placeholder='{{ 'customer.placeholder.tel02.value' | t }}' maxlength="4" />
+                    <span class="u-text--body">&ndash;</span>
+                    <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[integer]]" type="tel" name="customer[billing_address_attributes][tel03]" autocomplete="none" id="customer_billing_address_attributes_tel03" placeholder='{{ 'customer.placeholder.tel03.value' | t }}' maxlength="4" />
+                  {% endif %}
+                  {% unless shop_form_settings['email'] %}
+                    <span class="u-text--body" id='phone_note'>{{ 'orders.general.phone_note.value' | t }}</span>
+                  {% endunless %}
+                </div>
+              </td>
+            </tr>
+            <!-- FAX番号 -->
+            {% if f['fax'] %}
+            <tr>
+              <th class="u-text--body">{{ 'customer.general.fax.value' | t }}<span class="u-color__text--alert"></span></th>
+              <td>
+                <div class="c-form_table__tel {% if shop_form_settings['fax_1_field'] %} is-single{% endif %}">
+                  {% if f['fax_1_field'] %}
+                    <input class="u-text--input u-color__input--bg u-color__border--input validate[custom[integer]]" type="tel" name="customer[billing_address_attributes][fax01]" id="customer_billing_address_attributes_fax01" placeholder='{{ 'customer.placeholder.full_tel.value' | t }}' maxlength="12" />
+                  {% else %}
+                    <input class="u-text--input u-color__input--bg u-color__border--input validate[custom[integer]]" type="tel" name="customer[billing_address_attributes][fax01]" id="customer_billing_address_attributes_fax01" placeholder='{{ 'customer.placeholder.tel01.value' | t }}' maxlength="5" />
+                    <span class="u-text--body">&ndash;</span>
+                    <input class="u-text--input u-color__input--bg u-color__border--input validate[custom[integer]]" type="tel" name="customer[billing_address_attributes][fax02]" id="customer_billing_address_attributes_fax02" placeholder='{{ 'customer.placeholder.tel02.value' | t }}' maxlength="4" />
+                    <span class="u-text--body">&ndash;</span>
+                    <input class="u-text--input u-color__input--bg u-color__border--input validate[custom[integer]]" type="tel" name="customer[billing_address_attributes][fax03]" id="customer_billing_address_attributes_fax03" placeholder='{{ 'customer.placeholder.tel03.value' | t }}' maxlength="4" />
+                  {% endif %}
+                </div>
+              <td>
+            </tr>
+            {% endif %}
+            <!-- 会社名 -->
+            {% if f['company'] %}
+            <tr>
+              <th class="u-text--body">{{ 'customer.general.company_name.value' | t }}</th>
+              <td><input class="u-text--input u-color__input--bg u-color__border--input" type="text" value="" name="customer[billing_address_attributes][company_name]" autocomplete="organization” id="customer_billing_address_attributes_company_name" placeholder='{{ 'customer.placeholder.company.value' | t }}'></td>
+            </tr>
+            {% endif %}
+            <!-- メールアドレス -->
+            {% if shop_form_settings['email'] %}
+              <tr>
+                <th class="u-text--body">{{ 'customer.general.email.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+                <td><input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[email]] js-registration-email-input js-email-autocomplete for_password_validate" type="email" name="customer[email]" autocomplete="email" id="customer_email" placeholder="{{ 'customer.placeholder.email.value' | t }}" /></td>
+              </tr>
+            {% endif %}
+            <!-- 性別 -->
+            {% if shop_form_settings['sex'] %}
+              <tr>
+                <th class="u-text--body">{{ 'customer.general.sex.value' | t }}{% if shop_form_settings['sex_require'] %}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span>{% endif %}</th>
+                <td>
+                  <label class="c-form_table__select">
+                    <select class="u-text--input u-color__input--bg u-color__border--input{% if shop_form_settings['sex_require'] %} validate[required]{% endif %}" name="customer[sex_id]" id="customer_sex_id">
+                      <option value="">{{ 'general.message.please_selected_option.value' | t }}</option>
+                      {% for sex in sexes %}
+                        <option value='{{ sex.id }}' {% if customer.sex.id == sex.id %}selected{% endif %}>{{ sex.name }}</option>
+                      {% endfor %}
+                    </select>
+                  </label>
+                </td>
+              </tr>
+            {% endif %}
+            <!-- 職業 -->
+            {% if f['job'] %}
+              <th class="u-text--body">{{ 'customer.general.job.value' | t }}</th>
+              <td>
+                <label class="c-form_table__select">
+                  <select class="u-text--input u-color__input--bg u-color__border--input" name="customer[job_id]" id="customer_job_id">
+                    <option value="">{{ 'general.message.please_selected_option.value' | t }}</option>
+                    {% for job in jobs %}
+                      <option value='{{ job.id }}' {% if customer.job.id == job.id %}selected{% endif %}>{{ job.name }}</option>
+                    {% endfor %}
+                  </select>
+                </label>
+              </td>
+            {% endif %}
+            <!-- 生年月日 -->
+            {% if shop_form_settings["birth"] %}
+              <tr>
+                <th class="u-text--body">{{ 'customer.general.birth.value' | t }}{% if order.age_check_required? %}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span>{% elsif shop_form_settings["birth_require"] %}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span>{% endif %}</th>
+                <td>
+                  <div class="c-form_table__tel">
+                    <label class="c-form_table__select">
+                      <select class="u-text--input u-color__input--bg u-color__border--input{% if order.age_check_required? %} validate[required,custom[ageCheck]]{% elsif shop_form_settings["birth_require"] %} validate[required]{% else %} validate[condRequired[order_customer_attributes_birth_2i,order_customer_attributes_birth_3i]]{% endif %}" id="customer_birth_1i" name="customer[birth(1i)]" autocomplete="bday-year">
+                        {% if birth_year_default_value == 0 %}
+                          <option value="">----</option>
+                        {% endif %}
+                        {% assign now_year = "now" | date: "%Y" %}
+                        {% assign past_100_years = "now" | date: "%Y" | minus: 100 %}
+                        {% for y in (past_100_years..now_year) %}
+                          {% if birth_year_default_value == y %}
+                            {% if customer.birth_year == nil %}
+                              <option value="" selected="true">----</option>
+                            {% else %}
+                              <option value="">----</option>
+                            {% endif %}
+                          {% endif %}
+                          <option value='{{ y }}' {% if customer.birth_year == y %}selected{% endif %}>{{ y }}</option>
+                        {% endfor %}
+                      </select>
+                    </label>
+                    <span class="u-text--body">{{ 'customer.general.year.value' | t }}</span>
+                    <label class="c-form_table__select">
+                      <select class="u-text--input u-color__input--bg u-color__border--input{% if order.age_check_required? %} validate[required,custom[ageCheck]]{% elsif shop_form_settings["birth_require"] %} validate[required]{% else %} validate[condRequired[order_customer_attributes_birth_1i,order_customer_attributes_birth_3i]]{% endif %}" id="customer_birth_2i" name="customer[birth(2i)]" autocomplete="bday-month">
+                        <option value="">--</option>
+                        {% for m in (1..12) %}
+                          <option value='{{ m }}'{% if customer.birth_month == m %}selected{% endif %}>{{ m }}</option>
+                        {% endfor %}
+                      </select>
+                    </label>
+                    <span class="u-text--body">{{ 'customer.general.month.value' | t }}</span>
+                    <label class="c-form_table__select">
+                      <select class="u-text--input u-color__input--bg u-color__border--input{% if order.age_check_required? %} validate[required,custom[ageCheck]]{% elsif shop_form_settings["birth_require"] %} validate[required]{% else %} validate[condRequired[order_customer_attributes_birth_1i,order_customer_attributes_birth_2i]]{% endif %}" id="customer_birth_3i" name="customer[birth(3i)]" autocomplete="bday-day">
+                        <option value="">--</option>
+                        {% for d in (1..31) %}
+                          <option value='{{ d }}'{% if customer.birth_day == d %}selected{% endif %}>{{ d }}</option>
+                        {% endfor %}
+                      </select>
+                    </label>
+                    <span class="u-text--body">{{ d }}{{ 'customer.general.day.value' | t }}</span>
+                  </div>
+                </td>
+              </tr>
+            {% endif %}
+            <!-- パスワード -->
+            <tr>
+              <th class="u-text--body">{{ 'account.password.password.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+              <td><input id="customer_password" class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[validatePasswordForCustomerByAdminSetting]]" placeholder="{{ 'customer.placeholder.password.value' | t }}" type="password" name="customer[password]" /></td>
+            </tr>
+            <!-- パスワード（確認） -->
+            {% if shop_form_settings["password_confirmation"] %}
+              <tr>
+                <th class="u-text--body">{{ 'account.password.password_confirmation.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+                <td><input id="customer_password_confirmation" class="u-text--input u-color__input--bg u-color__border--input validate[required,minSize[8],equals[customer_password]]" placeholder="{{ 'customer.placeholder.password_confirmation.value' | t }}" type="password" name="customer[password_confirmation]" /></td>
+              </tr>
+            {% endif %}
+            <!-- 連携用顧客番号 -->
+            {% if shop_form_settings['link_number'] %}
+              <tr>
+                <th class="u-text--body">{{ shop_form_settings['link_number_label'] }}</th>
+                <td class="po-middle">
+                  <label class='c-form_table__checkbox  checkbox-inline check-old'>
+                    <input class='u-color__border--input' id="old" name="customer[link_number]" type="checkbox" {% if shop_form_settings['link_number_default_signup'] %}checked{% endif %} >
+                    <span class="c-form_table__checkbox__frame u-color__btn"></span>
+                    <span class="c-form_table__checkbox__text u-text--body">{{ shop_form_settings['link_number_checkbox_label'] }}</span>
+                  </label>
+                  <div class="c-form_table__fill-code" id="toggle">
+                    <p class="u-text--input c-form_table__fill-code__text ">{{ shop_form_settings['link_number_description'] }}</p>
+                    <input class="u-text--input u-color__input--bg u-color__border--input" type="text" name="customer[link_number]" placeholder="{{ shop_form_settings['link_number_placeholder'] }}">
+                  </div>
+                </td>
+              </tr>
+            {% else %}
+              <input value="{% if shop_form_settings['optin_default_signup'] %}1{% else %}0{% endif %}" name="customer[optin]" type="hidden">
+            {% endif %}
+            <!-- オプトイン -->
+            {% if shop_form_settings['optin_signup'] %}
+              <tr>
+                <th> </th>
+                <td><div class="c-form_table__newsletter">
+                    <label class='c-form_table__checkbox  checkbox-inline'>
+                    <input {% if shop_form_settings['optin_default_signup'] %}checked{% endif %} class='u-color__border--input' id="optin" name="customer[optin]" type="checkbox">
+                    <span class="c-form_table__checkbox__frame u-color__btn"></span>
+                    <span class="c-form_table__checkbox__text u-text--body">{{ shop_form_settings['optin_text'] }}</span>
+                  </label></div>
+                </td>
+              </tr>
+            {% else %}
+              <input value="{% if shop_form_settings['optin_default_signup'] %}1{% else %}0{% endif %}" name="customer[optin]" type="hidden">
+            {% endif %}
+            <tr>
+              <th> </th>
+              <td><div class="c-form_table__newsletter">
+                  <label class='c-form_table__checkbox  checkbox-inline check_agree' for='agree'>
+                  <input id='agree' {% if shop_form_settings['terms'] %}checked{% endif %} class='validate[required] u-color__border--input' data-prompt-position='topLeft' data-errormessage='{{ 'account.general.error_message.value' | t }}' name='agree' type='checkbox'>
+                  <span class="c-form_table__checkbox__frame u-color__btn"></span>
+                  <span class="c-form_table__checkbox__text u-text--body">{{ shop_form_settings['customer_term_text'] }}</span>
+                  </label></div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="p-account_form__inner__bottom">
+          <input class="p-account_form__inner__bottom__btn u-text--btn u-color__btn--bg" name="commit" type="submit" value="{{ 'account.general.member_registration_value.value' | t }}">
+        </div>
+      </div>
+    </form>
+  </div>
+</main>
+
+{% content_for meta_description %}
+{% endcontent_for %}
+
+{% content_for meta_keywords %}
+{% endcontent_for %}
+
+{% content_for title %}
+{% endcontent_for %}

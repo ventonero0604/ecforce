@@ -1,0 +1,30 @@
+{
+  "id": "banner",
+  "type": "banner-section",
+  "name": {
+    "ja": "バナー"
+  },
+  "settings": [
+    {
+      "type": "banner_picker",
+      "id": "banner_pc",
+      "label": {
+        "ja": "PC画像"
+      }
+    },
+    {
+      "type": "banner_picker",
+      "id": "banner_sp",
+      "label": {
+        "ja": "SP画像"
+      }
+    },
+    {
+      "type": "text",
+      "id": "banner_link",
+      "label": {
+        "ja": "バナーのリンク先"
+      }
+    }
+  ]
+}

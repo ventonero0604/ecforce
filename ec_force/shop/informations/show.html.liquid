@@ -1,0 +1,47 @@
+{{ 'shop/info' | javascript_include_tag }}
+
+<main class="l-container" role="main">
+
+  <div class="l-container__row">
+    <header class="p-column_header">
+      {{ content_for_information_detail }}
+    </header>
+  </div>
+  <div class="l-container__row u-margin__top--40">
+    <section class="p-page_article">
+      <div class="p-page_article__inner u-text--body">
+        <!-- 内容 -->
+        {% if smartphone %}
+          {{ information.parsed_content_mobile }}
+        {% else %}
+          {{ information.parsed_content }}
+        {% endif %}
+      </div>
+    </section>
+  </div>
+
+  <div class="l-container__row u-margin__top--80 u-margin__bottom--100">
+    <div class="c-article_nav">
+      <div class="c-article_nav__inner">
+      <!-- 前のお知らせへのリンク -->
+      <a class="c-article_nav__inner__prev u-text--btn u-color__btn--bg {% unless last_information %} is-inactive{% endunless %}" href="/shop/information/{{ last_information.slug }}">{{ 'general.action.previous.value' | t }}</a>
+      <!-- カテゴリー画面へのリンク -->
+      <a class="c-article_nav__inner__back u-text--link" href="/shop/information_categories/{{ information.information_category.slug }}">{{ 'general.action.return_list.value' | t }}</a>
+      <!-- 次のお知らせへのリンク -->
+      <a class="c-article_nav__inner__next u-text--btn u-color__btn--bg {% unless next_information %} is-inactive{% endunless %}" href="/shop/information/{{ next_information.slug }}">{{ 'general.action.next.value' | t }}</a>
+    </div>
+    </div>
+  </div>
+</main>
+
+{% content_for title %}
+  {{ information.title }}
+{% endcontent_for %}
+
+{% content_for meta_description %}
+  {{ information.meta_description }}
+{% endcontent_for %}
+
+{% content_for meta_keywords %}
+  {{ information.meta_keywords }}
+{% endcontent_for %}

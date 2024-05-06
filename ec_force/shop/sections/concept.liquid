@@ -1,0 +1,22 @@
+{% if section.disabled == "true" or section.disabled == true %}
+  <section data-section-id="{{id}}" data-section-type="{{section.type}}" style="display: none;">
+{% else %}
+  <section data-section-id="{{id}}" data-section-type="{{section.type}}">
+{% endif %}
+  <div class="l-container__row u-margin__top--80 u-margin__bottom--80">
+    <div class="p-concept p-concept--theme p-concept--layout{{ section.settings.layout }}" style="background: {{ section.settings.color_concept_bg }};">
+      <div class="p-concept__image">
+        {% if section.settings.image == '' %}
+          <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7">
+        {% else %}
+          {% assign image_url = section.settings.image | generate_image_url: theme_file_root_path %}
+          <img src="{{ image_url }}">
+        {% endif %}
+      </div>
+      <div class="p-concept__inner">
+        <h2 class="p-concept__title u-text--subhead">{{ section.settings.concept_title_text | escape }}</h2>
+        <p class="p-concept__text u-text--body">{{ section.settings.concept_message_text}}</p>{% comment %}Don't use escape{% endcomment %}
+      </div>
+    </div>
+  </div>
+</section>

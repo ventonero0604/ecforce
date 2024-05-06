@@ -1,0 +1,18 @@
+{{ 'shop/product_categories' | javascript_include_tag }}
+
+{% assign c = product_category %}
+<main class="l-container" role="main">
+  {% section 'product_categories_show_first_view' %}
+  {% include 'ec_force/shop/snippets/category_breadcrumbs_pc.html' %}
+  {% section 'products_index_content' %}
+  {% include 'ec_force/shop/snippets/category_breadcrumbs_sp.html' %}
+</main>
+
+{% content_for meta_description %}
+{% endcontent_for %}
+
+{% content_for meta_keywords %}
+{% endcontent_for %}
+
+{% content_for title %}
+{% endcontent_for %}

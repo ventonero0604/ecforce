@@ -1,0 +1,37 @@
+{
+  "id": "products_show_recommend",
+  "type": "products_show_recommend-section",
+  "name": {
+    "ja": "関連商品"
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "recommend",
+      "label": {
+        "ja": "関連商品表示"
+      }
+    },
+    {
+      "type": "text",
+      "id": "head",
+      "label": {
+        "ja": "見出し"
+      }
+    },
+    {
+      "type": "text",
+      "id": "subhead",
+      "label": {
+        "ja": "小見出し"
+      }
+    },
+    {
+      "type": "color",
+      "id": "color_products_show_recommend_bg",
+      "label": {
+        "ja": "背景"
+      }
+    }
+  ]
+}

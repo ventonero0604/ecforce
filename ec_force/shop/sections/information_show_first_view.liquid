@@ -1,0 +1,8 @@
+<section class="l-container__row" data-section-id="information_show_first_view">
+  <!-- サムネイル -->
+  {% if information.thumbnail.url and section.settings.image == true or section.settings.image == 'true' %}
+    <div class="p-column_header__bg" style="background-image:url('{{ information.thumbnail.url }}')"></div>
+  {% else %}
+    <style>.p-column_header__panel { margin-top: 0 !important }</style>
+  {% endif %}
+</section>

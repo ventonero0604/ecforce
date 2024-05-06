@@ -1,0 +1,20 @@
+<main class="l-container" role="main">
+  <div class="l-container__row">
+    <div class="p-password">
+      <div class="p-password__inner">
+        {{ 'notice' | flash: 'alert alert-success', 'text' }}
+        {{ 'alert' | flash: 'alert alert-danger', 'text' }}
+        {{ 'error' | flash: 'alert alert-danger', 'text' }}
+        <div class="p-password__content">
+          {% section 'password_header' %}
+          <form class="p-password__form" action="/password" accept-charset="UTF-8" method="post">
+            <input class="p-password__input u-color__bg--base u-color__border--input" type="password" name="password">
+            <button class="p-password__submit u-color__text--base u-color__bg--accent" type="submit">{{ 'general.action.submit.value' | t }}</button>
+          </form>
+          <a class="p-password__link u-color__text--accent" href="/password">{{ 'general.action.back.value' | t }}</a>
+        </div>
+        {% section 'password_footer' %}
+      </div>
+    </div>
+  </div>
+</main>

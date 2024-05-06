@@ -1,0 +1,22 @@
+{% if section.disabled == true or section.disabled == 'true' %}
+  {% assign visibility_value = "none" %}
+{% endif %}
+{% if smartphone %}
+  {% assign content = parsed_content_mobile %}
+{% else %}
+  {% assign content = parsed_content %}
+{% endif %}
+{% if content %}
+<section class="p-column" data-section-id="{{ id }}" data-section-type="{{ section.type }}" style="display: {{ visibility_value }};">
+  <style>
+    .c-text__center {
+      text-align: center;
+    }
+  </style>
+  <div class="l-container__row u-margin__top--40 u-margin__bottom--40 u-margin_sp__top--20">
+    <div class="p-show_selection u-text--body c-text__{{section.settings.content_align}}">
+      {{ content }}
+    </div>
+  </div>
+</section>
+{% endif %}

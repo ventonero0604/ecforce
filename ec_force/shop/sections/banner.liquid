@@ -1,0 +1,26 @@
+{% if section.disabled == "true" or section.disabled == true %}
+  <section data-section-id="{{id}}" data-section-type="{{section.type}}" style="display: none;">
+{% else %}
+  <section data-section-id="{{id}}" data-section-type="{{section.type}}">
+{% endif %}
+{% if smartphone %}
+  {% assign banner = section.settings.banner_sp %}
+{% else %}
+  {% assign banner = section.settings.banner_pc %}
+{% endif %}
+{% if banner.size > 0 %}
+  <div class="l-container__row u-margin__top--80 u-margin_sp__top--60 u-margin__bottom--80 u-margin_sp__bottom--60">
+    <div class="p-banner p-banner--section">
+      {% comment %}<a></a><img>のように揃えた書き方にするとSafariで押下できなくなってしまうので意図的にこの記述にしている{% endcomment %}
+      {% assign image_url = banner | generate_image_url: theme_file_root_path %}
+      {% if section.settings.banner_link.size > 0 %}
+        <a class="p-banner__link" href="{{section.settings.banner_link}}">
+          <p class="p-banner__image"><img src="{{ image_url }}"></p>
+        </a>
+      {% else %}
+        <p class="p-banner__image"><img src="{{ image_url }}"></p>
+      {% endif %}
+    </div>
+  </div>
+{% endif %}
+</section>

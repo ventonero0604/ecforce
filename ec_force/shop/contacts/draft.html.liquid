@@ -1,0 +1,168 @@
+{{ 'shop/contacts' | javascript_include_tag }}
+
+<main id="contacts-form-view" class="l-container" role="main">
+  <div class="l-container__row u-margin__top--60">
+    <header class="p-page_header">
+      <div class="p-page_header__inner">
+        <h1 class="p-page_header__inner__title u-text--head">{{ 'contact.general.contact_title.value' | t }}</h1>
+      </div>
+    </header>
+  </div>
+  <div class="l-container__row u-margin__top--60 u-margin__bottom--100">
+    <!-- フラッシュメッセージ -->
+    {{ 'notice' | flash: 'control-alert alert-success', 'text u-color__bg--bg u-color__text--alert' }}
+    {{ 'alert' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+    {{ 'contact_errors' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+    {{ 'error' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+    <form class="p-account_form" role="form" id="new_contact" action="/shop/contact" accept-charset="UTF-8" method="post">
+      <input type="hidden" name="_method" value="put">
+
+      {% csrf_meta_tags %}
+
+      <div class="p-account_form__inner">
+        <div class="p-contact__link">
+          <a class="p-contact__link__btn u-text--btn u-color__btn--bg" href="/shop/faq">{{ 'contact.general.faq.value' | t }}</a>
+        </div>
+        <div class="p-contact__head">
+          <h2 class="p-contact__head__title u-text--subhead">{{ 'contact.general.contact_form.value' | t }}</h2>
+          <p class="p-contact__head__notes u-text--body"><span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span>{{ 'general.message.input_required.value' | t }}</p>
+        </div>
+        <table class="c-form_table">
+          <tbody>
+            <!-- お名前 -->
+            <tr>
+              <th class="u-text--body">{{ 'customer.general.name.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+              <td>
+                {% if shop_form_settings['name_1_field'] %}
+                  <!-- フォーム初入力かつログイン済の場合 -->
+                  {% if contact.id == nil and customer_signed_in %}
+                    <input class="u-text--input u-color__input--bg u-color__border--input validate[required]" type="text" placeholder="{{ 'customer.placeholder.full_name.value' | t }}" name="contact[address_attributes][name01]" id="contact_address_attributes_name01" value="{{ current_customer.billing_address.full_name }}">
+                  {% else %}
+                    <input class="u-text--input u-color__input--bg u-color__border--input validate[required]" type="text" placeholder="{{ 'customer.placeholder.full_name.value' | t }}" name="contact[address_attributes][name01]" id="contact_address_attributes_name01" value="{{ contact.address.full_name }}">
+                  {% endif %}
+                {% else %}
+                  <div class="c-form_table__name">
+                    {% if contact.id == nil and customer_signed_in %}
+                      <input class="u-text--input u-color__input--bg u-color__border--input validate[required]" type="text" placeholder="{{ 'customer.placeholder.family_name.value' | t }}" name="contact[address_attributes][name01]" id="contact_address_attributes_name01" value="{{ current_customer.billing_address.name01 }}">
+                      <input class="u-text--input u-color__input--bg u-color__border--input validate[required]" type="text" placeholder="{{ 'customer.placeholder.name.value' | t }}" name="contact[address_attributes][name02]" id="contact_address_attributes_name02" value="{{ current_customer.billing_address.name02 }}">
+                    {% else %}
+                      <input class="u-text--input u-color__input--bg u-color__border--input validate[required]" type="text" placeholder="{{ 'customer.placeholder.family_name.value' | t }}" name="contact[address_attributes][name01]" id="contact_address_attributes_name01" value="{{ contact.address.name01 }}">
+                      <input class="u-text--input u-color__input--bg u-color__border--input validate[required]" type="text" placeholder="{{ 'customer.placeholder.name.value' | t }}" name="contact[address_attributes][name02]" id="contact_address_attributes_name02" value="{{ contact.address.name02 }}">
+                    {% endif %}
+                  </div>
+                {% endif %}
+              </td>
+            </tr>
+            <!-- フリガナ -->
+            <tr>
+              <th class="u-text--body">{{ 'customer.general.kana.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+              <td>
+                {% if shop_form_settings['kana_1_field'] %}
+                  <!-- フォーム初入力かつログイン済の場合 -->
+                  {% if customer_signed_in and contact.id == nil %}
+                    <input class="u-text--input u-color__input--bg u-color__border--input validate[required]" type="text" placeholder="{{ 'customer.placeholder.full_kana_name.value' | t }}" name="contact[address_attributes][kana01]" id="contact_address_attributes_kana01" value="{{ current_customer.billing_address.full_kana }}">
+                  {% else %}
+                    <input class="u-text--input u-color__input--bg u-color__border--input validate[required]" type="text" placeholder="{{ 'customer.placeholder.full_kana_name.value' | t }}" name="contact[address_attributes][kana01]" id="contact_address_attributes_kana01" value="{{ contact.address.full_kana }}">
+                  {% endif %}                    
+                {% else %}
+                  <div class="c-form_table__name">
+                    <!-- フォーム初入力かつログイン済の場合 -->
+                    {% if customer_signed_in and contact.id == nil %}
+                      <input class="u-text--input u-color__input--bg u-color__border--input validate[required]" type="text" placeholder="{{ 'customer.placeholder.family_kana_name.value' | t }}" name="contact[address_attributes][kana01]" id="contact_address_attributes_kana01" value="{{ current_customer.billing_address.kana01 }}">
+                      <input class="u-text--input u-color__input--bg u-color__border--input validate[required]" type="text" placeholder="{{ 'customer.placeholder.kana_name.value' | t }}" name="contact[address_attributes][kana02]" id="contact_address_attributes_kana02" value="{{ current_customer.billing_address.kana02 }}">
+                    {% else %}
+                      <input class="u-text--input u-color__input--bg u-color__border--input validate[required]" type="text" placeholder="{{ 'customer.placeholder.family_kana_name.value' | t }}" name="contact[address_attributes][kana01]" id="contact_address_attributes_kana01" value="{{ contact.address.kana01 }}">
+                      <input class="u-text--input u-color__input--bg u-color__border--input validate[required]" type="text" placeholder="{{ 'customer.placeholder.kana_name.value' | t }}" name="contact[address_attributes][kana02]" id="contact_address_attributes_kana02" value="{{ contact.address.kana02 }}">
+                    {% endif %}
+                  </div>
+                {% endif %}
+              </td>
+            </tr>
+            <!-- 電話番号 -->
+            <tr>
+              <th class="u-text--body">{{ 'customer.general.tel.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+              <td>
+                {% if shop_form_settings['tel_1_field'] %}
+                  {% if contact.id == nil and customer_signed_in %}
+                    <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[integer]]" type="tel" name="contact[address_attributes][tel01]" id="contact_address_attributes_tel01" value="{{ current_customer.billing_address.full_tel }}" maxlength="12">
+                  {% else %}
+                    <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[integer]]" type="tel" name="contact[address_attributes][tel01]" id="contact_address_attributes_tel01" value="{{ contact.address.full_tel }}" maxlength="12">
+                  {% endif %}
+                {% else %}
+                  <div class="c-form_table__tel">
+                    {% if contact.id == nil and customer_signed_in %}
+                      <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[integer]]" type="tel" name="contact[address_attributes][tel01]" id="contact_address_attributes_tel01" value="{{ current_customer.billing_address.tel01 }}" maxlength="5">
+                      <span class="u-text--body">&ndash;</span>
+                      <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[integer]]" type="tel" name="contact[address_attributes][tel02]" id="contact_address_attributes_tel02" value="{{ current_customer.billing_address.tel02 }}" maxlength="4">
+                      <span class="u-text--body">&ndash;</span>
+                      <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[integer]]" type="tel" name="contact[address_attributes][tel03]" id="contact_address_attributes_tel03" value="{{ current_customer.billing_address.tel03 }}" maxlength="4">
+                    {% else %}
+                      <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[integer]]" type="tel" name="contact[address_attributes][tel01]" id="contact_address_attributes_tel01" value="{{ contact.address.tel01 }}" maxlength="5">
+                      <span class="u-text--body">&ndash;</span>
+                      <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[integer]]" type="tel" name="contact[address_attributes][tel02]" id="contact_address_attributes_tel02" value="{{ contact.address.tel02 }}" maxlength="4">
+                      <span class="u-text--body">&ndash;</span>
+                      <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[integer]]" type="tel" name="contact[address_attributes][tel03]" id="contact_address_attributes_tel03" value="{{ contact.address.tel03 }}" maxlength="4">
+                    {% endif %}
+                  </div>
+                {% endif %}
+              </td>
+            </tr>
+            <!-- メールアドレス -->
+            <tr>
+              <th class="u-text--body">{{ 'customer.general.email.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+              <td>
+                <!-- ログイン済の場合 -->
+                {% if customer_signed_in %}
+                  <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[email]]" type="email" name="contact[customer_attributes][email]" id="contact_customer_attributes_email" value="{{ current_customer.email }}" disabled>
+                {% else %}
+                  <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[email]]" type="email" name="contact[customer_attributes][email]" id="contact_customer_attributes_email" value="{{ contact.customer.email }}">
+                {% endif %}
+              </td>
+            </tr>
+            <!-- お問い合わせ種別 -->
+            <tr>
+              <th class="u-text--body">{{ 'contact.general.contact_types.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+              <td>
+                <label class="c-form_table__select">
+                  <select class="u-text--input u-color__input--bg u-color__border--input" name="contact[contact_type_ids]" id="contact_contact_type_ids">
+                    {% for contact_type in contact_types %}
+                      <option value="{{ contact_type.id }}" {% if contact.contact_types[0].id == contact_type.id %}selected{% endif %}>{{ contact_type.name }}</option>
+                    {% endfor %}
+                  </select>
+                </label>
+              </td>
+            </tr>
+            <tr>
+              <th class="u-text--body">{{ 'contact.general.content.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+              <td>
+                <textarea class="u-text--input u-color__input--bg u-color__border--input validate[required]" rows="5" name="contact[content]" id="contact_content" cols="10" rows="8">{{ contact.content }}</textarea>
+              </td>
+            </tr>
+            <tr>
+              <th></th>
+              <td><div class="c-form_table__newsletter">
+                  <label class='c-form_table__checkbox checkbox-inline check_agree' for='agree'>
+                  <input id='agree' class='validate[required] u-color__border--input' data-errormessage='{{ 'base_info.privacy.error_message.value' | t }}' name='agree' type='checkbox'>
+                  <span class="c-form_table__checkbox__frame u-color__btn"></span>
+                  <span class="c-form_table__checkbox__text u-text--body"><a class="p-account__inner__content__form__bottom__link u-text--link" href="/shop/privacy" target="blank">{{ 'base_info.privacy.privacy_policy.value' | t }}</a>{{ 'base_info.privacy.agree.value' | t }}</span>
+                  </label>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="p-account_form__inner__bottom">
+          <button class="p-account_form__inner__bottom__btn u-text--btn u-color__btn--bg" type="submit">{{ 'general.action.confirm_input.value' | t }}</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</main>
+
+{% content_for meta_description %}
+{% endcontent_for %}
+
+{% content_for meta_keywords %}
+{% endcontent_for %}
+
+{% content_for title %}
+{% endcontent_for %}

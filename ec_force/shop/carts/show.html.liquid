@@ -1,0 +1,47 @@
+{{ 'shop/carts' | javascript_include_tag }}
+
+<main class="js-main-container" role="main" id="cart-show-view" style="display: block">
+  <div class="l-container__row u-margin__top--60">
+    {{ 'notice' | flash: 'control-alert alert-success', 'text u-color__bg--bg u-color__text--alert' }}
+    {{ 'alert' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+    {{ 'error' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+    {{ 'order_errors' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+
+    <header class="p-page_header">
+      <div class="p-page_header__inner">
+        <h1 class="p-page_header__inner__title u-text--head">{{ 'orders.general.cart.value' | t }}</h1>
+      </div>
+    </header>
+  </div>
+  <div class="l-container__row u-margin__top--60">
+    {% section 'carts_show_content' %}
+  </div>
+  {% if current_customer != null %}
+    <div class="js-browsing-histories l-container__row u-margin__top--60 u-margin__bottom--100"></div>
+  {% endif %}
+
+  {% comment %} related product {% endcomment %}
+  {% assign show_recommend = false %}
+  {% if base_info.use_related_products_on_cart? %}
+    {% if item.product.active_related_products.size > 0 and customize_preview_mode %}
+      {% assign show_recommend = true %}
+    {% elsif order.related_products.size > 0 %}
+      {% assign show_recommend = true %}
+    {% endif %}
+  {% endif %}
+
+  {% if show_recommend %}
+    <div class="l-container__row u-margin__top--60 u-margin__bottom--100">
+      {% section 'carts_show_recommend' %}
+    </div>
+  {% endif %}
+</main>
+
+{% content_for meta_description %}
+{% endcontent_for %}
+
+{% content_for meta_keywords %}
+{% endcontent_for %}
+
+{% content_for title %}
+{% endcontent_for %}

@@ -1,0 +1,54 @@
+{% if section.disabled == true or section.disabled == 'true' %}
+  <section data-section-id="{{ id }}" data-section-type="{{ section.type }}" style="display: none;">
+{% else %}
+  <section data-section-id="{{ id }}" data-section-type="{{ section.type }}">
+{% endif %}
+  {% if sliders.size > 0 %}
+    <div class="p-carousel_slider splide">
+      <div class="p-carousel_slider__track splide__track">
+        {% if sliders.size == 1 %}
+          <ul class="p-carousel_slider__track__list splide__list p-carousel_slider__track__list--single">
+        {% elsif section.settings.slideshow_switch == true or section.settings.slideshow_switch == 'true' %}
+          <ul class="p-carousel_slider__track__list splide__list" data-interval="{{ section.settings.slideshow_switching_interval }}">
+        {% else %}
+          <ul class="p-carousel_slider__track__list splide__list">
+        {% endif %}
+        {% for slider in sliders %}
+          <li class="p-carousel_slider__track__list__item splide__slide">
+            {% if slider.image.size > 0 %}
+              {% assign image_url = slider.image | generate_image_url: theme_file_root_path %}
+            {% else %}
+              {% assign image_url = missing_image %}
+            {% endif %}
+
+            {% if slider.slide_link.size > 0 %}
+              <a href="{{ slider.slide_link }}" class="p-carousel_slider__track__list__item__inner" style="background-image:url({{ image_url }})"></a>
+            {% else %}
+              <div class="p-carousel_slider__track__list__item__inner" style="background-image:url({{ image_url }})"></div>
+            {% endif %}
+          </li>
+        {% endfor %}
+        </ul>
+      </div>
+
+      {% if sliders.size > 1 %}
+        <div class="p-carousel_slider__nav splide__arrows">
+          <button class="p-carousel_slider__nav__arrow p-carousel_slider__nav__arrow--prev splide__arrow splide__arrow--prev">
+            <i class="u-icon--arrow"></i>
+          </button>
+          <ul class="p-carousel_slider__nav__pagination">
+            {% for slider in sliders %}
+              <li class="p-carousel_slider__nav__pagination__dot {% if forloop.index == 1 %}is-current{% endif %}">
+                <button type="button"></button>
+              </li>
+            {% endfor %}
+          </ul>
+
+          <button class="p-carousel_slider__nav__arrow p-carousel_slider__nav__arrow--next splide__arrow splide__arrow--next">
+            <i class="u-icon--arrow"></i>
+          </button>
+        </div>
+      {% endif %}
+    </div>
+  {% endif %}
+</section>

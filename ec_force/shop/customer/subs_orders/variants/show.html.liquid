@@ -1,0 +1,148 @@
+{{ 'shop/customer/subs_orders/variants' | javascript_include_tag }}
+
+<main class="l-container js-main-container" role="main" id="product-show-view">
+  <input id="subs-order-number" type="hidden" value="{{ params['id'] }}">
+  <input id="variant-sku" type="hidden" value="{{ product.master.sku }}">
+  <div class="l-container__row u-margin__top--60">
+    <div class="p-account u-margin__bottom--100">
+      <div class="p-account__inner">
+        <div class="p-account__inner__menu u-color__border--border">
+          {% include 'ec_force/shop/snippets/sidebar.html' %}
+        </div>
+        <div class="p-account__inner__content">
+          <div class="p-product_content p-product_content--subsdetail">
+            <div class="p-product_content__inner">
+              <div class="p-product_content__inner__img">
+                <div class="c-product_img c-product_img--subsdetail">
+                  {% if product.thumbnail.url %}
+                    {% assign src = product.thumbnail.url %}
+                  {% else %}
+                    {% assign src = 'missing' | image_url %}
+                  {% endif %}
+                  <img src="{{ src }}" id="main-img" alt="" width="" height="" class="mb20">
+                  <div id="sub-images-view"></div>
+                </div>
+              </div>
+              <section class="p-product_content__inner__info">
+                <div class="c-product_info">
+                  <div class="c-product_info__category u-text--body">
+                    {% assign _category = '' %}
+                    {% for category in product.product_categories %}
+                      {% if category.product_category_visibility %}
+                        {% unless _category == '' %}
+                          {% assign _category = _category | append: ', ' %}
+                        {% endunless %}
+                        {% assign _category = _category | append: category.name %}
+                      {% endif %}
+                    {% endfor %}
+                    {{ _category }}
+                  </div>
+                  <h1 class="c-product_info__title u-text--head">{{ product.name }}</h1>
+                  {% if section.settings.maker == true or section.settings.maker == 'true' %}
+                    {% if product.maker == null or product.maker.name == empty %}
+                      {% if customize_preview_mode %}
+                        <div class="u-text--body">こちらにメーカー情報が表示されます</div>
+                      {% endif %}
+                    {% elsif product.maker.url != empty %}
+                      <a class="u-text--link" href="{{ product.maker.url }}" rel="nofollow" target="_blank">{{ product.maker.name }}</a>
+                    {% else %}
+                      <div class="u-text--body">{{ product.maker.name }}</div>
+                    {% endif %}
+                  {% endif %}
+                  {%- comment -%}バッジ表示開始{%- endcomment -%}
+                  {% if delivery_group_badge_flg_hash[product.id] or concurrent_purchase_group_badge_flg_hash[product.id] %} 
+                    <div class="c-cart_item__info__badge u-text--body">
+                      <ul class="c-cart_item__badges">
+                        {% for delivery_group_name in product.delivery_group_names %}
+                          <li class="c-badge c-badge--delivery-group">{{ delivery_group_name }}</li>
+                        {% endfor %}
+                        {% for concurrent_purchase_badge_name in product.concurrent_purchase_badge_names %}
+                          <li class="c-badge c-badge--concurrent-purchase-group">{{ concurrent_purchase_badge_name }}</li>
+                        {% endfor %}
+                      </ul>
+                    </div>
+                  {% endif %}
+                  {%- comment -%}バッジ表示終了{%- endcomment -%}
+                  {% assign options = "" %}
+                  {% assign options = options | append: product.id | append: "," | append: subs_order.times %}
+                  {% assign options_array = options | split: "," %}
+                  <div class="c-product_info__price">
+                    <span id="sales-price">&yen;{{ options_array | liquid_recurring_time_price | number_with_delimiter }}</span>（税別）
+                  </div>
+                  <form class="c-product_info__form" action="/shop/customer/subs_orders/{{ params.id }}/variants/add" method="post">
+                    {% authenticity_token_tag %}
+                    <input id="variant-id" type="hidden" name="variant_id" value="{{ product.master.id }}">
+                    <div id="option_types" class="c-product_info__form__variant u-color--input u-color__input--bg u-color__border--input"></div>
+                    <div class="c-product_info__form__quantity">
+                      <label class="c-product_info__form__quantity__label u-text--body">{{ 'products.stock.quantity.value' | t }}</label>
+                      <div class="c-product_info__form__quantity__wrap">
+                        <label class="c-order_quantity">
+                          <input id="input-quantity" name="quantity" class="c-order_quantity__input u-color--input u-color__input--bg u-color__border--input" type="number" min="{{ min_quantity }}" max="{{ max_quantity }}" value="{{ min_quantity }}">
+                          <button class="u-color--input" id="btn-minus" type="button"><i class="u-icon--minus"></i></button>
+                          <button class="u-color--input" id="btn-plus" type="button"><i class="u-icon--plus"></i></button>
+                        </label>
+                      </div>
+                    </div>
+                    <div class="c-product_info__form__subsdetail u-color__bg--bg">
+                      <div class="c-product_info__form__subsdetail__input">
+                        <span class="c-product_info__form__subsdetail__input__title">次回のみお届け</span>
+                        <div class="c-product_info__form__subsdetail__input__inputwrap">
+                          <label>
+                            <input type="radio" name="onetime" value="yes">
+                            <span class="frame u-color__bg--base u-color__border--border"></span>
+                            <span class="label">はい</span>
+                          </label>
+                          <label>
+                            <input type="radio" name="onetime" value="no">
+                            <span class="frame u-color__bg--base u-color__border--border"></span>
+                            <span class="label">いいえ</span>
+                          </label>
+                        </div>
+                      </div>
+                      <div class="c-product_info__form__subsdetail__note">
+                        <span class="u-color__text--sub">※「いいえ」を選択した場合、毎回お届けいたします。</span>
+                      </div>
+                    </div>
+                    <button
+                      id="btn-add"
+                      class="c-product_info__form__submit u-text--btn u-color__btn--bg"
+                      data-disable-with="{{ 'general.action.saving.value' | t }}"
+                      type="submit">定期便に追加</button>
+
+                    <a
+                      id="btn-stock-waiting-list"
+                      class="c-product_info__form__submit u-text--btn u-color__btn--bg"
+                      href="javascript:void(0);"
+                      style="display:none;">
+                      [{{ 'products.stock.sold_out.value' | t }}] {{ 'products.stock.stock_waiting_list.value' | t }}
+                    </a>
+
+                  </form>
+                  <div class="c-product_info__description">
+                    {% if smartphone %}
+                      {{ product.description_mobile }}
+                    {% else %}
+                      {{ product.description }}
+                    {% endif %}
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<link rel="stylesheet" href="{{ theme_file_root_path }}/assets/product.css" type="text/css">
+<script src="{{ theme_file_root_path }}/assets/product.js" type="text/javascript"></script>
+
+{% content_for meta_description %}
+{% endcontent_for %}
+
+{% content_for meta_keywords %}
+{% endcontent_for %}
+
+{% content_for title %}
+{% endcontent_for %}
+

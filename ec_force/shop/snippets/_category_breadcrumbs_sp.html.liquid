@@ -1,0 +1,17 @@
+{% if product_category %}
+  {% assign category_id = product_category.id %}
+{% else %}
+  {% assign category_id = params["q"]["products_product_categories_product_category_id_eq"] %}
+{% endif %}
+{% if category_id %}
+  <div class="p-breadcrumbs p-breadcrumbs--sp u-color__border--border footer_bg">
+    <ol class="c-breadcrumbs u-text--body">
+      <li class="c-breadcrumbs__item">
+        <a class="c-breadcrumbs__item__inner u-text--link" href="/shop">
+          {{ 'general.general.home.value' | t }}
+        </a>
+      </li>
+      {{ category_id | render_product_category_breadcrumbs }}
+    </ol>
+  </div>
+{% endif %}

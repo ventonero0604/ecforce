@@ -1,0 +1,19 @@
+{% assign c = product_category %}
+<section class="l-container__row" data-section-id='product_categories_show_first_view' data-section-type='product_categories_show_first_view-section'>
+  {% if section.settings.image == true or section.settings.image == 'true' %}
+    {% assign thumbnail_url = c.thumbnail.url %}
+    <header class="c-category_header" style="background-image: url('{{ thumbnail_url }}');">
+      <div class="c-category_header__inner">
+        <h1 class="c-category_header__inner__title u-text--head--overlay">{{ c.name }}</h1>
+        <p class="c-category_header__inner__lead u-text--body--overlay">{{ c.description }}</p>
+      </div>
+    </header>
+  {% else %}
+    <header class="p-page_header u-margin__top--60">
+      <div class="p-page_header__inner">
+        <h1 class="p-page_header__inner__title u-text--head u-text--head">{{ c.name }}</h1>
+        <p class="p-page_header__inner__lead u-text--body">{{ c.description }}</p>
+      </div>
+    </header>
+  {% endif %}
+</section>

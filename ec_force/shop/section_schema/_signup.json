@@ -1,0 +1,37 @@
+{
+  "id": "signup",
+  "type": "signup-section",
+  "name": {
+    "ja": "サインアップ"
+  },
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "signup",
+      "label": {
+        "ja": "画像"
+      }
+    },
+    {
+      "type": "text",
+      "id": "head",
+      "label": {
+        "ja": "見出し"
+      }
+    },
+    {
+      "type": "text",
+      "id": "subhead",
+      "label": {
+        "ja": "小見出し"
+      }
+    },
+    {
+      "type": "text",
+      "id": "body",
+      "label": {
+        "ja": "本文"
+      }
+    }
+  ]
+}

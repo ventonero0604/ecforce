@@ -1,0 +1,35 @@
+{{ 'shop/customer/shipping_addresses' | javascript_include_tag }}
+
+<main class="l-container" role="main" id="shipping-address-new-view">
+  <div class="l-container__row u-margin__top--60 u-margin__bottom--100">
+    <div class="p-account">
+      <div class="p-account__inner">
+        <div class="p-account__inner__menu u-color__border--border">
+          {% include 'ec_force/shop/snippets/sidebar.html' %}
+        </div>
+        <div class="p-account__inner__content">
+          <ul class="c-breadcrumbs">
+            <li class="c-breadcrumbs__item u-text--link">
+              <a class="c-breadcrumbs__item__inner" href="/shop/customer">{{ 'account.general.mypage.value' | t }}</a>
+            </li>
+            <li class="c-breadcrumbs__item u-text--link">
+              <a class="c-breadcrumbs__item__inner" href="/shop/customer/shipping_addresses">{{ 'orders.shipping_address.shipping_addresses.value' | t }}</a>
+            </li>
+            <li class="c-breadcrumbs__item u-text--body">
+              <span class="c-breadcrumbs__item__inner">{{ 'orders.shipping_address.shipping_addresses_new.value' | t }}</span>
+            </li>
+          </ul>
+          <h1 class="p-account__inner__content__title u-text--head">{{ 'orders.shipping_address.shipping_addresses_new.value' | t }}</h1>
+          <p class="p-account__inner__content__lead u-text--body">{{ 'general.message.save_lead_text.value' | t }}<br /><a class="u-text--link" id="copy-customer-billing-address" href="javascript:void(0);">{{ 'orders.shipping_address.paste_member_information.value' | t }}</a></p>
+          <form class="p-account__inner__content__form" id="new_address_customer_shipping" action="/shop/customer/shipping_addresses" accept-charset="UTF-8" method="post">
+            {% include 'ec_force/shop/customer/shipping_addresses/form.html' %}
+            <div class="p-account__inner__content__form__bottom">
+              <button class="p-account__inner__content__form__bottom__btn u-text--btn u-color__btn--bg" type="submit">{{ 'general.action.add.value' | t }}</button>
+              <a class="p-account__inner__content__form__bottom__link u-text--link" href="/shop/customer/shipping_addresses">{{ 'general.action.cancel_addition.value' | t }}</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

@@ -1,0 +1,70 @@
+{
+  "id": "category_panel",
+  "type": "category_panel-section",
+  "name": {
+    "ja": "商品カテゴリー"
+  },
+  "settings": [
+    {
+      "type": "selector",
+      "id": "style",
+      "label": {
+        "ja": "カテゴリーのスタイル"
+      },
+      "options" : [
+        {
+          "value": "flex",
+          "label": {
+            "ja": "余白なし"
+          }
+        },
+        {
+          "value": "grid",
+          "label": {
+            "ja": "均等揃え"
+          }
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "head",
+      "label": {
+        "ja": "見出し"
+      }
+    },
+    {
+      "type": "text",
+      "id": "subhead",
+      "label": {
+        "ja": "小見出し"
+      }
+    },
+    {
+      "type": "range",
+      "id": "category_size",
+      "label": {
+        "ja": "表示件数"
+      },
+      "min": 1,
+      "max": 12,
+      "step": 1,
+      "unit": {
+        "ja": "件"
+      }
+    },
+    {
+      "type": "multiple_selectors",
+      "id": "category_panel_product_category",
+      "label": {
+        "ja": "表示するカテゴリー"
+      },
+      "option_model": "product_category",
+      "selector": {
+        "list": "category_panel_product_category_list",
+        "group": "category_panel_product_category_group",
+        "id": "category_panel_product_category_selector"
+      }
+    }
+  ]
+}

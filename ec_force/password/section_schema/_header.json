@@ -1,0 +1,69 @@
+{
+  "id": "password_header",
+  "type": "password_header-section",
+  "name": {
+    "ja": "パスワード保護ヘッダー"
+  },
+  "settings": [
+    {
+      "type": "radio",
+      "id": "image_or_text",
+      "label": {
+        "ja": "ロゴ表示方法"
+      },
+      "options": [
+        {
+          "value": "image",
+          "label": {
+            "ja": "画像"
+          }
+        },
+        {
+          "value": "text",
+          "label": {
+            "ja": "テキスト"
+          }
+        }
+      ]
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": {
+        "ja": "ロゴ画像"
+      }
+    },
+    {
+      "type": "range",
+      "id": "image_max_width",
+      "label": {
+        "ja": "ロゴ画像幅"
+      },
+      "min": 100,
+      "max": 500,
+      "step": 10,
+      "unit": {
+        "ja": "px"
+      }
+    },
+    {
+      "type": "text",
+      "id": "text",
+      "label": {
+        "ja": "ロゴテキスト"
+      }
+    },
+    {
+      "type": "range",
+      "id": "text_font_size",
+      "label": {
+        "ja": "ロゴテキストフォントサイズ"
+      },
+      "min": 30,
+      "max": 80,
+      "unit": {
+        "ja": "px"
+      }
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{{ 'shop/customer/subs_orders' | javascript_include_tag }}
+
+<main class="l-container" role="main">
+  <div class="l-container__row u-margin__top--60 u-margin__bottom--100">
+    {{ 'notice' | flash: 'control-alert alert-success', 'text u-color__bg--bg u-color__text--alert' }}
+    {{ 'alert' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+    {{ 'error' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+    <div class="p-account">
+      <div class="p-account__inner">
+        <div class="p-account__inner__menu u-color__border--border">
+          {% include 'ec_force/shop/snippets/sidebar.html' %}
+        </div>
+        <div class="p-account__inner__content">
+          <h1 class="p-account__inner__content__title u-text--head">{{ 'subs_orders.general.stop_reason.value' | t }}</h1>
+          <p class="p-account__inner__content__lead u-text--body">{{ 'subs_orders.general.stop_reason_lead_text.value' | t }}</p>
+          <div class="p-subscription_detail">
+            <div id="subs-order-cancel-view" class="subscription_detail__block">
+              <form class="form-horizontal" action="/shop/customer/subs_orders/{{ subs_order.number }}" accept-charset="UTF-8" method="post" data-confirm="{{ 'general.message.is_really_stop.value' | t }}">
+                <input type="hidden" name="_method" value="delete">
+                {% for reason in reasons %}
+                  <label class="c-form_table__checkbox consent_wrapper">
+                    <input class="u-color__border--input consent_checkbox" name="reason_ids[]"　id='reason_ids_{{ forloop.index0 }}' value='{{ reason.id }}' type="checkbox">
+                    <span class="c-form_table__checkbox__frame u-color__btn"></span>
+                    <span class="c-form_table__checkbox__text u-text--body">{{ reason.name }}</span>
+                  </label>
+                {% endfor %}
+                <div class="p-subscription_edit">
+                  <!-- 定期購入停止リンク -->
+                  <div class="p-account__inner__content__form__bottom">
+                    <input type="submit" name="commit" class="p-account__inner__content__form__bottom__btn u-text--btn u-color__btn--bg js-notransition" value="{{ 'subs_orders.general.stop_recurring.value' | t }}"/>
+                    <!-- 戻るリンク -->
+                    <a class="p-account__inner__content__form__bottom__link u-text--link" href="/shop/customer/subs_orders/{{ subs_order.number }}">{{ 'general.action.back.value' | t }}</a>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

@@ -1,0 +1,153 @@
+{
+  "id": "slideshow",
+  "type": "slideshow-section",
+  "name": {
+    "ja": "スライドショー"
+  },
+  "settings": [
+    {
+      "type": "header",
+      "id": "slideshow_contents_header",
+      "label": {
+        "ja": "コンテンツ"
+      }
+    },
+    {
+      "type": "image_content",
+      "id": "slideshow_image_sliders",
+      "label": {
+        "ja": "画像スライド"
+      },
+      "image_block": {
+        "type": "image_block",
+        "min_blocks": 1,
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": {
+              "ja": "画像"
+            }
+          },
+          {
+            "type": "text",
+            "id": "slide_title",
+            "label": {
+              "ja": "見出し"
+            }
+          },
+          {
+            "type": "text",
+            "id": "slide_subtitle",
+            "label": {
+              "ja": "小見出し"
+            }
+          },
+          {
+            "type": "text",
+            "id": "button_label",
+            "label": {
+              "ja": "ボタンラベル"
+            }
+          },
+          {
+            "type": "text",
+            "id": "slide_link",
+            "label": {
+              "ja": "ボタンリンク"
+            }
+          },
+          {
+            "type": "hidden",
+            "id": "display_order",
+            "label": {
+              "ja": "スライドの表示順"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "checkbox",
+      "id": "sp_slideshow_active",
+      "label": {
+        "ja": "SP用のコンテンツを設定する"
+      }
+    },
+    {
+      "type": "image_content",
+      "id": "slideshow_image_sliders_sp",
+      "label": {
+        "ja": "画像スライド"
+      },
+      "image_block": {
+        "type": "image_block",
+        "min_blocks": 1,
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": {
+              "ja": "画像"
+            }
+          },
+          {
+            "type": "text",
+            "id": "slide_title",
+            "label": {
+              "ja": "見出し"
+            }
+          },
+          {
+            "type": "text",
+            "id": "slide_subtitle",
+            "label": {
+              "ja": "小見出し"
+            }
+          },
+          {
+            "type": "text",
+            "id": "button_label",
+            "label": {
+              "ja": "ボタンラベル"
+            }
+          },
+          {
+            "type": "text",
+            "id": "slide_link",
+            "label": {
+              "ja": "ボタンリンク"
+            }
+          },
+          {
+            "type": "hidden",
+            "id": "display_order",
+            "label": {
+              "ja": "スライドの表示順"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "checkbox",
+      "id": "slideshow_switch",
+      "label": {
+        "ja": "スライドの自動切り替え"
+      }
+    },
+    {
+      "type": "range",
+      "id": "slideshow_switching_interval",
+      "label": {
+        "ja": "切替え間隔"
+      },
+      "min": 3,
+      "max": 9,
+      "step": 1,
+      "unit": {
+        "ja": "秒"
+      }
+    }
+  ]
+}

@@ -1,0 +1,572 @@
+{{ 'shop/customer/orders' | javascript_include_tag }}
+
+<main class="l-container" role="main" id="orders-detail-view">
+  <div class="l-container__row u-margin__top--60 u-margin__bottom--100">
+    {{ 'notice' | flash: 'control-alert alert-success', 'text u-color__bg--bg u-color__text--alert' }}
+    {{ 'alert' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+    {{ 'error' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+    <div class="p-account">
+      <div class="p-account__inner">
+        <div class="p-account__inner__menu u-color__border--border">
+          {% include 'ec_force/shop/snippets/sidebar.html' %}
+        </div>
+        <div class="p-account__inner__content">
+          <ul class="c-breadcrumbs">
+            <li class="c-breadcrumbs__item u-text--link">
+              <a class="c-breadcrumbs__item__inner" href="/shop/customer">{{ 'account.general.mypage.value' | t }}</a>
+            </li>
+            <li class="c-breadcrumbs__item u-text--link">
+              <a class="c-breadcrumbs__item__inner" href="/shop/customer/orders">{{ 'orders.history.purchase_history.value' | t }}</a>
+            </li>
+            <li class="c-breadcrumbs__item u-text--body">
+              <span class="c-breadcrumbs__item__inner">{{ 'orders.history.purchase_history_detail.value' | t }}</span>
+            </li>
+          </ul>
+          <h1 class="p-account__inner__content__title u-text--head">{{ 'orders.history.purchase_history_detail.value' | t }}</h1>
+          {% if cancelable %}
+            <a class="pull-right p-account__inner__content__form__bottom__link u-text--link order_cancel_on_mypage js-notransition" data-confirm="{{ 'general.message.is_really_cancel_order.value' | t }}" rel="nofollow" data-method="post" href="/shop/customer/orders/{{ order.number }}/cancel">{{ 'orders.history.cancel_order.value' | t }}</a>
+          {% endif %}
+          <div id='orders-detail-view' class="p-history_detail">
+            <div class="p-history_detail__block">
+              <table class="c-account_table u-color__border--border">
+                <tbody>
+                  <tr class="u-color__border--border u-color__bg--bg">
+                    <th class="u-text--strong">{{ 'orders.general.order_number.value' | t }}</th>
+                    {% if enabled_pre_order and order.unshipped_pre_order? %}
+                      <th class="u-text--strong">{{ 'orders.general.order_pre_ordered_at.value' | t }}</th>
+                    {% else %}
+                      <th class="u-text--strong">{{ 'orders.general.order_completed_at.value' | t }}</th>
+                    {% endif %}
+                    {% if order.pickup_store == false and order.smaregi_order? == false %}
+                      {% if enabled_pre_order and order.unshipped_pre_order? %}
+                        <th class="u-text--strong">{{ 'delivery.general.pre_ordered_delivery_description_snapshot.value' | t }}</th>
+                      {% else %}
+                        <th class="u-text--strong">{{ 'delivery.general.scheduled_to_shipped_at.value' | t }}</th>
+                        <th class="u-text--strong">{{ 'delivery.general.shipped_at.value' | t }}</th>
+                        <th class="u-text--strong">{{ 'delivery.general.scheduled_to_be_delivered_at.value' | t }}</th>
+                      {% endif %}
+                      <th class="u-text--strong">{{ 'delivery.general.delivery_time.value' | t }}</th>
+                      <th class="u-text--strong">{{ 'delivery.general.shipping_carrier.value' | t }}</th>
+                      <th class="u-text--strong">{{ 'delivery.general.shipping_slip.value' | t }}</th>
+                    {% elsif order.smaregi_order? == true %}
+                      <th class="u-text--strong">{{ 'orders.smaregi_order.store_name.value' | t }}</th>
+                    {% endif %}
+                  </tr>
+                  <tr class="u-color__border--border">
+                    <td class="u-text--body" data-title="{{ 'orders.general.order_number.value' | t }}：">{{ order.number }}</td>
+                    {% if enabled_pre_order and order.unshipped_pre_order? %}
+                      <td class="u-text--body" data-title="{{ 'orders.general.order_pre_ordered_at.value' | t }}：">{{ order.pre_ordered_at | date:'%Y/%m/%d' }}<br />{{ order.pre_ordered_at | date:'%H:%M:%S' }}</td>
+                    {% else %}
+                      <td class="u-text--body" data-title="{{ 'orders.general.order_completed_at.value' | t }}：">{{ order.completed_at | date:'%Y/%m/%d' }}<br />{{ order.completed_at | date:'%H:%M:%S' }}</td>
+                    {% endif %}
+                    {% if order.pickup_store == false and order.smaregi_order? == false %}
+                      {% if enabled_pre_order and order.unshipped_pre_order? %}
+                        <td class="u-text--body" data-title="{{ 'delivery.general.pre_ordered_delivery_description_snapshot.value' | t }}：">{{ order.pre_ordered_delivery_description_snapshot }}</td>
+                      {% else %}
+                        <td class="u-text--body" data-title="{{ 'delivery.general.scheduled_to_shipped_at.value' | t }}：">{{ order.scheduled_to_be_shipped_at | date:'%Y/%m/%d' }}</td>
+                        <td class="u-text--body" data-title="{{ 'delivery.general.shipped_at.value' | t }}：">
+                          {% if order.shipped_at %}
+                            {{ order.shipped_at | date: '%Y/%m/%d' }}<br/>{{ order.shipped_at | date: '%H:%M:%S' }}
+                          {% else %}
+                            -
+                          {% endif %}
+                        </td>
+                        <td class="u-text--body" data-title="{{ 'delivery.general.scheduled_to_be_delivered_at.value' | t }}：">
+                          {{ order.scheduled_to_be_delivered_at | date: "%Y/%m/%d" }}
+                        </td>
+                      {% endif %}
+                      <td class="u-text--body" data-title="{{ 'delivery.general.delivery_time.value' | t }}：">
+                        {% if order.scheduled_delivery_time == blank %}
+                          {{ 'general.general.unspecified.value' | t }}
+                        {% else %}
+                          {{ order.scheduled_delivery_time }}
+                        {% endif %}
+                      </td>
+                      <td class="u-text--body" data-title="{{ 'delivery.general.shipping_carrier.value' | t }}：">
+                        {% if order.shipping_carrier %}
+                          {{ order.shipping_carrier.name }}
+                        {% else %}
+                          -
+                        {% endif %}
+                      </td>
+                      <td class="u-text--body" data-title="{{ 'delivery.general.shipping_slip.value' | t }}：">
+                        {% if order.tracking_url == blank %}
+                          {% if order.shipping_slip == blank %}
+                            -
+                          {% else %}
+                            {{ order.shipping_slip }}
+                          {% endif %}
+                        {% else %}
+                          <a href="{{order.tracking_url}}" target="_blank">{{ order.shipping_slip }}</a>
+                        {% endif %}
+                      </td>
+                    {% elsif order.smaregi_order? == true %}
+                      <td class="u-text--body" data-title="{{ 'orders.smaregi_order.store_name.value' | t }}：">{{ order.smaregi_order.store_name }}</td>
+                    {% endif %}
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="p-history_detail__block">
+              <div class="p-history_detail__block__wrapper">
+                <div class="p-history_detail__block__list">
+                  <div class="p-history_detail__list --order-items">
+                    <!-- 注文商品一覧 -->
+                    {% for order_item in order.order_items %}
+                      {%- comment -%}order_itemsにギフト商品が含まれてしまうので避ける{%- endcomment -%}
+                      {% if order_item.variant.gift? %}{% continue %}{% endif %}
+                      <div class="c-cart_item u-color__border--border">
+                        <a class="c-cart_item__img" href="/shop/products/{{ order_item.product.master.sku }}">
+                          {% if order_item.variant.thumbnails.first.url %}
+                            {% assign thumbnail = order_item.variant.thumbnails.first.url  %}
+                          {% elsif order_item.product.master.thumbnails.url %}
+                            {% assign thumbnail = order_item.product.master.thumbnails.url  %}
+                          {% elsif order_item.product.thumbnail.url %}
+                            {% assign thumbnail = order_item.product.thumbnail.url  %}
+                          {% else %}
+                            {% assign thumbnail = 'missing' | image_url  %}
+                          {% endif %}
+                          <div class="c-cart_item__img__inner" style="background-image:url('{{ thumbnail }}')"></div>
+                        </a>
+                        <div class="c-cart_item__info">
+                          <!-- 商品名 -->
+                          <div class="c-cart_item__info__category u-text--body">
+                            {% assign _category = '' %}
+                            {% for category in order_item.product.product_categories %}
+                              {% if category.product_category_visibility %}
+                                {% unless _category == '' %}
+                                  {% assign _category = _category | append: ', ' %}
+                                {% endunless %}
+                                {% assign _category = _category | append: category.name %}
+                              {% endif %}
+                            {% endfor %}
+                            {{ _category }}
+                          </div>
+                          <a class="c-cart_item__info__title u-text--subhead" href="/shop/products/{{ order_item.product.master.sku }}">{{ order_item.name_with_tax }}</a>
+                          <div class="c-cart_item__info__variant u-text--body">
+                            {% assign option_cnt = 0 %}
+                            {% for option_value in order_item.variant.option_values %}
+                              {% unless option_cnt == 0 %}
+                                &nbsp;/&nbsp;
+                              {% endunless %}
+                              {{ option_value.option_type.presentation }}：{{ option_value.presentation }}
+                              {% assign option_cnt = option_cnt | plus: 1 %}
+                            {% endfor %}
+                          </div>
+                          <div class="c-cart_item__info__total">
+                            <div class="c-cart_item__info__total__quantity u-text--body">{{ 'products.stock.quantity.value' | t }}：{{ order_item.quantity }}</div>
+                            <div class="c-cart_item__info__total__price u-text--body">&yen;{{ order_item.subtotal_price_integer | number_with_delimiter }}</div>
+                          </div>
+                        </div>
+                      </div>
+                    {% endfor %}
+                  </div>
+                  {% if gift_order_items.size > 0 %}
+                    <div class="p-history_detail__list --gift-items">
+                      <div class="p-history_detail__block__head">
+                        <h2 class="p-history_detail__block__head__title u-text--subhead">{{ 'orders.gift.title.value' | t }}</h2>
+                      </div>
+                      <!-- ギフト商品一覧 -->
+                      {% for gift_oi in gift_order_items %}
+                        {% for gift_relation in gift_oi.gift_target_relations %}
+                          {% if forloop.first %}
+                            <div class="c-cart_item u-color__border--border">
+                              <div class="c-cart_item__img --no-hover">
+                                {% if gift_oi.available_thumbnail %}
+                                  {% assign src = gift_oi.available_thumbnail %}
+                                {% else %}
+                                  {% assign src = 'missing' | image_url %}
+                                {% endif %}
+                                <div class="c-cart_item__img__inner" style="background-image:url('{{ src }}')"></div>
+                              </div>
+                              <div class="c-cart_item__info">
+                                <!-- ギフト商品名 -->
+                                <p class="c-cart_item__info__title --no-hover u-text--subhead">{{ gift_oi.variant.name }}</p>
+                                <div class="c-cart_item__info__variant u-text--body">
+                                  {% for option_value in gift_oi.variant.option_values %}
+                                    {{ option_value.option_type.presentation }}：{{ option_value.presentation }}
+                                    {% unless forloop.last %}&nbsp;/&nbsp;{% endunless %}
+                                  {% endfor %}
+                                </div>
+                                <div class="c-cart_item__info__total">
+                                  <div class="c-cart_item__info__total__quantity u-text--body">{{ 'products.stock.quantity.value' | t }}：{{ gift_oi.quantity }}</div>
+                                  <div class="c-cart_item__info__total__price u-text--body">&yen;{{ gift_oi.subtotal_with_campaign_discount_integer | number_with_delimiter }}</div>
+                                </div>
+                                <p class="c-cart_item__toggle-gift-target-items js-gift__toggle u-text--subhead">
+                                  {{ 'orders.gift.target_item.value' | t }}
+                                  <span class="c-cart_item__toggle-icon">
+                                    <i class="u-icon--minus"></i>
+                                    <i class="u-icon--plus"></i>
+                                  </span>
+                                </p>
+                                <div class="c-cart_item__gift-target-items">
+                          {% endif %}
+                                  <div class="c-cart_item__info">
+                                    <!-- 対象の商品名 -->
+                                    <a class="c-cart_item__info__title u-text--subhead" href="/shop/products/{{ gift_relation.variant.sku }}">{{ gift_relation.variant.name }}</a>
+                                    <div class="c-cart_item__info__variant u-text--body">
+                                      {% for option_value in gift_relation.variant.option_values %}
+                                        {{ option_value.option_type.presentation }}：{{ option_value.presentation }}
+                                        {% unless forloop.last %}&nbsp;/&nbsp;{% endunless %}
+                                      {% endfor %}
+                                    </div>
+                                    {% if gift_oi.gift.noshi? %}
+                                      {% if gift_relation.description_part_of_noshi != blank %}
+                                        <p class="c-cart_item__text u-text--body">表書き：{{ gift_relation.description_part_of_noshi }}</p>
+                                      {% endif %}
+                                      {% if gift_relation.name_part_of_noshi != blank %}
+                                        <p class="c-cart_item__text u-text--body">名入れ：{{ gift_relation.name_part_of_noshi | escape }}</p>
+                                      {% endif %}
+                                    {% endif %}
+                                    <div class="c-cart_item__info__total">
+                                      <div class="c-cart_item__info__total__quantity u-text--body">{{ 'products.stock.quantity.value' | t }}：{{ gift_relation.gift_quantity }}</div>
+                                    </div>
+                                  </div>
+                          {% if forloop.last %}
+                                </div>
+                              </div>
+                            </div>
+                          {% endif %}
+                        {% endfor %}
+                      {% endfor %}
+                    </div>
+                  {% endif %}
+                  <p class="p-account__inner__content__lead u-text--body">
+                    <!-- 税率の印の説明 -->
+                    {% for symbol_text in order.tax_symbol_texts %}
+                      {{ symbol_text }}
+                    {% endfor %}
+                  </p>
+                </div>
+                <div class="c-billing_list u-color__bg--bg">
+                  <div class="c-billing_list__title u-text--subhead u-color__border--border">{{ 'orders.amount.order_amount.value' | t }}</div>
+                  <ul class="c-billing_list__detail u-color__border--border">
+                    <!-- 注文小計 -->
+                    <li class="c-billing_list__detail__item">
+                      <dl class="c-billing_list__detail__item__row">
+                        <dt class="c-billing_list__detail__item__row__title u-text--body">{{ 'orders.amount.product_price.value' | t }}</dt>
+                        <dd class="c-billing_list__detail__item__row__price u-text--body">&yen;{{ order.subtotal | number_with_delimiter }}</dd>
+                      </dl>
+                    </li>
+                    <!-- 手数料 -->
+                    {% if order.charge > 0 %}
+                      <li class="c-billing_list__detail__item">
+                        <dl class="c-billing_list__detail__item__row">
+                          <dt class="c-billing_list__detail__item__row__title u-text--body">{{ 'orders.amount.charge.value' | t }}</dt>
+                          <dd class="c-billing_list__detail__item__row__price u-text--body">&yen;{{ order.charge | number_with_delimiter }}</dd>
+                        </dl>
+                      </li>
+                    {% endif %}
+                    <!-- 送料 -->
+                    {% if order.deliv_fee > 0 %}
+                      <li class="c-billing_list__detail__item">
+                        <dl class="c-billing_list__detail__item__row">
+                          <dt class="c-billing_list__detail__item__row__title u-text--body">{{ 'orders.amount.deliv_fee.value' | t }}</dt>
+                          <dd class="c-billing_list__detail__item__row__price u-text--body">&yen;{{ order.deliv_fee }}</dd>
+                        </dl>
+                      </li>
+                    {% endif %}
+                    <!-- 割引(任意) -->
+                    {% if order.discount_not_with_point > 0 %}
+                      <li class="c-billing_list__detail__item">
+                        <dl class="c-billing_list__detail__item__row">
+                          <dt class="c-billing_list__detail__item__row__title u-text--body">{{ 'orders.amount.discount.value' | t }}</dt>
+                          <dd class="c-billing_list__detail__item__row__price u-text--body">&minus; &yen;{{ order.discount_not_with_point | number_with_delimiter }}</dd>
+                        </dl>
+                      </li>
+                    {% endif %}
+                    <!-- ポイント利用(税率適用前) -->
+                    {% if order.discount_point_amount != 0 and order.use_point_include_tax? == false %}
+                      <li class="billing_list__detail__item__tax__list__item">
+                        <dl class="c-billing_list__detail__item__row">
+                          <dt class="c-billing_list__detail__item__tax__list__item__title u-text--body">{{ 'orders.amount.discount_point_amount_before_tax.value' | t }}</dt>
+                          <dd class="c-billing_list__detail__item__tax__list__item__price u-text--body">&minus; &yen;{{ order.discount_point_amount | number_with_delimiter }}</dd>
+                        </dl>
+                      </li>
+                    {% endif %}
+                    <!-- 調整金額(税率適用前) -->
+                    {% if order.use_adjustment_include_tax? == false and order.adjustment != 0 %}
+                      <li class="billing_list__detail__item__tax__list__item">
+                        <dl class="c-billing_list__detail__item__row">
+                          <dt class="c-billing_list__detail__item__tax__list__item__title u-text--body">{{ 'orders.amount.adjustment_before_tax.value' | t }}</dt>
+                          <dd class="c-billing_list__detail__item__tax__list__item__price u-text--body">&yen;{{ order.adjustment | number_with_delimiter }}</dd>
+                        </dl>
+                      </li>
+                    {% endif %}
+                    <!-- 消費税 -->
+                    <li class="c-billing_list__detail__item">
+                      <dl class="c-billing_list__detail__item__row">
+                        <dt class="c-billing_list__detail__item__row__title u-text--body">{{ 'orders.amount.tax.value' | t }}</dt>
+                        <dd class="c-billing_list__detail__item__row__price u-text--body">&yen;{{ order.tax | number_with_delimiter }}</dd>
+                      </dl>
+                      {% if order.subtotal8 > 0 %}
+                        <div class="c-billing_list__detail__item__tax">
+                          <div class="c-billing_list__detail__item__tax__rate u-text--strong">{{ 'orders.amount.10_percent_target.value' | t }}</div>
+                          <ul class="c-billing_list__detail__item__tax__list">
+                            <!-- 10%対象小計 -->
+                            <li class="c-billing_list__detail__item__tax__list__item">
+                              <div class="c-billing_list__detail__item__tax__list__item__title u-text--body">{{ 'orders.amount.subtotal.value' | t }}</div>
+                              <div class="c-billing_list__detail__item__tax__list__item__price u-text--body">&yen;{{ order.subtotal10 | number_with_delimiter }}</div>
+                            </li>
+                            <!-- 10%対象割引 -->
+                            <li class="c-billing_list__detail__item__tax__list__item">
+                              <div class="c-billing_list__detail__item__tax__list__item__title u-text--body">{{ 'orders.amount.discount.value' | t }}</div>
+                              <div class="c-billing_list__detail__item__tax__list__item__price u-text--body">&yen;{{ order.discount10 | number_with_delimiter }}</div>
+                            </li>
+                            <!-- 10%対象消費税 -->
+                            {% if order.tax10 != 0 %}
+                              <li class="c-billing_list__detail__item__tax__list__item">
+                                <div class="c-billing_list__detail__item__tax__list__item__title u-text--body">{{ 'orders.amount.tax.value' | t }}</div>
+                                <div class="c-billing_list__detail__item__tax__list__item__price u-text--body">&yen;{{ order.tax10 | number_with_delimiter }}</div>
+                              </li>
+                            {% endif %}
+                          </ul>
+                        </div>
+                        <div class="c-billing_list__detail__item__tax">
+                          <div class="c-billing_list__detail__item__tax__rate u-text--strong">{{ 'orders.amount.8_percent_target.value' | t }}</div>
+                          <ul class="c-billing_list__detail__item__tax__list">
+                            <!-- 8%対象小計 -->
+                            <li class="c-billing_list__detail__item__tax__list__item">
+                              <div class="c-billing_list__detail__item__tax__list__item__title u-text--body">{{ 'orders.amount.subtotal.value' | t }}</div>
+                              <div class="c-billing_list__detail__item__tax__list__item__price u-text--body">&yen;{{ order.subtotal8 | number_with_delimiter }}</div>
+                            </li>
+                            <!-- 8%対象割引 -->
+                            <li class="c-billing_list__detail__item__tax__list__item">
+                              <div class="c-billing_list__detail__item__tax__list__item__title u-text--body">{{ 'orders.amount.discount.value' | t }}</div>
+                              <div class="c-billing_list__detail__item__tax__list__item__price u-text--body">&yen;{{ order.discount8 | number_with_delimiter }}</div>
+                            </li>
+                            <!-- 8%対象消費税 -->
+                            {% if order.tax8 != 0 %}
+                              <li class="c-billing_list__detail__item__tax__list__item">
+                                <div class="c-billing_list__detail__item__tax__list__item__title u-text--body">{{ 'orders.amount.tax.value' | t }}</div>
+                                <div class="c-billing_list__detail__item__tax__list__item__price u-text--body">&yen;{{ order.tax8 | number_with_delimiter }}</div>
+                              </li>
+                            {% endif %}
+                          </ul>
+                        </div>
+                      {% endif %}
+                    </li>
+                    <!-- ポイント利用(税率適用後) -->
+                    {% if order.discount_point_amount != 0 and order.use_point_include_tax? == true %}
+                      <li class="billing_list__detail__item__tax__list__item">
+                        <dl class="c-billing_list__detail__item__row">
+                          <dt class="c-billing_list__detail__item__tax__list__item__title u-text--body">{{ 'orders.amount.discount_point_amount_after_tax.value' | t }}</dt>
+                          <dd class="c-billing_list__detail__item__tax__list__item__price u-text--body">&minus; &yen;{{ order.discount_point_amount | number_with_delimiter }}</dd>
+                        </dl>
+                      </li>
+                    {% endif %}
+                    <!-- 調整金額(税率適用後) -->
+                    {% if order.use_adjustment_include_tax? == true and order.adjustment != 0 %}
+                      <li class="billing_list__detail__item__tax__list__item">
+                        <dl class="c-billing_list__detail__item__row">
+                          <dt class="c-billing_list__detail__item__tax__list__item__title u-text--body">{{ 'orders.amount.adjustment_after_tax.value' | t }}</dt>
+                          <dd class="c-billing_list__detail__item__tax__list__item__price u-text--body">&yen;{{ order.adjustment | number_with_delimiter }}</dd>
+                        </dl>
+                      </li>
+                    {% endif %}
+                  </ul>
+                  <!-- 合計 -->
+                  <div class="c-billing_list__total">
+                    <div class="c-billing_list__total__title u-text--subhead">{{ 'orders.amount.total.value' | t }}</div>
+                    <div class="c-billing_list__total__price u-text--subhead">&yen;{{ order.total | number_with_delimiter }}</div>
+                  </div>
+                  <!-- 付与予定ポイント -->
+                  {% if base_info.use_point? and customer_signed_in %}
+                    <div class="c-billing_list__total">
+                      <div class="c-billing_list__total__title u-text--body">{{ 'points.general.grant_plan_point.value' | t }}</div>
+                      <div class="c-billing_list__total__point u-text--body">{{ order.grant_plan_point | number_with_delimiter }}&nbsp;ポイント</div>
+                    </div>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+            <div class="p-history_detail__block">
+              <div class="p-history_detail__block__head">
+                <h2 class="p-history_detail__block__head__title u-text--subhead">{{ 'payments.general.payment_info.value' | t }}</h2>
+              </div>
+              <table class="c-account_table u-color__border--border">
+                <tbody>
+                  <tr class="u-color__border--border u-color__bg--bg">
+                    <th class="u-text--strong">{{ 'payments.general.payment_method.value' | t }}</th>
+                    <th class="u-text--strong">{{ 'payments.credit_card.payment_times.value' | t }}</th>
+                    <th class="u-text--strong">{{ 'payments.general.human_state_name.value' | t }}</th>
+                    <th class="u-text--strong">{{ 'payments.general.payment_human_state_name.value' | t }}</th>
+                  </tr>
+                  <tr class="u-color__border--border">
+                    <td class="u-text--body" data-title="{{ 'payments.general.payment_method.value' | t }}：">{{ order.payment_method.name }}</td>
+                    <td class="u-text--body" data-title="{{ 'payments.credit_card.payment_times.value' | t }}：">
+                      {% if order.payment.payment_times > 1 %}
+                        {{ order.payment.payment_times }}
+                      {% else %}
+                        -
+                      {% endif %}
+                    </td>
+                    <td class="u-text--body" data-title="{{ 'payments.general.human_state_name.value' | t }}：">{{ order.human_state_name }}</td>
+                    <td class="u-text--body" data-title="{{ 'payments.general.payment_human_state_name.value' | t }}：">{{ order.payment.human_state_name }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="p-history_detail__block">
+              {% if order.pickup_store %}
+                <div class="p-history_detail__block__head">
+                  <h2 class="p-history_detail__block__head__title u-text--subhead">{{ 'orders.pickup_store.store_for_pickup.value' | t }}</h2>
+                </div>
+                <table class="c-account_table u-color__border--border">
+                  <tbody>
+                    <tr class="u-color__border--border u-color__bg--bg">
+                      <th class="u-text--strong">{{ 'orders.pickup_store.name.value' | t }}</th>
+                      <th class="u-text--strong">{{ 'orders.pickup_store.kana.value' | t }}</th>
+                      <th class="u-text--strong">{{ 'orders.pickup_store.zip.value' | t }}</th>
+                      <th class="u-text--strong">{{ 'orders.pickup_store.address.value' | t }}</th>
+                      <th class="u-text--strong">{{ 'orders.pickup_store.tel.value' | t }}</th>
+                      <th class="u-text--strong">{{ 'orders.pickup_store.fax.value' | t }}</th>
+                      <th class="u-text--strong">{{ 'orders.pickup_store.business_hours.value' | t }}</th>
+                    </tr>
+                    <tr class="u-color__border--border">
+                      <td class="u-text--body" data-title="{{ 'orders.pickup_store.name.value' | t }}：">{{ order.pickup_store.name }}</td>
+                      <td class="u-text--body" data-title="{{ 'orders.pickup_store.kana.value' | t }}：">{{ order.pickup_store.kana }}</td>
+                      <td class="u-text--body" data-title="{{ 'orders.pickup_store.zip.value' | t }}：">{{ order.pickup_store.full_zip }}</td>
+                      <td class="u-text--body" data-title="{{ 'orders.pickup_store.address.value' | t }}：">{{ order.pickup_store.full_address_with_space }}</td>
+                      <td class="u-text--body" data-title="{{ 'orders.pickup_store.tel.value' | t }}：">{{ order.pickup_store.full_tel }}</td>
+                      <td class="u-text--body" data-title="{{ 'orders.pickup_store.fax.value' | t }}：">{{ order.pickup_store.full_fax }}</td>
+                      <td class="u-text--body" data-title="{{ 'orders.pickup_store.business_hours.value' | t }}：">{{ order.pickup_store.business_hours }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              {% elsif order.smaregi_order? == false %}
+                <div class="p-history_detail__block__head">
+                  <h2 class="p-history_detail__block__head__title u-text--subhead">{{ 'orders.shipping_address.shipping_address.value' | t }}</h2>
+                  {% unless order.state == 'shipped' or order.state == 'delivered' %}
+                    <a class="p-history_detail__block__head__btn u-text--btn u-color__btn--bg" href="/shop/customer/orders/{{ order.number }}/shipping_address/edit">{{ 'general.action.change.value' | t }}</a>
+                  {% endunless %}
+                </div>
+                <table class="c-account_table u-color__border--border">
+                  <tbody>
+                    <tr class="u-color__border--border u-color__bg--bg">
+                      <th class="u-text--strong">{{ 'customer.general.name.value' | t }}</th>
+                      <th class="u-text--strong">{{ 'customer.general.kana.value' | t }}</th>
+                      <th class="u-text--strong">{{ 'customer.general.zip.value' | t }}</th>
+                      <th class="u-text--strong">{{ 'customer.general.address.value' | t }}</th>
+                      <th class="u-text--strong">{{ 'customer.general.tel.value' | t }}</th>
+                    </tr>
+                    <tr class="u-color__border--border">
+                      <td class="u-text--body" data-title="{{ 'customer.general.name.value' | t }}：">{{ order.shipping_address.full_name }}</td>
+                      <td class="u-text--body" data-title="{{ 'customer.general.kana.value' | t }}：">{{ order.shipping_address.full_kana }}</td>
+                      <td class="u-text--body" data-title="{{ 'customer.general.zip.value' | t }}：">{{ order.shipping_address.full_zip }}</td>
+                      <td class="u-text--body" data-title="{{ 'customer.general.address.value' | t }}：">{{ order.shipping_address.full_address }}</td>
+                      <td class="u-text--body" data-title="{{ 'customer.general.tel.value' | t }}：">{{ order.shipping_address.full_tel }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              {% endif %}
+            </div>
+            <!-- カスタム項目 -->
+            <div id="view-free_columns" class="p-history_detail">
+              {% if base_info.use_free_columns? and base_info.use_order_free_columns_mypage? and liquid_custom_field != empty %}
+                <div class="p-free_column_view">
+                  <h2 class="p-free_column_view__head u-text--subhead">{{ base_info.order_free_columns_title }}</h2>
+                  {% for custom_field_info in liquid_custom_field %}
+                    {% for custom_info in custom_field_info[1] %}
+                      {% assign info = custom_info[1] %}
+                      <div class="p-free_column_view__body">
+                        {% if info['category'] %}
+                          <h3 class="p-free_column_view__category u-text--subhead">{{ info['category'] | escape }}</h3>
+                        {% endif %}
+                        <table class="p-free_column_view__table c-free_column_table">
+                          <tbody>
+                          {% for i_hash in info['info'] %}
+                            {% assign i = i_hash[1] %}
+                            <tr class="c-free_column_table__row">
+                              <th class="c-free_column_table__head u-text--body">{{ i['free_columns_label'] | escape }}</th>
+                              <td class="c-free_column_table__data u-text--body">{{ i['free_column_values_value'] | join: ', ' | escape }}</td>
+                            </tr>
+                          {% endfor %}
+                          </tbody>
+                        </table>
+                      </div>
+                    {% endfor %}
+                  {% endfor %}
+                </div>
+              {% endif %}
+            </div>
+            <!-- 戻るボタン -->
+            <div class="p-account__inner__content__form__bottom">
+              {% if base_info.order_receipt_display_flg? and order.smaregi_order? == false %}
+                <button class="receipt-issue p-account__inner__content__form__bottom__btn u-text--btn u-color__btn--bg" value="{{ order.number }}">領収書発行</button>
+              {% endif %}
+              <a class="p-account__inner__content__form__bottom__link u-text--link" href="/shop/customer/orders">{{ 'general.action.back.value' | t }}</a>
+            </div>
+          </div>
+          <!-- 決済エラーの場合に表示する支払い方法変更フォーム -->
+          {% if payment_methods_changable_flg %}
+            <div class="p-history_detail">
+              <!-- 支払い方法変更 -->
+              <div id="payment-method-edit-view" class="p-subscription_edit__block u-color__border--border">
+                <div class="p-subscription_edit__block__title u-text--subhead">{{ 'payments.general.change_payment_method.value' | t }}</div>
+                <div class="p-subscription_edit__block__lead u-text--body">{{ 'general.message.save_lead_text.value' | t }}</div>
+                <form class="p-account__inner__content__form" action="/shop/customer/orders/{{ order.number }}" accept-charset="UTF-8" method="post">
+                  <input type="hidden" name="_method" value="put">
+                  {% csrf_meta_tags %}
+                  <div class="p-account__inner__content__form__text u-text--body"><span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span>{{ 'general.message.input_required.value' | t }}</div>
+                  <table class="c-form_table">
+                    <tbody>
+                      <!-- 支払い方法変更 -->
+                      <tr>
+                        <th class="u-text--body">{{ 'payments.general.payment_method.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+                        <td>
+                          <label class="c-form_table__select">
+                            <select class="u-text--input u-color__input--bg u-color__border--input" name="order[payment_attributes][payment_method_id]" id="order_payment_attributes_payment_method_id">
+                              {% for payment_method in payment_methods %}
+                                <option value="{{ payment_method.id }}" {% if order.payment_method.id == payment_method.id %}selected{% endif %}>{{ payment_method.name }}</option>
+                              {% endfor %}
+                            </select>
+                          </label>
+                        </td>
+                      </tr>
+                      <!-- クレジットカード選択 -->
+                      <tr id="credit-card">
+                        <th class="u-text--body">{{ 'payments.credit_card.credit_card.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+                        <td>
+                          <label class="c-form_table__select">
+                            <select class="u-text--input u-color__input--bg u-color__border--input validate[required]" name="order[payment_attributes][source_id]" id="order_payment_attributes_source_id">
+                              <option value="">--</option>
+                              {% for card in credit_cards %}
+                                <option value="{{ card.id }}" {% if selected_credit_card.id == card.id %}selected{% endif %}>{{ card.display_number_with_default }}</option>
+                              {% endfor %}
+                            </select>
+                          </label>
+                          <input value="EcForce::CreditCard" type="hidden" name="order[payment_attributes][source_type]" id="order_payment_attributes_source_type">
+                          {% if base_info.credit_card_editable? %}
+                            <a href="/shop/customer/cards"><span class="u-text--link">{{ 'payments.credit_card.transition_card.value' | t }}</span></a>
+                          {% endif %}
+                        </td>
+                      </tr>
+                      <!-- 分割回数 -->
+                      <tr class="form-group">
+                        <th class="u-text--body">{{ 'payments.credit_card.payment_times.value' | t }}</th>
+                        <td>
+                          <label class="c-form_table__select">
+                            <select class="u-text--input u-color__input--bg u-color__border--input" name="order[payment_attributes][payment_times]" id="order_payment_attributes_payment_times">
+                              {% for i in (2..24) %}
+                                <option value="{{ i }}" {% if order.payment.payment_times == i %}selected{% endif %}>{{ i }}</option>
+                              {% endfor %}
+                            </select>
+                          </label>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div class="p-account__inner__content__form__bottom">
+                    <!-- 送信リンク -->
+                    <input class="p-account__inner__content__form__bottom__btn u-text--btn u-color__btn--bg" type="submit" name="commit" value="{{ 'general.action.save.value' | t }}" data-disable-with="{{ 'general.action.saving.value' | t }}">
+                  </div>
+                </form>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

@@ -1,0 +1,52 @@
+{% case id %}
+{% when 'information_show_content' %}
+  {% assign base_class = 'p-column_header__panel__inner__top__share' %}
+  {% assign share_url = '/shop/information/' | append: information.slug | prepend: site_url | url_encode %}
+  {% assign share_url_line = 'https://social-plugins.line.me/lineit/share?url=' | append: share_url %}
+{% else %}
+  {% assign base_class = 'c-product_info__share' %}
+  {% assign share_url = '/shop/products/' | append: product.master.sku | prepend: site_url | url_encode %}
+  {% assign share_url_line = 'https://line.me/R/msg/text/?' | append: share_url %}
+{% endcase %}
+{% comment %}
+[ECFDEV-12962]
+Liquid::Template.parse時に渡すsettingsで定義されているsettings_data.jsonの
+階層が2種類存在するためliquid側で制御する（暫定対応）
+content_for利用時のsettings: application_helper.rb#parse_section_liquid -> set_theme_store_load_path.rb#set_theme_store_load_path > @settings
+sectionタグ利用時のsettings: liquid.rb > SectionTag#render > settings_data
+{% endcomment %}
+{% if settings.current %}
+  {% assign setting = settings.current.settings %}
+{% else %}
+  {% assign setting = settings.settings %}
+{% endif %}
+<div data-section-id="sns" class="{{ base_class }}">
+  {% if section.settings.sns == true or section.settings.sns == 'true' %}
+    <div class="{{ base_class }}__label u-text--body">
+      {{ section.settings.share_title | escape }}
+    </div>
+    <ul class="{{ base_class }}__list u-color--head">
+      {% if setting.sns.settings.facebook == true or setting.sns.settings.facebook == 'true' %}
+        <li class="{{ base_class }}__list__item">
+          <a class="{{ base_class }}__list__item__inner" href="https://www.facebook.com/share.php?u={{share_url}}" rel="nofollow" target="_blank">
+            <i class="u-icon--facebook"></i>
+          </a>
+        </li>
+      {% endif %}
+      {% if setting.sns.settings.twitter == true or setting.sns.settings.twitter == 'true' %}
+        <li class="{{ base_class }}__list__item">
+          <a class="{{ base_class }}__list__item__inner" href="https://twitter.com/share?url={{share_url}}" rel="nofollow" target="_blank">
+            <i class="u-icon--twitter"></i>
+          </a>
+        </li>
+      {% endif %}
+      {% if setting.sns.settings.line == true or setting.sns.settings.line == 'true' %}
+        <li class="{{ base_class }}__list__item">
+          <a class="{{ base_class }}__list__item__inner" href="{{share_url_line}}" rel="nofollow" target="_blank">
+            <i class="u-icon--line"></i>
+          </a>
+        </li>
+      {% endif %}
+    </ul>
+  {% endif %}
+</div>

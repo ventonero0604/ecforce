@@ -1,0 +1,33 @@
+{% if section.disabled == "true" or section.disabled == true %}
+  <section data-section-id="{{id}}" data-section-type="{{section.type}}" style="display: none;">
+{% else %}
+  <section data-section-id="{{id}}" data-section-type="{{section.type}}">
+{% endif %}
+  <div class="l-container__row">
+    {% if section.settings.image == '' %}
+      <div class="p-signup">
+        <header class="p-signup__title">
+          <h2 class="p-signup__title__en u-text--head">{{ section.settings.head | escape }}</h2>
+          <span class="p-signup__title__jp u-text--subhead">{{ section.settings.subhead | escape }}</span>
+        </header>
+        <p class="p-signup__lead u-text--body">{{section.settings.body}}</p>{% comment %}Don't use escape{% endcomment %}
+    {% else %}
+      {% assign image_url = section.settings.image | generate_image_url: theme_file_root_path %}
+      <div class="p-signup" style="background-image: url('{{ image_url }}');">
+        <header class="p-signup__title">
+          <h2 class="p-signup__title__en u-text--head--overlay">{{ section.settings.head | escape }}</h2>
+          <span class="p-signup__title__jp u-text--subhead--overlay">{{ section.settings.subhead | escape }}</span>
+        </header>
+        <p class="p-signup__lead u-text--body--overlay">{{section.settings.body}}</p>{% comment %}Don't use escape{% endcomment %}
+    {% endif %}
+        <div class="p-signup__inner">
+          <div class="c-subscribe_form js-signup-form">
+            <input class="c-subscribe_form__input u-text--input u-color__input--bg u-color__border--input js-signup-form-input" type="email"
+                  placeholder="{{ 'customer.placeholder.email.value' | t }}" autocomplete="email">
+            <button type="button"
+                    class="c-subscribe_form__btn u-color__btn--bg--overlay u-text--btn--overlay js-signup-form-submit">{{ 'general.action.register.value' | t }}</button>
+          </div>
+        </div>
+    </div>
+  </div>
+</section>

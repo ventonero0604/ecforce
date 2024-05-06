@@ -1,0 +1,30 @@
+{
+  "id": "carts_show_recommend",
+  "type": "carts_show_recommend-section",
+  "name": {
+    "ja": "関連商品"
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "recommend",
+      "label": {
+        "ja": "関連商品表示"
+      }
+    },
+    {
+      "type": "text",
+      "id": "head",
+      "label": {
+        "ja": "見出し"
+      }
+    },
+    {
+      "type": "text",
+      "id": "subhead",
+      "label": {
+        "ja": "小見出し"
+      }
+    }
+  ]
+}

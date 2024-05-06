@@ -1,0 +1,31 @@
+{
+  "id": "selections_show_content",
+  "type": "selections_show_content-section",
+  "name": {
+    "ja": "コンテンツ"
+  },
+  "settings": [
+    {
+      "type": "radio",
+      "id": "content_align",
+      "label": {
+        "ja": "テキスト表示位置"
+      },
+      "options": [
+        {
+          "value": "left",
+          "label": {
+            "ja": "左寄せ"
+          }
+        },
+        {
+          "value": "center",
+          "label": {
+            "ja": "中央揃え"
+          }
+        }
+      ],
+      "default": "left"
+    }
+  ]
+}

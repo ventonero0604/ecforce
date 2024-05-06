@@ -1,0 +1,50 @@
+<style>
+  .p-movie__info__title {
+    color: inherit;
+  }
+  .p-movie__info__subTitle {
+    color: inherit;
+  }
+</style>
+{% if section.disabled == "true" or section.disabled == true %}
+  <section data-section-id="{{id}}" data-section-type="{{section.type}}" style="display: none;">
+{% else %}
+  <section data-section-id="{{id}}" data-section-type="{{section.type}}">
+{% endif %}
+  {% case section.settings.video_height %}
+    {% when "small" %}
+      {% assign video_height_modifier = '--small' %}
+      {% assign video_control_modifier = '--control' %}
+    {% when "medium" %}
+      {% assign video_height_modifier = '--middle' %}
+      {% assign video_control_modifier = '--control' %}
+    {% when "large" %}
+      {% assign video_height_modifier = '--large' %}
+      {% assign video_control_modifier = '' %}
+  {% endcase %}
+  <section class="p-movie u-color__bg--base {{video_height_modifier}}" data-url="https://www.youtube.com/embed/{{section.settings.video_id}}" data-id="{{section.settings.video_id}}">
+    <div class="p-movie__info">
+    {% if video_height_modifier == '--large' %}
+      <h2 class="p-movie__info__title u-text--head--overlay">{{section.settings.head}}</h2>
+      <p class="p-movie__info__subTitle u-text--subhead--overlay">{{section.settings.subhead}}</p>
+      <div class="p-movie__info__view">
+        <a href="#" class="p-movie__info__view__btn u-color__btn--bg u-text--btn">動画を見る</a>
+      </div>
+    {% else %}
+      <h2 class="p-movie__info__title u-text--head">{{section.settings.head}}</h2>
+      <p class="p-movie__info__subTitle u-text--subhead">{{section.settings.subhead}}</p>
+    {% endif %}
+    </div>
+    <div class="p-movie__inner {{video_control_modifier}}">
+      <iframe
+          id="ytplayer-{{id}}"
+          class="ytplayer"
+          frameborder="0"
+          allowfullscreen="1"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          width="640"
+          height="360"
+          src="https://www.youtube.com/embed/{{section.settings.video_id}}?enablejsapi=1&autoplay=1&loop=1&modestbranding=1&playsinline=1&start=1&disablekb=1&fs=0&showinfo=0&rel=0&mute=1&playlist={{section.settings.video_id}}{% if video_height_modifier != '--large' %}&controls=1{% endif %}"></iframe> 
+    </div>
+  </section>
+</section>

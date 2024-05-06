@@ -1,0 +1,68 @@
+{{ 'shop/customer/shipping_addresses' | javascript_include_tag }}
+<main class="l-container" role="main">
+  <div class="l-container__row u-margin__top--60 u-margin__bottom--100">
+    {{ 'notice' | flash: 'control-alert alert-success', 'text u-color__bg--bg u-color__text--alert' }}
+    {{ 'alert' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+    {{ 'error' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+    <div class="p-account">
+      <div class="p-account__inner">
+        <div class="p-account__inner__menu u-color__border--border">
+          {% include 'ec_force/shop/snippets/sidebar.html' %}
+        </div>
+        <div class="p-account__inner__content">
+          <ul class="c-breadcrumbs">
+            <li class="c-breadcrumbs__item u-text--link">
+              <a class="c-breadcrumbs__item__inner" href="/shop/customer">{{ 'account.general.mypage.value' | t }}</a>
+            </li>
+            <li class="c-breadcrumbs__item u-text--body">
+              <span class="c-breadcrumbs__item__inner">{{ 'orders.shipping_address.shipping_addresses.value' | t }}</span>
+            </li>
+          </ul>
+          <h1 class="p-account__inner__content__title u-text--head">{{ 'orders.shipping_address.shipping_addresses.value' | t }}</h1>
+          <p class="p-account__inner__content__lead u-text--body">{{ 'orders.shipping_address.shipping_address_lead_text.value' | t }}</p>
+          <div class="p-address_list">
+            <a class="p-address_list__add u-text--btn u-color__btn--bg" href="/shop/customer/shipping_addresses/new">{{ 'orders.shipping_address.add_shipping_address.value' | t }}</a>
+            {% if shipping_addresses.size > 0 %}
+              <table class="c-account_table u-color__border--border">
+                <tbody>
+                  <tr class="u-color__border--border u-color__bg--bg">
+                    <th class="u-text--strong">{{ 'customer.general.name.value' | t }}</th>
+                    <th class="u-text--strong">{{ 'customer.general.kana.value' | t }}</th>
+                    <th class="u-text--strong">{{ 'customer.general.zip.value' | t }}</th>
+                    <th class="u-text--strong">{{ 'customer.general.address.value' | t }}</th>
+                    <th class="u-text--strong">{{ 'customer.general.tel.value' | t }}</th>
+                    <th class="u-text--strong"></th>
+                    <th class="u-text--strong"></th>
+                  </tr>
+                  {% for shipping_address in shipping_addresses %}
+                    <tr class="u-color__border--border">
+                      <td class="u-text--body" data-title="{{ 'customer.general.name.value' | t }}：">{{ shipping_address.full_name }}</td>
+                      <td class="u-text--body" data-title="{{ 'customer.general.kana.value' | t }}：">{{ shipping_address.full_kana }}</td>
+                      <td class="u-text--body" data-title="{{ 'customer.general.zip.value' | t }}：">{{ shipping_address.full_zip }}</td>
+                      <td class="u-text--body" data-title="{{ 'customer.general.address.value' | t }}：">{{ shipping_address.full_address }}</td>
+                      <td class="u-text--body" data-title="{{ 'customer.general.tel.value' | t }}：">{{ shipping_address.full_tel }}</td>
+                      <td>
+                        <a class="c-account_table__edit u-color__text--accent" href="/shop/customer/shipping_addresses/{{ shipping_address.id }}/edit">
+                          <i class="u-icon--edit"></i>
+                          <span class="u-text--body">{{ 'general.action.edit.value' | t }}</span>
+                        </a>
+                      </td>
+                      <td>
+                        {% if shipping_addresses.size >= 2 %}
+                          <a class="c-account_table__delete u-text--link js-notransition" data-confirm="{{ 'general.message.is_really_delete.value' | t }}" rel="nofollow" data-method="delete" href="/shop/customer/shipping_addresses/{{ shipping_address.id }}">
+                            <i class="u-icon--close u-color--head"></i>
+                            <span class="u-text--link">{{ 'general.action.delete.value' | t }}</span>
+                          </a>
+                        {% endif %}
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

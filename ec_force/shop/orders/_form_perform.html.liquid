@@ -1,0 +1,78 @@
+<main id="perform-view" class="l-container" role="main">
+  <div class="l-container__row u-margin__top--80 u-margin_sp__top--40">
+    {% if order.error_messages != empty %}
+      <div class="alert_ec alert-danger_ec" style="padding: 8px 40px; margin: 0 auto 24px; display: table;">
+        {% for full_message in order.error_messages %}
+          <p style="margin-bottom: 0 !important;"> {{ full_message }} </p>
+        {% endfor %}
+      </div>
+      <legend style="font-size: 14px; margin-bottom: 32px; text-align: center; border: 0;"> 上記のエラーが発生したため、{{ order.product_names | join: ', ' }}でご注文を承ります。</legend>
+    {% endif %}
+    <div class="c-steps_to_order c-steps_to_order--theme">
+      <div class="c-steps_to_order__step c-steps_to_order__step--1">
+      <p class="c-steps_to_order__number u-font__en is-complete">1</p>
+        <p class="c-steps_to_order__text">ご注文内容の<br>入力</p>
+      </div>
+      <div class="c-steps_to_order__step c-steps_to_order__step--2">
+        <p class="c-steps_to_order__number u-font__en is-complete">2</p>
+        <p class="c-steps_to_order__text">ご注文内容の<br>確認</p>
+      </div>
+      <div class="c-steps_to_order__step c-steps_to_order__step--3">
+        <p class="c-steps_to_order__number u-font__en is-active">3</p>
+        <p class="c-steps_to_order__text">ご注文<br>完了</p>
+      </div>
+    </div>
+  </div>
+  <div class="l-container__row u-margin__top--60 u-margin__bottom--80">
+    <header class="p-page_header">
+      <div class="p-page_header__inner">
+        <h1 class="p-page_header__inner__title u-text--head">{{ 'orders.general.complete_text.value' | t }}</h1>
+        <!-- お問い合わせ用メールアドレス -->
+        <p class="p-page_header__inner__lead u-text--body">
+          {{ 'orders.general.complete_lead_text.value' | t }}
+          <a class="u-text--link" href="mailto:{{ base_info.contact_email }}">{{ base_info.contact_email }}</a>
+        </p>
+        <div>
+          <p class="p-page_header__inner__lead u-text--subhead">{{ 'orders.general.order_number.value' | t }}：{{ order.number }}</p>
+        </div>
+      </div>
+    </header>
+  </div>
+
+  {% if line_id_linkable and order.complete? %}
+    <hr class="mt15 mb5">
+    <div class="alert">
+      {{ line_settings['information_context'] }}
+      <!-- LINE ID 連携ボタン（リンク） -->
+    </div>
+    <div class="line_new_ec">
+      <div class="button-container">
+        <a class="button btn-line line-token-set-btn" href="#">
+          <span class="before-btn-line" style="background-image:url('{{ theme_file_root_path }}/assets/images/login-line.png')"></span>
+          {{ 'account.line.line_id.value' | t }}
+          <span class="after-btn-line"></span>
+        </a>
+      </div>
+    </div>
+  {% endif %}
+
+  {% comment %} カウントダウンタイマー {% endcomment %}
+  {% if use_timer %}
+  <div class="l-container__row">
+    <div id="countdown-timer" class="default-hide">
+        <div class="timer-clock c-timer_clock">
+          <span class="c-timer_clock__text timer left">有効期限&nbsp;</span>
+          <span class="c-timer_clock__text hour">
+            <span class="timer hour"></span> 時間
+          </span>
+          <span class="c-timer_clock__text minute">
+            <span class="timer minute"></span> 分
+          </span>
+          <span class="c-timer_clock__text second">
+            <span class="timer second"></span> 秒
+          </span>
+        </div>
+    </div>
+  </div>
+  {% endif %}
+</main>

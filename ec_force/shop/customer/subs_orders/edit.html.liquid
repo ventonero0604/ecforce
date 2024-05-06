@@ -1,0 +1,539 @@
+{{ 'shop/customer/subs_orders' | javascript_include_tag }}
+
+<main class="l-container" role="main" id='subs-order-edit-view'>
+  <div class="l-container__row u-margin__top--60 u-margin__bottom--100">
+    {{ 'notice' | flash: 'control-alert alert-success', 'text u-color__bg--bg u-color__text--alert' }}
+    {{ 'alert' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+    {{ 'error' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+    <div class="p-account">
+      <div class="p-account__inner">
+        <div class="p-account__inner__menu u-color__border--border">
+          {% include 'ec_force/shop/snippets/sidebar.html' %}
+        </div>
+        <div class="p-account__inner__content">
+          <ul class="c-breadcrumbs">
+            <li class="c-breadcrumbs__item u-text--link">
+              <a class="c-breadcrumbs__item__inner" href="/shop/customer">{{ 'account.general.mypage.value' | t }}</a>
+            </li>
+            <li class="c-breadcrumbs__item u-text--link">
+              <a class="c-breadcrumbs__item__inner" href="/shop/customer/subs_orders">{{ 'subs_orders.general.subs_orders.value' | t }}</a>
+            </li>
+            <li class="c-breadcrumbs__item u-text--body">
+              <span class="c-breadcrumbs__item__inner">{{ 'subs_orders.general.edit_recurring.value' | t }}</span>
+            </li>
+          </ul>
+          <h1 class="p-account__inner__content__title u-text--head">{{ 'orders.general.order_number.value' | t }}：{{ subs_order.number }}</h1>
+          <p class="p-account__inner__content__lead u-text--body">{{ 'general.message.save_lead_text.value' | t }}</p>
+          <div class="p-subscription_edit">
+            <div id="payment-edit-view">
+              <!-- 支払い方法変更 -->
+              {% if base_info.payment_method_changeable_on_mypage? %}
+                {% unless payment_methods.size == 0 %}
+                  <div id="payment-method-edit-view" class="p-subscription_edit__block u-color__border--border">
+                    <div class="p-subscription_edit__block__title u-text--subhead">{{ 'payments.general.change_payment_method.value' | t }}</div>
+                    <div class="p-subscription_edit__block__lead u-text--body">{{ 'general.message.save_lead_text.value' | t }}</div>
+                    <form class="p-account__inner__content__form" action="/shop/customer/subs_orders/{{ subs_order.number }}" accept-charset="UTF-8" method="post">
+                      <input type="hidden" name="_method" value="put">
+                      {% csrf_meta_tags %}
+                      <div class="p-account__inner__content__form__text u-text--body"><span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span>{{ 'general.message.input_required.value' | t }}</div>
+                      <table class="c-form_table">
+                        <tbody>
+                          <!-- 支払い方法変更 -->
+                          <tr>
+                            <th class="u-text--body">{{ 'payments.general.payment_method.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+                            <td>
+                              <label class="c-form_table__select">
+                                <select class="u-text--input u-color__input--bg u-color__border--input" name="subs_order[payment_attributes][payment_method_id]" id="subs_order_payment_attributes_payment_method_id">
+                                  {% for payment_method in payment_methods %}
+                                    <option value="{{ payment_method.id }}" {% if subs_order.payment_method.id == payment_method.id %}selected{% endif %}>{{ payment_method.name }}</option>
+                                  {% endfor %}
+                                </select>
+                              </label>
+                            </td>
+                          </tr>
+                          <!-- クレジットカード選択 -->
+                          <tr id="credit-card">
+                            <th class="u-text--body">{{ 'payments.credit_card.credit_card.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+                            <td>
+                              <label class="c-form_table__select">
+                                <select class="u-text--input u-color__input--bg u-color__border--input validate[required]" name="subs_order[payment_attributes][source_id]" id="subs_order_payment_attributes_source_id">
+                                  <option value="">--</option>
+                                  {% for card in credit_cards %}
+                                    <option value="{{ card.id }}" {% if selected_credit_card.id == card.id %}selected{% endif %}>{{ card.display_number_with_default }}</option>
+                                  {% endfor %}
+                                </select>
+                              </label>
+                              <input value="EcForce::CreditCard" type="hidden" name="subs_order[payment_attributes][source_type]" id="subs_order_payment_attributes_source_type">
+                              {% if base_info.credit_card_editable? %}
+                                <a href="/shop/customer/cards"><span class="u-text--link">{{ 'payments.credit_card.transition_card.value' | t }}</span></a>
+                              {% endif %}
+                            </td>
+                          </tr>
+                          <!-- 分割回数 -->
+                          <tr class="form-group">
+                            <th class="u-text--body">{{ 'payments.credit_card.payment_times.value' | t }}</th>
+                            <td>
+                              <label class="c-form_table__select">
+                                <select class="u-text--input u-color__input--bg u-color__border--input" name="subs_order[payment_attributes][payment_times]" id="subs_order_payment_attributes_payment_times">
+                                  {% for i in (2..24) %}
+                                    <option value="{{ i }}" {% if subs_order.payment.payment_times == i %}selected{% endif %}>{{ i }}</option>
+                                  {% endfor %}
+                                </select>
+                              </label>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <div class="p-account__inner__content__form__bottom">
+                        <!-- 送信リンク -->
+                        <input class="p-account__inner__content__form__bottom__btn u-text--btn u-color__btn--bg" type="submit" name="commit" value="{{ 'general.action.save.value' | t }}" data-disable-with="{{ 'general.action.saving.value' | t }}">
+                        <!-- 戻るリンク -->
+                        <a class="p-account__inner__content__form__bottom__link u-text--link" href="/shop/customer/subs_orders/{{ subs_order.number }}">{{ 'general.action.back.value' | t }}</a>
+                      </div>
+                    </form>
+                  </div>
+                {% endunless %}
+              {% endif %}
+
+              <!-- ポイント利用予約 -->
+              {% if base_info.use_point? and base_info.use_point_reservation? %}
+                <div id='point-redeem-view' class="p-subscription_edit__block u-color__border--border">
+                  <div class="p-subscription_edit__block__title u-text--subhead">{{ 'points.general.use_point_reservation.value' | t }}</div>
+                  <div class="p-subscription_edit__block__lead u-text--body">{{ 'points.general.use_point_reservation_lead_text.value' | t }}</div>
+                  <form class="p-account__inner__content__form" action="/shop/customer/subs_orders/{{ subs_order.number }}" accept-charset="UTF-8" method="post">
+                    {% csrf_meta_tags %}
+                    <input type="hidden" name="_method" value="put">
+                    {% if current_customer.point_total <= base_info.point_event_redeem.point_upper_limit %}
+                      {% assign point_upper_limit = current_customer.point_total %}
+                    {% else %}
+                      {% assign point_upper_limit = base_info.point_event_redeem.point_upper_limit %}
+                    {% endif %}
+
+                    {% if current_customer.point_total <= base_info.point_event_redeem.point_lower_limit %}
+                      {% assign point_lower_limit = current_customer.point_total %}
+                    {% else %}
+                      {% assign point_lower_limit = base_info.point_event_redeem.point_lower_limit %}
+                    {% endif %}
+
+                    <!-- ポイント利用予約入力フォーム -->
+                    <div class="p-account__inner__content__form__text u-text--body"><span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span>{{ 'general.message.input_required.value' | t }}</div>
+                    <table class="c-form_table">
+                      <tbody>
+                        <!-- ポイント有効期限確認 -->
+                        {% if subs_order.active_point_for_next_auth_order? %}
+                          <tr>
+                            <th class="u-text--body">{{ 'points.general.use_point.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+                            <td>
+                              <label class="c-form_table__checkbox consent_wrapper">
+                                <input name="subs_order[all_point_redeem]" type="hidden" value="0" />
+                                <input class="u-color__border--input" type="checkbox" value="1" name="subs_order[all_point_redeem]" id="subs_order_all_point_redeem" {% if subs_order.all_point_redeem == true %}checked{% endif %}/>
+                                <span class="c-form_table__checkbox__frame u-color__btn"></span>
+                                <span class="c-form_table__checkbox__text u-text--body">{{ 'points.general.use_point_all_point_redeem.value' | t }}</span>
+                              </label>
+                              <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[integer],min[{{ point_lower_limit }}],max[{{ point_upper_limit }}]" type="text" value="{{ subs_order.point_redeem }}" name="subs_order[point_redeem]" id="subs_order_point_redeem" {% if subs_order.all_point_redeem == true %}disabled{% endif %} />
+                            </td>
+                          </tr>
+                          <tr>
+                            <th class="u-text--body"></th>
+                            <td>
+                              <div class="c-form_table__vertical">
+                                <!-- 次回のみポイント利用フラグ -->
+                                <!-- 次回のみポイントを利用する -->
+                                <label class="c-form_table__radio">
+                                  <input class="u-text--input u-color__input--bg u-color__border--input" type="radio" name="subs_order[onetime_point_redeem]" id="subs_order_onetime_point_redeem_true" value="1" {% if subs_order.onetime_point_redeem == true %}checked{% endif %}>
+                                  <span class="c-form_table__radio__frame u-color__btn--bg"></span>
+                                  <span class="c-form_table__radio__text u-text--body">{{ 'points.general.use_point_only_next_order.value' | t }}</span>
+                                </label>
+                                <!-- 次回以降もポイントを利用する -->
+                                <label class="c-form_table__radio">
+                                  <input class="u-text--input u-color__input--bg u-color__border--input" type="radio" name="subs_order[onetime_point_redeem]" id="subs_order_onetime_point_redeem_false" value="0" {% if subs_order.onetime_point_redeem == false %}checked{% endif %}>
+                                  <span class="c-form_table__radio__frame u-color__btn--bg"></span>
+                                  <span class="c-form_table__radio__text u-text--body">{{ 'points.general.use_point_after_next_order_all.value' | t }}</span>
+                                </label>
+                              </div>
+                            </td>
+                          </tr>
+                        {% else %}
+                          <tr>
+                            <th class="u-text--body">{{ 'points.general.use_point.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+                            <td><input class="u-text--input u-color__input--bg u-color__border--input" type="text" value="{{ subs_order.point_redeem }}" name="subs_order[point_redeem]" id="subs_order_point_redeem" disabled="true"/></td>
+                          </tr>
+                        {% endif %}
+                        <tr>
+                          <th class="u-text--body"></th>
+                          <td>
+                            <div class="c-form_table__vertical">
+                              <!-- 現在の所持ポイント -->
+                              <div class="p-subscription_edit__block__point u-text--body">{{ 'points.general.current_customer_point.value' | t }}{{ current_customer.point_total | number_with_delimiter }}</div>
+                              <!-- ポイント利用上限 -->
+                              <div class="p-subscription_edit__block__notes u-text--body">{{ 'points.general.point_upper_limit.value' | t }}{{ base_info.point_event_redeem.point_upper_limit | number_with_delimiter }}</div>
+                              <!-- ポイント利用下限 -->
+                              <div class="p-subscription_edit__block__notes u-text--body">{{ 'points.general.point_lower_limit.value' | t }}{{ base_info.point_event_redeem.point_lower_limit | number_with_delimiter }}</div>
+                            </div>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                      <div class="p-account__inner__content__form__bottom">
+                        <!-- 送信リンク -->
+                        {% if subs_order.active_point_for_next_auth_order? %}
+                          <button class="p-account__inner__content__form__bottom__btn u-text--btn u-color__btn--bg" type="submit">{{ 'general.action.save.value' | t }}</button>
+                        {% endif %}
+                        <!-- 戻るリンク -->
+                        <a class="p-account__inner__content__form__bottom__link u-text--link" href="/shop/customer/subs_orders/{{ subs_order.number }}">{{ 'general.action.back.value' | t }}</a>
+                      </div>
+                  </form>
+                </div>
+              {% endif %}
+
+              <!-- クーポン利用 -->
+              <div id='coupon-view' class="p-subscription_edit__block u-color__border--border" id='coupon-view'>
+                <div class="p-subscription_edit__block__title u-text--subhead">{{ 'orders.coupon.use_coupon.value' | t }}</div>
+                <div class="p-subscription_edit__block__lead u-text--body">{{ 'general.message.save_lead_text.value' | t }}</div>
+                <form class="p-account__inner__content__form" action="/shop/customer/subs_orders/{{ subs_order.number }}" accept-charset="UTF-8" method="post">
+                  {% csrf_meta_tags %}
+                  <input type="hidden" name="_method" value="put">
+                  <div class="p-account__inner__content__form__text u-text--body"><span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span>{{ 'general.message.input_required.value' | t }}</div>
+                  <table class="c-form_table">
+                    <tbody>
+                      <tr>
+                        <!-- クーポンコード入力フォーム -->
+                        <th class="u-text--body">{{ 'orders.coupon.coupon_code.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+                        <td class="u-text--body">
+                          {% if subs_order.coupon_id %}
+                            {{ 'orders.coupon.use.value' | t }}
+                          {% else %}
+                            <input class="u-text--input u-color__input--bg u-color__border--input" type="text" name='subs_order[coupon_code]' value="{{ subs_order.coupon_code }}" id="subs_order_coupon_code" />
+                          {% endif %}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div class="p-account__inner__content__form__bottom">
+                    <!-- 送信リンク -->
+                    {% if subs_order.coupon_id %}
+                      <a class="p-account__inner__content__form__bottom__btn u-text--btn u-color__btn--bg" data-confirm="{{ 'general.message.is_really_remove.value' | t }}" rel="nofollow" href="javascript:remove_coupon.submit();">{{ 'general.action.remove.value' | t }}</a>
+                    {% else %}
+                      <button class="p-account__inner__content__form__bottom__btn u-text--btn u-color__btn--bg" type="submit">{{ 'general.action.save.value' | t }}</button>
+                    {% endif %}
+                    <a class="p-account__inner__content__form__bottom__link u-text--link" href="/shop/customer/subs_orders/{{ subs_order.number }}">{{ 'general.action.back.value' | t }}</a>
+                  </div>
+                </form>
+
+                <form name="remove_coupon" action="/shop/customer/subs_orders/{{ subs_order.number }}" accept-charset="UTF-8" method="post">
+                  <input type="hidden" name="_method" value="put">
+                  <input type="hidden" name="subs_order[coupon_code]">
+                </form>
+              </div>
+            </div>
+
+            <div id="delivery-edit-view">
+              <!-- 配送サイクル設定 -->
+              {% if base_info.delivery_cycle_changeable? %}
+                <div id='shipping-cycle-edit-view' class="p-subscription_edit__block u-color__border--border">
+                  <div class="p-subscription_edit__block__title u-text--subhead">{{ 'delivery.delivery_cycle.delivery_cycle.value' | t }}</div>
+                  <div class="p-subscription_edit__block__lead u-text--body">{{ 'general.message.save_lead_text.value' | t }}</div>
+                  <form class="p-account__inner__content__form" action="/shop/customer/subs_orders/{{ subs_order.number }}" accept-charset="UTF-8" method="post">
+                    {% csrf_meta_tags %}
+                    <input type="hidden" name="_method" value="put" />
+                    <input value="true" type="hidden" name="subs_order[payment_schedule_locked]" id="subs_order_payment_schedule_locked">
+                    <div class="p-account__inner__content__form__text u-text--body"><span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span>{{ 'general.message.input_required.value' | t }}</div>
+                    <table class="c-form_table">
+                      <tbody>
+                        <!-- 配送サイクルの指定 -->
+                        <tr>
+                          <th class="u-text--body">{{ 'delivery.delivery_cycle.delivery_cycle.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+                          <td>
+                            <label class="c-form_table__select">
+                              <select class="u-text--input u-color__input--bg u-color__border--input" id="subs_order_payment_schedule" name="subs_order[payment_schedule]">
+                                {% if available_payment_schedules contains 'date' %}
+                                  <option value="date" {% if subs_order.payment_schedule == "date" %}selected{% endif %}>{{ 'delivery.delivery_cycle.specify_by_date.value' | t }}</option>
+                                {% endif %}
+                                {% if available_payment_schedules contains 'term' %}
+                                  <option value="term" {% if subs_order.payment_schedule == "term" %}selected{% endif %}>{{ 'delivery.delivery_cycle.specify_by_term.value' | t }}</option>
+                                {% endif %}
+                                {% if available_payment_schedules contains 'day_of_week' %}
+                                  <option value="day_of_week" {% if subs_order.payment_schedule == "day_of_week" %}selected{% endif %}>{{ 'delivery.delivery_cycle.specify_by_day_of_week.value' | t }}</option>
+                                {% endif %}
+                              </select>
+                            </label>
+                          </td>
+                        </tr>
+                        <!-- 日付で指定 -->
+                        <tr id='container_delivery_schedule_by_date'>
+                          <th class="u-text--body"></th>
+                          <td>
+                            <div class="c-form_table__tel">
+                              <label class="c-form_table__select">
+                                <select class="u-text--input u-color__input--bg u-color__border--input validate[required]" name="subs_order[scheduled_to_be_delivered_every_x_month]" id="subs_order_scheduled_to_be_delivered_every_x_month">
+                                  {% if subs_order.available_delivery_dates.size > 0 %}
+                                    {% assign months = subs_order.available_delivery_dates | map: 'month' %}
+                                    {% for m in months %}
+                                      <option value="{{ m }}" {% if m == subs_order.scheduled_to_be_delivered_every_x_month %}selected{% endif %}>{{ m }}{{ 'delivery.delivery_cycle.months.value' | t }}</option>
+                                    {% endfor %}
+                                  {% else %}
+                                    {% for m in (1..12) %}
+                                      <option value="{{ m }}" {% if subs_order.scheduled_to_be_delivered_every_x_month == m %}selected{% endif %}>{{ m }}{{ 'delivery.delivery_cycle.months.value' | t }}</option>
+                                    {% endfor %}
+                                  {% endif %}
+                                </select>
+                              </label>
+                              <span class="u-text--body">{{ 'delivery.delivery_cycle.every_time.value' | t }}</span>
+                              <label class="c-form_table__select">
+                                <select class="u-text--input u-color__input--bg u-color__border--input validate[required]" name="subs_order[scheduled_to_be_delivered_on_xth_day]" id="subs_order_scheduled_to_be_delivered_on_xth_day">
+                                  {% for d in (1..28) %}
+                                    <option value="{{ d }}" {% if subs_order.scheduled_to_be_delivered_on_xth_day == d %}selected{% endif %}>{{ d }}{{ 'customer.general.day.value' | t }}</option>
+                                  {% endfor %}
+                                  <option value="99" {% if subs_order.scheduled_to_be_delivered_on_xth_day == 99 %}selected{% endif %}>{{ 'delivery.delivery_cycle.last_day.value' | t }}</option>
+                                </select>
+                              </label>
+                              <span class="u-text--body">{{ 'delivery.delivery_cycle.delivery_to_day.value' | t }}</span>
+                            </div>
+                          </td>
+                        </tr>
+                        <!-- 間隔で指定 -->
+                        <tr id='container_delivery_schedule_by_term'>
+                          <th class="u-text--body"></th>
+                          <td>
+                            <div class="c-form_table__tel">
+                              <label class="c-form_table__select">
+                                <select class="u-text--input u-color__input--bg u-color__border--input validate[required]" name="subs_order[scheduled_to_be_delivered_every_x_day]" id="subs_order_scheduled_to_be_delivered_every_x_day">
+                                  {% if subs_order.available_delivery_intervals.size > 0 %}
+                                    {% assign intervals = subs_order.available_delivery_intervals | map: 'day' %}
+                                    {% for interval in intervals %}
+                                      <option value="{{ interval }}" {% if interval == subs_order.scheduled_to_be_delivered_every_x_day %}selected{% endif %}>{{ interval }}</option>
+                                    {% endfor %}
+                                  {% else %}
+                                    {% assign least_interval = subs_order_settings['require_at_least_x_days_between_1st_and_2nd_orders'] %}
+                                    {% for interval in (least_interval..30) %}
+                                      <option value="{{ interval }}" {% if interval == subs_order.scheduled_to_be_delivered_every_x_day %}selected{% endif %}>{{ interval }}</option>
+                                    {% endfor %}
+                                    <option value="60" {% if subs_order.scheduled_to_be_delivered_every_x_day == 60 %}selected{% endif %}>60</option>
+                                    <option value="90" {% if subs_order.scheduled_to_be_delivered_every_x_day == 90 %}selected{% endif %}>90</option>
+                                  {% endif %}
+                                </select>
+                              </label>
+                              <span class="u-text--body">{{ 'delivery.delivery_cycle.delivered_every_other_day.value' | t }}</span>
+                            </div>
+                          </td>
+                        </tr>
+                        <!-- 曜日で指定 -->
+                        <tr id='container_delivery_schedule_by_day_of_week' style='display:none;'>
+                          <th class="u-text--body"></th>
+                          <td>
+                            <div class="c-form_table__tel">
+                              <label class="c-form_table__select">
+                                <select class="u-text--input u-color__input--bg u-color__border--input validate[required]" name='subs_order[scheduled_to_be_delivered_every_x_month]' id='subs_order_scheduled_to_be_delivered_every_x_month'>
+                                  {% if subs_order.available_delivery_dates.size > 0 %}
+                                    {% assign months = subs_order.available_delivery_dates | map: 'month' %}
+                                    {% for m in months %}
+                                      <option value="{{ m }}" {% if subs_order.scheduled_to_be_delivered_every_x_month == m %}selected{% endif %}>{{ m }}{{ 'delivery.delivery_cycle.months.value' | t }}</option>
+                                    {% endfor %}
+                                  {% else %}
+                                    {% for m in (1..12) %}
+                                      <option value="{{ m }}" {% if subs_order.scheduled_to_be_delivered_every_x_month == m %}selected{% endif %}>{{ m }}{{ 'delivery.delivery_cycle.months.value' | t }}</option>
+                                    {% endfor %}
+                                  {% endif %}
+                                </select>
+                              </label>
+                              <span class="u-text--body">{{ 'delivery.delivery_cycle.every_time.value' | t }}</span>
+                              <label class="c-form_table__select">
+                                <select class="u-text--input u-color__input--bg u-color__border--input validate[required]" name='subs_order[scheduled_to_be_delivered_on_xth_day_of_week]' id='subs_order_scheduled_to_be_delivered_on_xth_day_of_week'>
+                                  {% for n in (1..4) %}
+                                    <option value="{{ n }}" {% if subs_order.scheduled_to_be_delivered_on_xth_day_of_week == n %}selected{% endif %}>{{ n }}</option>
+                                  {% endfor %}
+                                </select>
+                              </label>
+                              <span class="u-text--body">{{ 'delivery.delivery_cycle.th.value' | t }}</span>
+                              <label class="c-form_table__select">
+                                <select class="u-text--input u-color__input--bg u-color__border--input validate[required]" name='subs_order[scheduled_to_be_delivered_every_x_day_of_week]' id='subs_order_scheduled_to_be_delivered_every_x_day_of_week'>
+                                  {% for d in (0..6) %}
+                                    <option value="{{ d }}" {% if subs_order.scheduled_to_be_delivered_every_x_day_of_week == d %}selected{% endif %}>{{ day_of_weeks[d] }}</option>
+                                  {% endfor %}
+                                </select>
+                              </label>
+                              <span class="u-text--body">{{ 'delivery.delivery_cycle.delivery_to_weekday.value' | t }}</span>
+                            </div>
+                          </td>
+                        </tr>
+                        <!-- 次回配送予定日をサイクルに合わせる -->
+                        {% if base_info.scheduled_to_be_delivered_at_based_on_last_order? %}
+                          <tr>
+                            <th class="u-text--body">{{ 'delivery.next.recalculate_scheduled_to_be_delivered_at_based_on_last_order.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+                            <td>
+                              <div class="c-form_table__gender">
+                                <label class="c-form_table__radio">
+                                  <input class="u-text--input u-color__input--bg u-color__border--input" checked name="subs_order[recalculate_scheduled_to_be_delivered_at_based_on_last_order]" type="radio" value="1">
+                                  <span class="c-form_table__radio__frame u-color__btn--bg"></span>
+                                  <span class="c-form_table__radio__text u-text--body">{{ 'general.general.yes.value' | t }}</span>
+                                </label>
+                                <label class="c-form_table__radio">
+                                  <input class="u-text--input u-color__input--bg u-color__border--input" name="subs_order[recalculate_scheduled_to_be_delivered_at_based_on_last_order]" type="radio" value="0">
+                                  <span class="c-form_table__radio__frame u-color__btn--bg"></span>
+                                  <span class="c-form_table__radio__text u-text--body">{{ 'general.general.no.value' | t }}</span>
+                                </label>
+                              </div>
+                            </td>
+                          </tr>
+                        {% endif %}
+                        <!-- 現在の次回配送予定日 -->
+                        <tr>
+                          <th class="u-text--body"></th>
+                          <td class="u-text--body">
+                            <div class="c-form_table__notes">{{ 'delivery.next.current_delivered_at.value' | t }}{{ subs_order.scheduled_to_be_delivered_at | date: "%Y/%m/%d" }}</div>
+                          </th>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div class="p-account__inner__content__form__bottom">
+                      <input type="submit" name="commit" value="{{ 'general.action.save.value' | t }}" class="p-account__inner__content__form__bottom__btn u-text--btn u-color__btn--bg" data-disable-with="{{ 'general.action.saving.value' | t }}" />
+                      <a class="p-account__inner__content__form__bottom__link u-text--link" href="/shop/customer/subs_orders/{{ subs_order.number }}">{{ 'general.action.back.value' | t }}</a>
+                    </div>
+                  </form>
+                </div>
+              {% endif %}
+              <!-- 次回配送予定日の変更 -->
+              {% if base_info.scheduled_to_be_delivered_at_changeable_on_mypage? %}
+                <div id="scheduled-to-be-delivered-view" class="p-subscription_edit__block u-color__border--border">
+                  <div class="p-subscription_edit__block__title u-text--subhead">{{ 'delivery.next.change_delivered_at.value' | t }}</div>
+                  <div class="p-subscription_edit__block__lead u-text--body">{{ 'delivery.next.delivered_at_lead_text.value' | t }}</div>
+                  <form class="p-account__inner__content__form" action="/shop/customer/subs_orders/{{ subs_order.number }}" accept-charset="UTF-8" method="post">
+                    <input type="hidden" name="_method" value="put">
+                    <input type='hidden' id='option_scheduled_to_be_delivered_at' value={{option_scheduled_to_be_delivered_at}}>
+                    <input type='hidden' id='current_scheduled_to_be_delivered_at' value={{subs_order.scheduled_to_be_delivered_at}}>
+                    {% csrf_meta_tags %}
+                    <div class="p-account__inner__content__form__text u-text--body"><span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span>{{ 'general.message.input_required.value' | t }}</div>
+                    <table class="c-form_table">
+                      <tbody>
+                        <!-- 次回配送予定日の選択 -->
+                        <tr>
+                          <th class="u-text--body">{{ 'delivery.next.delivered_at.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+                          <td>
+                            <label class="c-form_table__select">
+                              <select class="u-text--input u-color__input--bg u-color__border--input validate[required]" id='subs_order_scheduled_to_be_delivered_at' name="subs_order[scheduled_to_be_delivered_at]">
+                                {% assign a = subs_order.scheduled_to_be_delivered_at | date: "%Y-%m-%d" %}
+                                <option value={{ a }} selected>{{ a }}(現在の次回配送予定日)</option>
+                                {% for d in option_scheduled_to_be_delivered_at %}
+                                  {% assign b = d | date: "%Y-%m-%d" %}
+                                  {% unless a == b %}
+                                    <option value={{ d }}>{{ d }}</option>
+                                  {% endunless %}
+                                {% endfor %}
+                              </select>
+                            </label>
+                          </td>
+                        </tr>
+                        <!-- 現在の次回配送予定日 -->
+                        <tr>
+                          <th class="u-text--body"></th>
+                          <td class="u-text--body">
+                            <div class="c-form_table__notes">{{ 'delivery.next.current_delivered_at.value' | t }}{{ subs_order.scheduled_to_be_delivered_at | date: "%Y/%m/%d" }}</div>
+                          </th>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div class="p-account__inner__content__form__bottom">
+                      <!-- 送信リンク -->
+                      <input class="p-account__inner__content__form__bottom__btn u-text--btn u-color__btn--bg" type="submit" name="commit" value="{{ 'general.action.save.value' | t }}" data-disable-with="{{ 'general.action.saving.value' | t }}">
+                      <!-- 戻るリンク -->
+                      <a class="p-account__inner__content__form__bottom__link u-text--link" href="/shop/customer/subs_orders/{{ subs_order.number }}">{{ 'general.action.back.value' | t }}</a>
+                    </div>
+                  </form>
+                </div>
+              {% endif %}
+
+              <!-- 定期お届け時間の変更 -->
+              {% if base_info.scheduled_delivery_time_changeable_on_mypage? and subs_order.available_delivery_times.size > 0 %}
+                <div id="scheduled-delivery-time-view" class="p-subscription_edit__block u-color__border--border">
+                  <div class="p-subscription_edit__block__title u-text--subhead">{{ 'delivery.next.change_delivery_times.value' | t }}</div>
+                  <div class="p-subscription_edit__block__lead u-text--body">{{ 'delivery.next.delivery_times_lead_text.value' | t }}</div>
+                  <form class="p-account__inner__content__form" action="/shop/customer/subs_orders/{{ subs_order.number }}" accept-charset="UTF-8" method="post">
+                    <input type="hidden" name="_method" value="put">
+                    {% csrf_meta_tags %}
+                    <div class="p-account__inner__content__form__text u-text--body"><span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span>{{ 'general.message.input_required.value' | t }}</div>
+                    <table class="c-form_table">
+                      <tbody>
+                        <tr>
+                          <!-- 定期お届け時間の選択 -->
+                          <th class="u-text--body">{{ 'delivery.next.delivery_times.value' | t }}</th>
+                          <td>
+                            <label class="c-form_table__select">
+                              <select class="u-text--input u-color__input--bg u-color__border--input" id='subs_order_scheduled_delivery_time' name="subs_order[scheduled_delivery_time]">
+                                <option value="">{{ 'general.general.unspecified.value' | t }}</option>
+                                {% assign available_times = subs_order.available_delivery_times | map: 'time' %}
+                                {% for at in available_times %}
+                                  <option value="{{ at }}" {% if subs_order.scheduled_delivery_time == at %}selected{% endif %}>{{at}}</option>
+                                {% endfor %}
+                              </select>
+                            </label>
+                          </td>
+                        </tr>
+                        <!-- 現在のお届け時間 -->
+                        {% if subs_order.scheduled_delivery_time != "" %}
+                          <tr>
+                            <th class="u-text--body"></th>
+                            <td class="u-text--body">
+                              <div class="c-form_table__notes">{{ 'delivery.next.current_delivery_times.value' | t }}{{ subs_order.scheduled_delivery_time }}</div>
+                            </th>
+                          </tr>
+                        {% endif %}
+                      </tbody>
+                    </table>
+                    <div class="p-account__inner__content__form__bottom">
+                      <input class="p-account__inner__content__form__bottom__btn u-text--btn u-color__btn--bg" type="submit" name="commit" value="{{ 'general.action.save.value' | t }}" data-disable-with="{{ 'general.action.saving.value' | t }}">
+                      <a class="p-account__inner__content__form__bottom__link u-text--link" href="/shop/customer/subs_orders/{{ subs_order.number }}">{{ 'general.action.back.value' | t }}</a>
+                    </div>
+                  </form>
+                </div>
+              {% endif %}
+
+              <!-- 次回配送のスキップの変更 -->
+              {% if base_info.skip_next_delivery_on_mypage? %}
+                <div id="skip-next-delivery-view" class="p-subscription_edit__block u-color__border--border">
+                  <div class="p-subscription_edit__block__title u-text--subhead">{{ 'delivery.next.skip_next_delivery.value' | t }}</div>
+                  <div class="p-subscription_edit__block__lead u-text--body">{{ 'delivery.next.skip_next_delivery_lead_text.value' | t }}</div>
+                  <form class="p-account__inner__content__form" action="/shop/customer/subs_orders/{{ subs_order.number }}" accept-charset="UTF-8" method="post">
+                    <input type="hidden" name="_method" value="put">
+                    {% csrf_meta_tags %}
+                    <input value="true" type="hidden" name="subs_order[skip_next_scheduled_delivery]" id="subs_order_skip_next_scheduled_delivery">
+                    <table class="c-form_table">
+                      <tbody>
+                        <!-- 現在の次回配送予定日 -->
+                        <tr>
+                          <th class="u-text--body"></th>
+                          <td class="u-text--body">
+                            <div class="c-form_table__notes">{{ 'delivery.next.current_delivered_at.value' | t }}{{ subs_order.scheduled_to_be_delivered_at | date: "%Y/%m/%d" }}</div>
+                          </th>
+                        </tr>
+                        <!-- スキップした後の次回配送予定日 -->
+                        <tr>
+                          <th class="u-text--body"></th>
+                          <td class="u-text--body">
+                            {% if subs_order.skip_next_scheduled_delivery? == false %}
+                              <div class="c-form_table__notes">
+                                {{ 'delivery.next.skip_scheduled_delivery_time.value' | t }}
+                                {{ subs_order.next_scheduled_to_be_delivered_at | date: "%Y/%m/%d" }}
+                              </div>
+                            {% endif %}
+                          </th>
+                        </tr>
+                      </tbody>
+                    </table>
+                    <div class="p-account__inner__content__form__bottom">
+                      {% unless subs_order.skip_next_scheduled_delivery? %}
+                        <!-- 送信リンク -->
+                        <input class="p-account__inner__content__form__bottom__btn u-text--btn u-color__btn--bg" type="submit" name="commit" value="{{ 'delivery.next.skip_next_delivery.value' | t }}">
+                      {% endunless %}
+                      <!-- 戻るリンク -->
+                      <a class="p-account__inner__content__form__bottom__link u-text--link" href="/shop/customer/subs_orders/{{ subs_order.number }}">{{ 'general.action.back.value' | t }}</a>
+                    </div>
+                  </form>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

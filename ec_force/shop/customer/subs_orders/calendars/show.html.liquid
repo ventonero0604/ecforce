@@ -1,0 +1,141 @@
+{{ 'shop/customer/subs_orders/calendars' | javascript_include_tag }}
+
+<main class="l-container" role="main">
+  <div class="l-container__row u-margin__top--60 u-margin__bottom--100">
+    <div class="p-account">
+      <div class="p-account__inner">
+        <div class="p-account__inner__menu u-color__border--border">
+          {% include 'ec_force/shop/snippets/sidebar.html' %}
+        </div>
+        <div class="p-account__inner__content">
+          <ul class="c-breadcrumbs">
+            <li class="c-breadcrumbs__item u-text--link">
+              <a class="c-breadcrumbs__item__inner" href="/shop/customer">{{ 'account.general.mypage.value' | t }}</a>
+            </li>
+            <li class="c-breadcrumbs__item u-text--link">
+              <a class="c-breadcrumbs__item__inner" href="/shop/customer/subs_orders/{{ subs_order.number }}">{{ 'subs_orders.general.subs_orders.value' | t }}</a>
+            </li>
+            <li class="c-breadcrumbs__item u-text--body">
+              <span class="c-breadcrumbs__item__inner">{{ subs_order.number }}</span>
+            </li>
+          </ul>
+          <header class="p-favorite__header">
+            <div class="p-list_header__inner">
+              <h1 class="p-list_header__inner__title u-text--head">配送カレンダー&nbsp;&nbsp;{{ 'subs_orders.general.subs_order_number.value' | t }}:{{ subs_order.number }}</h1>
+              <div class="c-list_tool">
+              </div>
+            </div>
+          </header>
+
+          <div class="p-calendar u-margin__top--30">
+            <div class="p-calendar__header">
+              {% assign a = subs_order.scheduled_to_be_delivered_at | date: "%Y-%m" %}
+              {% assign b = current_calendar_date | date: "%Y-%m" %}
+              {% assign now_month = "today" | date: "%Y-%m" %}
+              {% assign current_month = current_calendar_date | date: "%Y-%m" %}
+              <div class="prev">
+                <a class="u-color__text--link" href="/shop/customer/subs_orders/{{ subs_order.number }}/calendars?date={{ prev_calendar_date | date: '%Y-%m-%d' }}">
+                  <span>前の月へ</span>
+                </a>
+              </div>
+              <div class="month">
+                {% if now_month != current_month %}
+                  <a class="backlink u-color__border--border u-color__text--main" href="/shop/customer/subs_orders/{{ subs_order.number }}/calendars">
+                    <span>当月に戻る</span>
+                  </a>
+                {% endif %}
+                <h2 class="month_value u-font__both">{{ current_calendar_date | date: "%Y年 %m月" }}</h2>
+              </div>
+              <div class="u-color__text--link next">
+                {% if a != b %}
+                  <a href="/shop/customer/subs_orders/{{ subs_order.number }}/calendars?date={{ next_calendar_date | date: '%Y-%m-%d' }}">
+                    <span>次の月へ</span>
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+            <div class="p-calendar__wrap">
+              {% assign day_of_week_text = '日,月,火,水,木,金,土' | split: ',' %}
+              {% assign today = "today" | date: "%Y-%m-%d" %}
+              {% comment %} PC {% endcomment %}
+              <table class="p-calendar__table u-color__border--border">
+                <thead>
+                  <tr>
+                    <th class="u-color__bg--bg u-color__border--border"><span class="u-font__en">SUN</span></th>
+                    <th class="u-color__bg--bg u-color__border--border"><span class="u-font__en">MON</span></th>
+                    <th class="u-color__bg--bg u-color__border--border"><span class="u-font__en">TUE</span></th>
+                    <th class="u-color__bg--bg u-color__border--border"><span class="u-font__en">WED</span></th>
+                    <th class="u-color__bg--bg u-color__border--border"><span class="u-font__en">THU</span></th>
+                    <th class="u-color__bg--bg u-color__border--border"><span class="u-font__en">FRI</span></th>
+                    <th class="u-color__bg--bg u-color__border--border"><span class="u-font__en">SAT</span></th>
+                  </tr>
+                </thead>
+                {% assign subs_order_scheduled_to_be_delivered_at = subs_order.scheduled_to_be_delivered_at | date: "%Y-%m-%d" %}
+                {% assign subs_order_changeable_scheduled_to_be_delivery_closed_at = subs_order.changeable_scheduled_to_be_delivery_closed_at | date: "%Y-%m-%d" %}
+                <tbody>
+                  {% for current_calendar_day in current_calendar_days %}
+                    {% assign wnum = forloop.index0 | modulo: 7 %}
+                    {% if wnum == 0 %}
+                      <tr>
+                    {% endif %}
+                    {% assign day = current_calendar_day | date: "%Y-%m-%d" %}
+                    {% assign wday = current_calendar_day | date: "%a" %}
+                    {% assign current_mon = current_calendar_date | date: '%m' %}
+                    {% assign looped_mon = current_calendar_day | date: '%m' %}
+
+                    {% if current_mon == looped_mon %}
+                      <td class="u-color__border--border">
+                        <div class="date u-font__en{% if day == today %} u-color__bg--accent u-color__text--base{% endif %}">{{ day | date: '%e' }}</div>
+                        <div class="detail">
+                          {% if subs_order_scheduled_to_be_delivered_at == day %}
+                            <div class="info-box scheduled u-color__bg--accent-light">
+                              <span>お届け予定日</span>
+                            </div>
+                            {% if subs_order_changeable_scheduled_to_be_delivery_closed_at == today and base_info.scheduled_to_be_delivered_at_changeable_on_mypage? %}
+                              <div class="change">
+                                <a class="u-color__text--link" href="/shop/customer/subs_orders/{{ subs_order.id }}/edit">変更する</a>
+                              </div>
+                            {% endif %}
+                          {% elsif subs_order_changeable_scheduled_to_be_delivery_closed_at == day and base_info.scheduled_to_be_delivered_at_changeable_on_mypage? %}
+                            <div class="info-box deadline u-color__bg--alert-light">
+                              <span class="u-color__text--alert">{{ subs_order_scheduled_to_be_delivered_at | date: "%m月%d日" }}分<br/>締め切り日</span>
+                            </div>
+                            {% if subs_order_changeable_scheduled_to_be_delivery_closed_at == day and base_info.scheduled_to_be_delivered_at_changeable_on_mypage? %}
+                              <div class="change">
+                                <a class="u-color__text--link" href="/shop/customer/subs_orders/{{ subs_order.id }}/edit">変更する</a>
+                              </div>
+                            {% endif %}
+                          {% elsif order_delivered_dates contains day %}
+                            <div class="info-box delivered">
+                              <span class="u-color__text--sub">お届け完了</span>
+                            </div>
+                          {% endif %}
+                        </div>
+                      </td>
+                    {% else %}
+                      <td class="u-color__border--border">
+                        <div class="date u-font__en u-color__text--sub">{{ day | date: '%e' }}</div>
+                        <div class="detail"></div>
+                      </td>
+                    {% endif %}
+
+                    {% if wnum == 6 %}
+                      </tr>
+                    {% endif %}
+                  {% endfor %}
+                </tbody>
+              </table>
+
+            </div>
+            <div class="p-calendar__buttons u-margin__top--60">
+              <a class="u-color__bg--accent" href="/shop/customer/subs_orders/{{ subs_order.number }}">
+                <span class="u-color__text--base">戻る</span>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

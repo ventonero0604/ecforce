@@ -1,0 +1,196 @@
+{{ 'shop/customer/subs_orders/shipping_addresses' | javascript_include_tag }}
+
+<main class="l-container" role="main" id="shipping-address-edit-view">
+  <div class="l-container__row u-margin__top--60 u-margin__bottom--100">
+    {{ 'notice' | flash: 'control-alert alert-success', 'text u-color__bg--bg u-color__text--alert' }}
+    {{ 'alert' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+    {{ 'error' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+    <div class="p-account">
+      <div class="p-account__inner">
+        <div class="p-account__inner__menu u-color__border--border">
+          {% include 'ec_force/shop/snippets/sidebar.html' %}
+        </div>
+        <div class="p-account__inner__content">
+          <ul class="c-breadcrumbs">
+            <li class="c-breadcrumbs__item u-text--link">
+              <a class="c-breadcrumbs__item__inner" href="/shop/customer">{{ 'account.general.mypage.value' | t }}</a>
+            </li>
+            <li class="c-breadcrumbs__item u-text--link">
+              <a class="c-breadcrumbs__item__inner" href="/shop/customer/subs_orders">{{ 'subs_orders.general.subs_orders.value' | t }}</a>
+            </li>
+            <li class="c-breadcrumbs__item u-text--body">
+              <span class="c-breadcrumbs__item__inner">{{ 'subs_orders.shipping_address.recurring_edit.value' | t }}</span>
+            </li>
+          </ul>
+          <h1 class="p-account__inner__content__title u-text--head">{{ 'orders.general.order_number.value' | t }}：{{ subs_order.number }}</h1>
+          <p class="p-account__inner__content__lead u-text--body">{{ 'general.message.save_lead_text.value' | t }}</p>
+          <div class="p-account__inner__content__copy">
+            <table class="c-form_table">
+              <tbody>
+                <tr>
+                  <!-- お届け先住所をコピー -->
+                  <th class="u-text--body">{{ 'orders.shipping_address.copy_shipping_address.value' | t }}</th>
+                  <td>
+                    <div class="c-form_table__tel ">
+                      <label class="c-form_table__select">
+                        <select class="u-text--input u-color__input--bg u-color__border--input" id="copy-shipping-address-id">
+                          <option value="">{{ 'general.message.please_selected_option.value' | t }}</option>
+                          {% for shipping_address in subs_order.customer.shipping_addresses %}
+                            <option value="{{ shipping_address.id }}"> {{ shipping_address.full_name }} | {{ 'base_info.general.post_mark.value' | t }}{{ shipping_address.full_zip }} {{ shipping_address.full_address_with_space }}</option>
+                          {% endfor %}
+                        </select>
+                      </label>
+                      <a class="p-account__inner__content__copy__btn u-text--btn u-color__btn--bg" href="javascript:void(0);" id="copy-shipping-address">{{ 'general.action.copy.value' | t }}</a>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <form class="p-account__inner__content__form" action="/shop/customer/subs_orders/{{ subs_order.number }}/shipping_address" accept-charset="UTF-8" method="post">
+            <input name="utf8" type="hidden" value="✓">
+            <input type="hidden" name="_method" value="put">
+            {% csrf_meta_tags %}
+            <div class="p-account__inner__content__form__text u-text--body"><span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span>{{ 'general.message.input_required.value' | t }}</div>
+            <table class="c-form_table">
+              <tbody>
+                <!-- お名前 -->
+                <tr>
+                  <th class="u-text--body">{{ 'customer.general.name.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+                  <td>
+                    <div class="c-form_table__name {% if shop_form_settings['name_1_field'] %} is-single{% endif %}">
+                      {% if shop_form_settings['name_1_field'] %}
+                        <input class="u-text--input u-color__input--bg u-color__border--input validate[required]" type="text" placeholder="{{ 'customer.placeholder.full_name.value' | t }}" value="{{ subs_order.shipping_address.full_name }}" name="address_subs_order_shipping[name01]" autocomplete="name" id="address_subs_order_shipping_name01">
+                      {% else %}
+                        <input class="u-text--input u-color__input--bg u-color__border--input validate[required]" type="text" placeholder="{{ 'customer.placeholder.family_name.value' | t }}" value="{{ subs_order.shipping_address.name01 }}" name="address_subs_order_shipping[name01]" autocomplete="family-name" id="address_subs_order_shipping_name01">
+                        <input class="u-text--input u-color__input--bg u-color__border--input validate[required]" type="text" placeholder="{{ 'customer.placeholder.name.value' | t }}" value="{{ subs_order.shipping_address.name02 }}" name="address_subs_order_shipping[name02]" autocomplete="given-name" id="address_subs_order_shipping_name02">
+                      {% endif %}
+                    </div>
+                  </td>
+                </tr>
+                <!-- フリガナ -->
+                <tr>
+                  <th class="u-text--body">{{ 'customer.general.kana.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+                  <td>
+                    <div class="c-form_table__name {% if shop_form_settings['kana_1_field'] %} is-single{% endif %}">
+                      {% if shop_form_settings['kana_1_field'] %}
+                        <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[katakana]]" type="text" placeholder="{{ 'customer.placeholder.full_kana_name.value' | t }}" value="{{ subs_order.shipping_address.full_kana }}" name="address_subs_order_shipping[kana01]" id="address_subs_order_shipping_kana01">
+                      {% else %}
+                        <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[katakana]]" type="text" placeholder="{{ 'customer.placeholder.family_kana_name.value' | t }}" value="{{ subs_order.shipping_address.kana01 }}" name="address_subs_order_shipping[kana01]" id="address_subs_order_shipping_kana01">
+                        <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[katakana]]" type="text" placeholder="{{ 'customer.placeholder.kana_name.value' | t }}" value="{{ subs_order.shipping_address.kana02 }}" name="address_subs_order_shipping[kana02]" id="address_subs_order_shipping_kana02">
+                      {% endif %}
+                    </div>
+                  </td>
+                </tr>
+                <!-- 郵便番号 -->
+                {% if shop_form_settings['zip_digits'] %}
+                  {% assign validate_min_7 = ',minSize[7]' %}
+                  {% assign validate_min_3 = ',minSize[3]' %}
+                  {% assign validate_min_4 = ',minSize[4]' %}
+                {% endif %}
+                <tr>
+                  <th class="u-text--body">{{ 'customer.general.zip.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+                  <td>
+                    <div class="c-form_table__postcode{% if smartphone %} smart_phone{% endif %}{% if shop_form_settings['zip_1_field'] %} is-single{% endif %}">
+                      <span class="u-text--body">&#12306;</span>
+                      {% if shop_form_settings['zip_1_field'] %}
+                        <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[integer]{{ validate_min_7 }}]" type="tel" value="{{ subs_order.shipping_address.full_zip }}" name="address_subs_order_shipping[zip01]" autocomplete="postal-code" id="address_subs_order_shipping_zip01" maxlength="7">
+                      {% else %}
+                        <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[integer]{{ validate_min_3 }}]" type="tel" value="{{ subs_order.shipping_address.zip01 }}" name="address_subs_order_shipping[zip01]" autocomplete="postal-code" id="address_subs_order_shipping_zip01" maxlength="3">
+                        <span class="u-text--body">&ndash;</span>
+                        <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[integer]{{ validate_min_4 }}]" type="tel" value="{{ subs_order.shipping_address.zip02 }}" name="address_subs_order_shipping[zip02]" autocomplete="none" id="address_subs_order_shipping_zip02" maxlength="4">
+                      {% endif %}
+                    </div>
+                  </td>
+                </tr>
+                <!-- 都道府県 -->
+                <tr>
+                  <th class="u-text--body">{{ 'customer.general.prefecture.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+                  <td>
+                    <label class="c-form_table__select">
+                      <select class="u-text--input u-color__input--bg u-color__border--input validate[required]" name="address_subs_order_shipping[prefecture_id]" id="address_subs_order_shipping_prefecture_id">
+                        <option value="">{{ 'general.message.please_selected_option.value' | t }}</option>
+                        {% for prefecture in prefectures %}
+                          <option value='{{ prefecture.id }}' {% if subs_order.shipping_address.prefecture.id == prefecture.id %}selected{% endif %}>{{ prefecture.name }}</option>
+                        {% endfor %}
+                      </select>
+                    </label>
+                  </td>
+                </tr>
+                <!-- 住所 -->
+                <tr>
+                  <th class="u-text--body">{{ shop_form_settings['addr01_label'] }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+                  <td><input class="u-text--input u-color__input--bg u-color__border--input validate[required]" type="text" placeholder="{{ shop_form_settings['addr01_placeholder'] }}" value="{{ subs_order.shipping_address.addr01 }}" name="address_subs_order_shipping[addr01]" id="address_subs_order_shipping_addr01"></td>
+                </tr>
+                {% if shop_form_settings['addr03'] %}
+                  <tr>
+                    <th class="u-text--body">{{ shop_form_settings['addr02_label'] }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+                    <td><input class="u-text--input u-color__input--bg u-color__border--input validate[required]" type="text" placeholder="{{ shop_form_settings['addr02_placeholder'] }}" value="{{ subs_order.shipping_address.addr02 }}" name="address_subs_order_shipping[addr02]" id="address_subs_order_shipping_addr02"></td>
+                  </tr>
+                  <tr>
+                    <th class="u-text--body">{{ shop_form_settings['addr03_label'] }}
+                    <td><input class="u-text--input u-color__input--bg u-color__border--input" type="text" placeholder="{{ shop_form_settings['addr03_placeholder'] }}" value="{{ subs_order.shipping_address.addr03 }}" name="address_subs_order_shipping[addr03]" id="address_subs_order_shipping_addr03"></td>
+                  </tr>
+                {% else %}
+                  <tr>
+                    <th class="u-text--body">{{ shop_form_settings['addr02_label'] }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+                    <td><input class="u-text--input u-color__input--bg u-color__border--input validate[required]" type="text" placeholder="{{ shop_form_settings['addr02_placeholder'] }}" value="{{ subs_order.shipping_address.addr02 }}{{ subs_order.shipping_address.addr03 }}" name="address_subs_order_shipping[addr02]" id="address_subs_order_shipping_addr02"></td>
+                  </tr>
+                {% endif %}
+                <!-- 電話番号 -->
+                <tr>
+                  <th class="u-text--body">{{ 'customer.general.tel.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+                  <td>
+                    <div class="c-form_table__tel{% if smartphone %} smart_phone{% endif %}{% if shop_form_settings['tel_1_field'] %} is-single{% endif %}">
+                      {% if shop_form_settings['tel_1_field'] %}
+                        <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[integer]]" type="tel" value="{{ subs_order.shipping_address.full_tel }}" name="address_subs_order_shipping[tel01]" autocomplete="tel" id="address_subs_order_shipping_tel01" maxlength="12">
+                      {% else %}
+                        <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[integer]]" type="tel" name='address_subs_order_shipping[tel01]' placeholder='' value="{{ subs_order.shipping_address.tel01 }}" name="address_subs_order_shipping[tel01]" autocomplete="none" id="address_subs_order_shipping_tel01" maxlength="5">
+                        <span class="u-text--body">&ndash;</span>
+                        <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[integer]]" type="tel" name='address_subs_order_shipping[tel02]' placeholder='' value="{{ subs_order.shipping_address.tel02 }}" name="address_subs_order_shipping[tel02]" autocomplete="none" id="address_subs_order_shipping_tel02" maxlength="4">
+                        <span class="u-text--body">&ndash;</span>
+                        <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[integer]]" type="tel" name='address_subs_order_shipping[tel03]' placeholder='' value="{{ subs_order.shipping_address.tel03 }}" name="address_subs_order_shipping[tel03]" autocomplete="none" id="address_subs_order_shipping_tel03" maxlength="4">
+                      {% endif %}
+                    </div>
+                  </td>
+                </tr>
+                <!-- FAX番号 -->
+                {% if shop_form_settings['fax'] %}
+                  <tr>
+                    <th class="u-text--body">{{ 'customer.general.fax.value' | t }}</th>
+                    <td>
+                      <div class="c-form_table__tel {% if shop_form_settings['fax_1_field'] %} is-single{% endif %}">
+                        {% if shop_form_settings['fax_1_field'] %}
+                          <input class="u-text--input u-color__input--bg u-color__border--input" type="tel" value="{{ subs_order.shipping_address.full_fax }}" name="address_subs_order_shipping[fax01]" id="address_subs_order_shipping_fax01" maxlength="12">
+                        {% else %}
+                          <input class="u-text--input u-color__input--bg u-color__border--input" type="tel" value="{{ subs_order.shipping_address.fax01 }}" name="address_subs_order_shipping[fax01]" id="address_subs_order_shipping_fax01" maxlength="5">
+                          <span class="u-text--body">&ndash;</span>
+                          <input class="u-text--input u-color__input--bg u-color__border--input" type="tel" value="{{ subs_order.shipping_address.fax02 }}" name="address_subs_order_shipping[fax02]" id="address_subs_order_shipping_fax02" maxlength="4">
+                          <span class="u-text--body">&ndash;</span>
+                          <input class="u-text--input u-color__input--bg u-color__border--input" type="tel" value="{{ subs_order.shipping_address.fax03 }}" name="address_subs_order_shipping[fax03]" id="address_subs_order_shipping_fax03" maxlength="4">
+                        {% endif %}
+                      </div>
+                    </td>
+                  </tr>
+                {% endif %}
+                <!-- 会社名 -->
+                {% if shop_form_settings['company'] %}
+                  <tr>
+                    <th class="u-text--body">{{ 'customer.general.company_name.value' | t }}</th>
+                    <td><input class="u-text--input u-color__input--bg u-color__border--input" type="text" value="{{ subs_order.shipping_address.company_name }}" name="address_subs_order_shipping[company_name]" autocomplete="organization” id="address_subs_order_shipping_company_name">
+                  </tr>
+                {% endif %}
+              </tbody>
+            </table>
+            <div class="p-account__inner__content__form__bottom">
+              <!-- 送信リンク -->
+              <input name="commit" class="p-account__inner__content__form__bottom__btn u-text--btn u-color__btn--bg" type="submit" data-disable-with="{{ 'general.action.saving.value' | t }}" value="{{ 'general.action.save.value' | t }}">
+              <!-- 戻るリンク -->
+              <a class="p-account__inner__content__form__bottom__link u-text--link" href="/shop/customer/subs_orders/{{ subs_order.number }}">{{ 'general.action.cancel.value' | t }}</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

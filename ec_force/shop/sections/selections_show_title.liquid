@@ -1,0 +1,16 @@
+{% if section.disabled == true or section.disabled == 'true' %}
+  {% assign visibility_value = "none" %}
+{% endif %}
+
+{% if selection.title %}
+  <section class="p-column" data-section-id="{{ id }}" data-section-type="{{ section.type }}" style="display: {{ visibility_value }};">
+    <style>
+      .c-text__center {
+        text-align: center;
+      }
+    </style>
+    <div class="p-show_selection c-text__{{ section.settings.title_align }}">
+      <h1 class="p-list_header__inner__title u-text--head">{{ selection.title }}</h1>
+    </div>
+  </section>
+{% endif %}

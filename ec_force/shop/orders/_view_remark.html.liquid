@@ -1,0 +1,18 @@
+{% if shop_form_settings['remark'] %}
+  <div id='view-remark' class="p-checkout__list__block u-color__border--border">
+    <div class="p-checkout__list__block__inner">
+      <h2 class="p-checkout__list__block__inner__title u-text--subhead">{{ 'orders.remark.remark.value' | t }}<span class='charsLeft'></span>{{ 'orders.remark.remark_end_text.value' | t }}</h2>
+      <table class="c-form_table">
+        <tbody>
+          <tr>
+            <th></th>
+            <td>
+              <!-- 通信欄の入力 -->
+              <textarea class='u-text--input u-color__input--bg u-color__border--input limited' name='order[remark]' maxlength='500' placeholder="{{ shop_form_settings['remark_placeholder'] }}">{{ order.remark | escape }}</textarea>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endif %}

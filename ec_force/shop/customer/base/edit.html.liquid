@@ -1,0 +1,536 @@
+{{ 'shop/customer/base' | javascript_include_tag }}
+
+<main id="customer-edit-view" class="l-container" role="main">
+  <div class="l-container__row u-margin__top--60 u-margin__bottom--100">
+    {{ 'notice' | flash: 'control-alert alert-success', 'text u-color__bg--bg u-color__text--alert' }}
+    {{ 'error' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+    {{ 'alert' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+    <div class="p-account">
+      <div class="p-account__inner">
+        <div class="p-account__inner__menu u-color__border--border">
+          {% include 'ec_force/shop/snippets/sidebar.html' %}
+        </div>
+        <div class="p-account__inner__content">
+          <ul class="c-breadcrumbs">
+            <li class="c-breadcrumbs__item u-text--link">
+              <a class="c-breadcrumbs__item__inner" href="/shop/customer">{{ 'account.general.mypage.value' | t }}</a>
+            </li>
+            <li class="c-breadcrumbs__item u-text--body">
+              <span class="c-breadcrumbs__item__inner">{{ 'account.general.member_info.value' | t }}</span>
+            </li>
+          </ul>
+          <h1 class="p-account__inner__content__title u-text--head">
+            {{ 'account.general.member_info.value' | t }}</h1>
+          <form class="p-account__inner__content__form" id="customer_form" action="/shop/customer" accept-charset="UTF-8" method="post">
+            <input name="_method" type="hidden" value="put">
+            {% csrf_meta_tags %}
+            {% if current_customer.error_messages != empty %}
+              {% for error_message in current_customer.error_messages %}
+                {{ error_message }}
+              {% endfor %}
+            {% endif %}
+            <input disabled="disabled" type="hidden" value="{{ current_customer.number }}" name="customer[friendly_id]" id="customer_friendly_id">
+            <div class="p-account__inner__content__form__text u-text--body"><span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span>{{ 'general.message.input_required.value' | t }}</div>
+            <table class="c-form_table">
+              <tbody>
+                <!-- お名前 -->
+                <tr>
+                  <th class="u-text--body">{{ 'customer.general.name.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+                  <td>
+                    <div class="c-form_table__name {% if shop_form_settings['name_1_field'] %} is-single{% endif %}">
+                      {% if shop_form_settings['name_1_field'] %}
+                        <input class="u-text--input u-color__input--bg u-color__border--input validate[required]" type="text" placeholder="{{ 'customer.placeholder.full_name.value' | t }}" value="{{ current_customer.billing_address.full_name }}" name="customer[billing_address_attributes][name01]" autocomplete="name" id="customer_billing_address_attributes_name01">
+                      {% else %}
+                        <input class="u-text--input u-color__input--bg u-color__border--input validate[required]" type="text" placeholder="{{ 'customer.placeholder.family_name.value' | t }}" value="{{ current_customer.billing_address.name01 }}" name="customer[billing_address_attributes][name01]" autocomplete="family-name" id="customer_billing_address_attributes_name01">
+                        <input class="u-text--input u-color__input--bg u-color__border--input validate[required]" type="text" placeholder="{{ 'customer.placeholder.name.value' | t }}" value="{{ current_customer.billing_address.name02 }}" name="customer[billing_address_attributes][name02]" autocomplete="given-name" id="customer_billing_address_attributes_name02">
+                      {% endif %}
+                    </div>
+                  </td>
+                </tr>
+                <!-- フリガナ -->
+                <tr>
+                  <th class="u-text--body">{{ 'customer.general.kana.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+                  <td>
+                    <div class="c-form_table__name {% if shop_form_settings['kana_1_field'] %} is-single{% endif %}">
+                      {% if shop_form_settings['kana_1_field'] %}
+                        <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[katakana]]" type="text" placeholder="{{ 'customer.placeholder.full_kana_name.value' | t }}" value="{{ current_customer.billing_address.full_kana }}" name="customer[billing_address_attributes][kana01]" id="customer_billing_address_attributes_kana01">
+                      {% else %}
+                        <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[katakana]]" type="text" placeholder="{{ 'customer.placeholder.family_kana_name.value' | t }}" value="{{ current_customer.billing_address.kana01 }}" name="customer[billing_address_attributes][kana01]" id="customer_billing_address_attributes_kana01">
+                        <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[katakana]]" type="text" placeholder="{{ 'customer.placeholder.kana_name.value' | t }}" value="{{ current_customer.billing_address.kana02 }}" name="customer[billing_address_attributes][kana02]" id="customer_billing_address_attributes_kana02">
+                      {% endif %}
+                    </div>
+                  </td>
+                </tr>
+                <!-- 郵便番号 -->
+                {% if shop_form_settings['zip_digits'] %}
+                  {% assign validate_min_7 = ',minSize[7]' %}
+                  {% assign validate_min_3 = ',minSize[3]' %}
+                  {% assign validate_min_4 = ',minSize[4]' %}
+                {% endif %}
+                <tr>
+                  <th class="u-text--body">{{ 'customer.general.zip.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+                  <td>
+                    <div class="c-form_table__postcode {% if shop_form_settings['zip_1_field'] %} is-single{% endif %}">
+                      <span class="u-text--body">&#12306;</span>
+                      {% if shop_form_settings['zip_1_field'] %}
+                        <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[integer]{{ validate_min_7 }}]" type="tel" value="{{ current_customer.billing_address.full_zip }}" name="customer[billing_address_attributes][zip01]" autocomplete="postal-code" id="customer_billing_address_attributes_zip01" maxlength="7">
+                      {% else %}
+                        <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[integer]{{ validate_min_3 }}]" type="tel" value="{{ current_customer.billing_address.zip01 }}" name="customer[billing_address_attributes][zip01]" autocomplete="postal-code" id="customer_billing_address_attributes_zip01" maxlength="3">
+                        <span class="u-text--body">&ndash;</span>
+                        <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[integer]{{ validate_min_4 }}]" type="tel" value="{{ current_customer.billing_address.zip02 }}" name="customer[billing_address_attributes][zip02]" autocomplete="none" id="customer_billing_address_attributes_zip02" maxlength="4">
+                      {% endif %}
+                    </div>
+                  </td>
+                </tr>
+                <!-- 都道府県 -->
+                <tr>
+                  <th class="u-text--body">{{ 'customer.general.prefecture.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+                  <td>
+                    <label class="c-form_table__select">
+                      <select class="u-text--input u-color__input--bg u-color__border--input validate[required]" name="customer[billing_address_attributes][prefecture_name]" id="customer_billing_address_attributes_prefecture_name">
+                        <option value="">{{ 'general.message.please_selected_option.value' | t }}</option>
+                        {% for prefecture in prefectures %}
+                          <option value='{{ prefecture.name }}' {% if current_customer.billing_address.prefecture.name == prefecture.name %}selected{% endif %}>{{ prefecture.name }}</option>
+                        {% endfor %}
+                      </select>
+                    </label>
+                  </td>
+                </tr>
+                <!-- 住所 -->
+                <tr>
+                  <th class="u-text--body">{{ shop_form_settings['addr01_label'] }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+                  <td><input class="u-text--input u-color__input--bg u-color__border--input validate[required]" type="text" placeholder="{{ shop_form_settings['addr01_placeholder'] }}" value="{{ current_customer.billing_address.addr01 }}" name="customer[billing_address_attributes][addr01]" id="customer_billing_address_attributes_addr01"></td>
+                </tr>
+                {% if shop_form_settings['addr03'] %}
+                  <tr>
+                    <th class="u-text--body">{{ shop_form_settings['addr02_label'] }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+                    <td>
+                      <input class="u-text--input u-color__input--bg u-color__border--input validate[required]" type="text" placeholder="{{ shop_form_settings['addr02_placeholder'] }}" value="{{ current_customer.billing_address.addr02 }}" name="customer[billing_address_attributes][addr02]" id="customer_billing_address_attributes_addr02">
+                    </td>
+                  </tr>
+                  <tr>
+                    <th class="u-text--body">{{ shop_form_settings['addr03_label'] }}</th>
+                    <td>
+                      <input class="u-text--input u-color__input--bg u-color__border--input" type="text" placeholder="{{ shop_form_settings['addr03_placeholder'] }}" name="customer[billing_address_attributes][addr03]" id="customer_billing_address_attributes_addr03" value="{{ current_customer.billing_address.addr03 }}">
+                    </td>
+                  </tr>
+                {% else %}
+                  <tr>
+                    <th class="u-text--body">{{ shop_form_settings['addr02_label'] }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+                    <td>
+                      <input class="u-text--input u-color__input--bg u-color__border--input validate[required]" type="text" placeholder="{{ shop_form_settings['addr02_placeholder'] }}" value="{{ current_customer.billing_address.addr02 }}{{ current_customer.billing_address.addr03 }}" name="customer[billing_address_attributes][addr02]" id="customer_billing_address_attributes_addr02">
+                    </td>
+                  </tr>
+                {% endif %}
+                <!-- 電話番号 -->
+                <tr>
+                  <th class="u-text--body">{{ 'customer.general.tel.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+                  <td>
+                    <div class="c-form_table__tel {% if shop_form_settings['tel_1_field'] %} is-single{% endif %}">
+                      {% if shop_form_settings['tel_1_field'] %}
+                        <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[integer]]" type="tel" value="{{ current_customer.billing_address.full_tel }}" name="customer[billing_address_attributes][tel01]" autocomplete="tel" id="customer_billing_address_attributes_tel01" maxlength="12">
+                      {% else %}
+                        <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[integer]]" type="tel" value="{{ current_customer.billing_address.tel01 }}" name="customer[billing_address_attributes][tel01]" autocomplete="none" id="customer_billing_address_attributes_tel01" maxlength="5">
+                        <span class="u-text--body">&ndash;</span>
+                        <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[integer]]" type="tel" value="{{ current_customer.billing_address.tel02 }}" name="customer[billing_address_attributes][tel02]" autocomplete="none" id="customer_billing_address_attributes_tel02" maxlength="4">
+                        <span class="u-text--body">&ndash;</span>
+                        <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[integer]]" type="tel" value="{{ current_customer.billing_address.tel03 }}" name="customer[billing_address_attributes][tel03]" autocomplete="none" id="customer_billing_address_attributes_tel03" maxlength="4">
+                      {% endif %}
+                    </div>
+                  </td>
+                </tr>
+                <!-- FAX番号 -->
+                {% if shop_form_settings['fax'] %}
+                  <tr>
+                    <th class="u-text--body">{{ 'customer.general.fax.value' | t }}</th>
+                    <td>
+                      <div class="c-form_table__tel {% if shop_form_settings['fax_1_field'] %} is-single{% endif %}">
+                        {% if shop_form_settings['fax_1_field'] %}
+                          <input class="u-text--input u-color__input--bg u-color__border--input validate[custom[integer]]" type="tel" value="{{ current_customer.billing_address.full_fax }}" name="customer[billing_address_attributes][fax01]" id="customer_billing_address_attributes_fax01" maxlength="12">
+                        {% else %}
+                          <input class="u-text--input u-color__input--bg u-color__border--input validate[custom[integer]]" type="tel" value="{{ current_customer.billing_address.fax01 }}" name="customer[billing_address_attributes][fax01]" id="customer_billing_address_attributes_fax01" maxlength="5">
+                          <span class="u-text--body">&ndash;</span>
+                          <input class="u-text--input u-color__input--bg u-color__border--input validate[custom[integer]]" type="tel" value="{{ current_customer.billing_address.fax02 }}" name="customer[billing_address_attributes][fax02]" id="customer_billing_address_attributes_fax02" maxlength="4">
+                          <span class="u-text--body">&ndash;</span>
+                          <input class="u-text--input u-color__input--bg u-color__border--input validate[custom[integer]]" type="tel" value="{{ current_customer.billing_address.fax03 }}" name="customer[billing_address_attributes][fax03]" id="customer_billing_address_attributes_fax03" maxlength="4">
+                        {% endif %}
+                      </div>
+                    </td>
+                  </tr>
+                {% endif %}
+                <!-- 会社名 -->
+                {% if shop_form_settings['company'] %}
+                  <tr>
+                    <th class="u-text--body">
+                      {{ 'customer.general.company_name.value' | t }}
+                    </th>
+                    <td>
+                      <input class="u-text--input u-color__input--bg u-color__border--input" type="text" placeholder="" value="{{ current_customer.billing_address.company_name }}" name="customer[billing_address_attributes][company_name]" autocomplete="organization" id="customer_billing_address_attributes_company_name">
+                    </td>
+                  </tr>
+                {% endif %}
+
+                {% if subs_orders.size > 0 %}
+                  <tr>
+                    <th colspan="2" class="u-text--body">{{ 'subs_orders.shipping_address.selected_recurring.value' | t }}</th>
+                  </tr>
+
+                  <tr>
+                    <td colspan="2">
+                      <div class="c-form_table__subscription">
+                        <label class="c-form_table__checkbox">
+                          <input class="u-color__border--input" id="toggle_all_subs_orders" type="checkbox"{% if default_checked %} checked="checked"{% endif %}>
+                          <span class="c-form_table__checkbox__frame u-color__btn"></span>
+                          <span class="c-form_table__checkbox__text u-text--body">{{ 'subs_orders.shipping_address.reflect_on_all_recurring.value' | t }}</span>
+                        </label>
+                        <table class="c-account_table u-color__border--border">
+                          <tbody>
+                            <tr class="u-color__border--border u-color__bg--bg">
+                              <th class="u-text--strong"></th>
+                              <th class="u-text--strong">{{ 'subs_orders.general.subs_order_number.value' | t }}</th>
+                              <th class="u-text--strong">{{ 'subs_orders.general.subs_order_status.value' | t }}</th>
+                              <th class="u-text--strong">{{ 'orders.amount.subtotal.value' | t }}</th>
+                              <th class="u-text--strong">{{ 'products.general.products_name.value' | t }}</th>
+                              <th class="u-text--strong">{{ 'general.general.created_at.value' | t }}</th>
+                              <th class="u-text--strong">{{ 'orders.shipping_address.shipping_address.value' | t }}</th>
+                              <th class="u-text--strong">{{ 'delivery.next.delivered_at.value' | t }}</th>
+                            </tr>
+                            {% for subs_order in subs_orders %}
+                              <tr class="u-color__border--border">
+                                <td>
+                                <label class="c-form_table__checkbox u-text--body">
+                                  <input class="u-color__border--input" name="subs_order_numbers[]" type="checkbox" value="{{ subs_order.number }}"{% if default_checked %} checked="checked"{% endif %}>
+                                  <span class="c-form_table__checkbox__frame u-color__btn"></span>
+                                </label>
+                                </td>
+                                {% if enabled_pre_order and subs_order.orders.first.unshipped_pre_order? %}
+                                  <td class="u-text--body" data-title="{{ 'subs_orders.general.subs_order_number.value' | t }}：">{{ subs_order.number }}</td>
+                                {% else %}
+                                  <td class="u-text--body" data-title="{{ 'subs_orders.general.subs_order_number.value' | t }}："><a class="p-account__inner__content__form__bottom__link u-text--link" href="/shop/customer/subs_orders/{{ subs_order.number }}">{{ subs_order.number }}</a></td>
+                                {% endif %}
+                                <td class="u-text--body" data-title="{{ 'subs_orders.general.subs_order_status.value' | t }}：">{{ subs_order.human_state_name }}</td>
+                                <td class="u-text--body" data-title="{{ 'orders.amount.subtotal.value' | t }}：">&yen;{{ subs_order.subtotal | number_with_delimiter }}</td>
+                                <td class="u-text--body" data-title="{{ 'products.general.products_name.value' | t }}：">{{ subs_order.order_items | map: 'variant' | map: 'product' | map: 'name' | join ',' }}</td>
+                                <td class="u-text--body" data-title="{{ 'general.general.created_at.value' | t }}：">{{ subs_order.created_at | date: "%Y/%m/%d" }}</td>
+                                <td class="u-text--body" data-title="{{ 'orders.shipping_address.shipping_address.value' | t }}：">{{ subs_order.shipping_address.full_address }}</td>
+                                {% if enabled_pre_order and subs_order.orders.first.unshipped_pre_order? %}
+                                  <td class="u-text--body" data-title="{{ 'delivery.next.delivered_at.value' | t }}：">{{ 'subs_orders.general.pre_order_unshipped_text.value' | t }}</td>
+                                {% else %}
+                                  <td class="u-text--body" data-title="{{ 'delivery.next.delivered_at.value' | t }}：">{{ subs_order.scheduled_to_be_delivered_at | date: "%Y/%m/%d" }}</td>
+                                {% endif %}
+                              </tr>
+                            {% endfor %}
+                          </tbody>
+                        </table>
+                      </div>
+                    </td>
+                  </tr>
+                {% endif %}
+
+                <!-- メールアドレス -->
+                {% if shop_form_settings['email'] %}
+                  <tr>
+                    <th class="u-text--body">{{ 'customer.general.email.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+                    <td><input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[email]]" type="email" value="{{ current_customer.email }}" name="customer[email]" autocomplete="email" id="customer_email"></td>
+                  </tr>
+                {% endif %}
+                <!-- 性別 -->
+                {% if shop_form_settings['sex'] %}
+                  <tr>
+                    <th class="u-text--body">{{ 'customer.general.sex.value' | t }}{% if shop_form_settings['sex_require'] %}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span>{% endif %}</th>
+                    <td>
+                      <label class="c-form_table__select">
+                        <select class="u-text--input u-color__input--bg u-color__border--input{% if shop_form_settings['sex_require'] %} validate[required]{% endif %}" name="customer[sex_id]" id="customer_sex_id">
+                          <option value="">{{ 'general.message.please_selected_option.value' | t }}</option>
+                          {% for sex in sexes %}
+                            <option value='{{ sex.id }}' {% if current_customer.sex.id == sex.id %}selected{% endif %}>{{ sex.name }}</option>
+                          {% endfor %}
+                        </select>
+                      </label>
+                    </td>
+                  </tr>
+                {% endif %}
+                <!-- 職業 -->
+                {% if shop_form_settings['job'] %}
+                  <tr>
+                    <th class="u-text--body">
+                      {{ 'customer.general.job.value' | t }}
+                    </th>
+                    <td>
+                      <label class="c-form_table__select">
+                        <select class="u-text--input u-color__input--bg u-color__border--input"name="customer[job_id]" id="customer_job_id">
+                          <option value="">{{ 'general.message.please_selected_option.value' | t }}</option>
+                          {% for job in jobs %}
+                            <option value='{{ job.id }}' {% if current_customer.job.id == job.id %}selected{% endif %}>{{ job.name }}</option>
+                          {% endfor %}
+                        </select>
+                      </label>
+                    </td>
+                  </tr>
+                {% endif %}
+                <!-- 生年月日 -->
+                {% if shop_form_settings["birth"] %}
+                  <tr>
+                    <th class="u-text--body">{{ 'customer.general.birth.value' | t }}{% if shop_form_settings["birth_require"] %}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span>{% endif %}</th>
+                    <td>
+                      <div class="c-form_table__tel">
+                        <label class="c-form_table__select">
+                          <select class="u-text--input u-color__input--bg u-color__border--input{% if shop_form_settings["birth_require"] %} validate[required]{% else %} validate[condRequired[order_customer_attributes_birth_2i,order_customer_attributes_birth_3i]]{% endif %}" name="customer[birth(1i)]" autocomplete="bday-year">
+                            {% if birth_year_default_value == 0 %}
+                              <option value="">----</option>
+                            {% endif %}
+                            {% assign now_year = "now" | date: "%Y" %}
+                            {% assign past_100_years = "now" | date: "%Y" | minus: 100 %}
+                            {% for y in (past_100_years..now_year) %}
+                              {% if birth_year_default_value == y %}
+                                {% if order.customer.birth_year == nil %}
+                                  <option value="" selected="true">----</option>
+                                {% else %}
+                                  <option value="">----</option>
+                                {% endif %}
+                              {% endif %}
+                              <option value='{{ y }}' {% if current_customer.birth_year == y %}selected{% endif %}>{{ y }}</option>
+                            {% endfor %}
+                          </select>
+                        </label>
+                        <span class="u-text--body">{{ 'customer.general.year.value' | t }}</span>
+                        <label class="c-form_table__select">
+                          <select class="u-text--input u-color__input--bg u-color__border--input{% if shop_form_settings["birth_require"] %} validate[required]{% else %} validate[condRequired[order_customer_attributes_birth_1i,order_customer_attributes_birth_3i]]{% endif %}" name="customer[birth(2i)]" autocomplete="bday-month">
+                            <option value="">--</option>
+                            {% for m in (1..12) %}
+                              <option value='{{ m }}'{% if current_customer.birth_month == m %}selected{% endif %}>{{ m }}</option>
+                            {% endfor %}
+                          </select>
+                        </label>
+                        <span class="u-text--body">{{ 'customer.general.month.value' | t }}</span>
+                        <label class="c-form_table__select">
+                          <select class="u-text--input u-color__input--bg u-color__border--input{% if shop_form_settings["birth_require"] %} validate[required]{% else %} validate[condRequired[order_customer_attributes_birth_1i,order_customer_attributes_birth_2i]]{% endif %}" name="customer[birth(3i)]" autocomplete="bday-day">
+                            <option value="">--</option>
+                            {% for d in (1..31) %}
+                              <option value='{{ d }}'{% if current_customer.birth_day == d %}selected{% endif %}>{{ d }}</option>
+                            {% endfor %}
+                          </select>
+                        </label>
+                        <span class="u-text--body">{{ d }}{{ 'customer.general.day.value' | t }}</span>
+                      </div>
+                    </td>
+                  </tr>
+                {% endif %}
+                <!-- メールマガジン受信 -->
+                {% if shop_form_settings['optin_edit'] %}
+                  <tr>
+                    <th class="u-text--body">
+                      {{ 'customer.general.mail_magazine.value' | t }}
+                    </th>
+                    <td>
+                      <label class="customer_optin c-form_table__select">
+                        <select class="u-text--input u-color__input--bg u-color__border--input"name="customer[optin]" id="customer_optin">
+                          <option value="1" {% if current_customer.optin == true %}selected{% endif %}>{{ 'customer.general.receive_mail_magazine.value' | t }}</option>
+                          <option value="0" {% if current_customer.optin == false %}selected{% endif %}>{{ 'customer.general.not_receive_mail_magazine.value' | t }}</option>
+                        </select>
+                      </label>
+                    </td>
+                  </tr>
+                {% endif %}
+              </tbody>
+            </table>
+
+            <!-- カスタム項目 -->
+            <div id="view-free_columns" class="u-color__border--border">
+              {% if base_info.use_free_columns? and base_info.use_free_columns_mypage and liquid_custom_field %}
+                <h2 class="p-account__inner__content__title u-text--subhead">{{ base_info.free_columns_title }}</h2>
+                {% for custom_info_hash in liquid_custom_field %}
+                <div id="category-{{ custom_info_hash[0] }}" class="category-wrapper">
+                  {% for seq_hash in custom_info_hash[1] %}
+                  <div id="category-{{ custom_info_hash[0] }}-{{ seq_hash[0] }}" class="p-checkout__list__block__inner__category category-container">
+                    {% assign info = seq_hash[1] %}
+                      {% if info['category'] %}
+                      <div class="p-checkout__list__block__inner__category__title u-color__border--border">
+                        <h3 class="u-text--subhead category-caption-text">{{ info['category'] | escape }}</h3>
+                        {% if info['category_multiple_answer'] %}
+                          <button class="u-color__text--alert category-btn-wrapper category-minus" data-id="{{ custom_info_hash[0] }}" data-seq="{{ seq_hash[0] }}" style="display: none;" type="button">
+                            <i class="u-icon--close"></i>
+                            <span class="category-btn">削除</span>
+                          </button>
+                        {% endif %}
+                      </div>
+                      {% endif %}
+                      <table class="c-form_table c-form_table--edit">
+                        <tbody>
+                        {% for i_hash in info['info'] %}
+                          {% assign i = i_hash[1] %}
+                          {%- capture required_class -%}
+                            {%- if i['required'] -%} validate[required] {%- endif -%}
+                          {%- endcapture -%}
+                          {%- capture column_id -%}
+                            customer_free_columns_{{ custom_info_hash[0] }}_{{ seq_hash[0] }}_{{ i['free_column_id'] }}
+                          {%- endcapture -%}
+                          {%- capture column_name -%}
+                            customer[free_columns][{{ custom_info_hash[0] }}][{{ seq_hash[0] }}][{{ i['free_column_id'] }}]
+                          {%- endcapture -%}
+                          <tr>
+                            <th class="u-text--body">
+                              <label for="{{ column_id }}">
+                                <span class="form_label_ec">{{ i['label'] | escape }}
+                                {%- if i['required'] -%}<span class="u-color__text--alert">*</span>{%- endif -%}
+                                </span>
+                                {% if i['maxlength'] and i['type'] == 'EcForce::FreeColumn::Textarea' %}
+                                  <span>（残り<span data-feedback-maxlength="{{ column_id }}"></span>文字）</span>
+                                {% endif %}
+                              </label>
+                            </th>
+                            <td class="u-text--body">
+                            {%- capture min -%} {{ i['minlength'] | default: ''  }} {%- endcapture -%}
+                            {%- capture max -%} {{ i['maxlength'] | default: ''  }} {%- endcapture -%}
+                            {% case i['type'] %}
+                              {% when 'EcForce::FreeColumn::Textarea' %}
+                                {% for v in i['value'] %}
+                                  {% if i['is_valid_format'] == true %}{% assign value = v | escape %}{% else %}{% assign value = '' %}{% endif %}
+                                  <textarea class="u-color__border--input free_columns form-control input-sm validate[minSize[{{ min }}],maxSize[{{ max }}]] send_feedback_maxlength {{ required_class }}" data-id="{{ i['free_column_id'] }}" data-prompt-position="topLeft" placeholder="{{ i['placeholder'] }}" rows="5" maxlength="{{ max }}" name="{{ column_name }}" id="{{ column_id }}">{{ value }}</textarea>
+                                {% endfor %}
+                              {% when 'EcForce::FreeColumn::Input' %}
+                                {% for v in i['value'] %}
+                                  {% if i['is_valid_format'] == true %}{% assign value = v | escape %}{% else %}{% assign value = '' %}{% endif %}
+                                  {% case i['input_type_name'] %}
+                                    {% when 'メール' %}
+                                      <input type="email" class="u-color__border--input free_columns form-control input-sm validate[custom[email],minSize[{{ min }}],maxSize[{{ max }}]] {{ required_class }}" data-id="{{ i['free_column_id'] }}" data-prompt-position="topLeft" value="{{ value }}" placeholder="{{ i['placeholder'] }}" name="{{ column_name }}" id="{{ column_id }}" maxlength="{{ max }}" size="{{ max }}">
+                                    {% when '日付' %}
+                                      <input type="text" class="u-color__border--input free_columns form-control input-sm datepicker validate[minSize[{{ min }}],maxSize[{{ max }}],custom[date]] {{ required_class }}" data-id="{{ i['free_column_id'] }}" data-prompt-position="topLeft" value="{{ value }}" placeholder="{{ i['placeholder'] }}" name="{{ column_name }}" id="{{ column_id }}" maxlength="{{ max }}" size="{{ max }}">
+                                    {% when '数字' %}
+                                      <input type="number" class="u-color__border--input free_columns form-control input-sm validate[custom[integer],min[{{ min }}],max[{{ max }}]] {{ required_class }}" data-id="{{ i['free_column_id'] }}" data-prompt-position="topLeft" value="{{ value }}" placeholder="{{ i['placeholder'] }}" name="{{ column_name }}" id="{{ column_id }}" maxlength="{{ max }}" size="{{ max }}">
+                                    {% when 'テキスト' %}
+                                      <input type="text" class="u-color__border--input free_columns form-control input-sm validate[minSize[{{ min }}],maxSize[{{ max }}]] {{ required_class }}" data-id="{{ i['free_column_id'] }}" data-prompt-position="topLeft" value="{{ value }}" placeholder="{{ i['placeholder'] }}" name="{{ column_name }}" id="{{ column_id }}" maxlength="{{ max }}" size="{{ max }}">
+                                  {% endcase %}
+                                {% endfor %}
+                              {% else %}
+                                {% assign free_column_options = i['options'] %}
+                                {% case i['type'] %}
+                                  {% when 'EcForce::FreeColumn::Checkbox' %}
+                                    <input class="free_columns" data-id="{{ i['free_column_id'] }}" data-prompt-position="topLeft" type="hidden" name="{{ column_name }}[]">
+                                    {% for option in free_column_options %}
+                                      {% if option['default'] == true %}{% assign default = '1' %}{% else %}{% assign default = '0' %}{% endif %}
+                                      {% if i['value'] contains option['value'] %}{% assign checked = 'checked="checked"' %}{% else %}{% assign checked = "" %}{% endif %}
+                                      {% if i['value'].size == 1 and i['value'][0] == '' and option['default'] == true %}{% assign checked = 'checked="checked"' %}{% elsif i['is_valid_format'] == false and option['default'] == true %}{% assign checked = 'checked="checked"' %}{% endif %}
+                                      <div class="c-form_table__newsletter checkbox-wrapper">
+                                        <label class="c-form_table__checkbox checkbox__top" for="{{ column_id }}_{{ option['key'] }}">
+                                          <input class="u-color__border--input free_columns {{ required_class }}" data-id="{{ i['free_column_id'] }}" data-prompt-position="topLeft" data-default="{{ default }}" type="checkbox" value="{{ option['key'] }}" {{ checked }} name="{{ column_name }}[]" id="{{ column_id }}_{{ option['key'] }}">
+                                          <span class="c-form_table__checkbox__frame u-color__border--accent"></span>
+                                          <span class="c-form_table__checkbox__text">{{ option['value'] | escape }}</span>
+                                        </label>
+                                      </div>
+                                    {% endfor %}
+                                  {% when 'EcForce::FreeColumn::Radio' %}
+                                    {% if i['required'] %}
+                                      <input class="free_columns" data-id="{{ i['free_column_id'] }}" data-prompt-position="topLeft" type="hidden" name="{{ column_name }}">
+                                    {% else %}
+                                      <div class="radio-wrapper">
+                                        <label class="c-form_table__radio c-form_table__newsletter radio__top" for="{{ column_id }}_">
+                                          <input class="u-color__border--input free_columns {{ required_class }}" data-id="{{ i['free_column_id'] }}" data-prompt-position="topLeft" data-default="0" type="radio" value="" checked="checked" name="{{ column_name }}" id="{{ column_id }}_">
+                                          <span class="c-form_table__radio__frame u-color__bg--accent"></span>
+                                          <span class="c-form_table__radio__text">未設定</span>
+                                        </label>
+                                      </div>
+                                    {% endif %}
+                                    {% for option in free_column_options %}
+                                      {% if option['default'] == true %}{% assign default = '1' %}{% else %}{% assign default = '0' %}{% endif %}
+                                      {% if i['value'] contains option['value'] %}{% assign checked = 'checked="checked"' %}{% else %}{% assign checked = "" %}{% endif %}
+                                      {% if i['value'].size == 1 and i['value'][0] == '' and option['default'] == true %}{% assign checked = 'checked="checked"' %}{% elsif i['is_valid_format'] == false and option['default'] == true %}{% assign checked = 'checked="checked"' %}{% endif %}
+                                      <div class="radio-wrapper">
+                                        <label class="c-form_table__radio c-form_table__newsletter radio__top" for="{{ column_id }}_{{ option['key'] }}">
+                                          <input class="u-color__border--input free_columns {{ required_class }}" data-id="{{ i['free_column_id'] }}" data-prompt-position="topLeft" data-default="{{ default }}" type="radio" value="{{ option['key'] }}" {{ checked }} name="{{ column_name }}" id="{{ column_id }}_{{ option['key'] }}">
+                                          <span class="c-form_table__radio__frame u-color__bg--accent"></span>
+                                          <span class="c-form_table__radio__text">{{ option['value'] | escape }}</span>
+                                        </label>
+                                      </div>
+                                    {% endfor %}
+                                  {% else %}
+                                    {%- assign multiple = '' -%}
+                                    {%- assign multiple_class = '' -%}
+                                    {%- if i['multiple_flag'] -%}
+                                      {%- assign multiple = 'multiple="multiple"' -%}
+                                      {%- assign multiple_class = 'multiple' -%}
+                                    {%- endif -%}
+                                    {%- if i['multiple_flag'] -%}
+                                      <input class="free_columns" data-id="{{ i['free_column_id'] }}" data-prompt-position="topLeft" name="{{ column_name }}[]" type="hidden" value="">
+                                    {%- endif -%}
+                                    <label class="c-form_table__select {{ multiple_class }}">
+                                      <select {{ multiple }} class="u-color__border--input free_columns form-control input-sm {{ required_class }}" data-id="{{ i['free_column_id'] }}" data-prompt-position="topLeft" style="resize: vertical;" name="{{ column_name }}[]" id="{{ column_id }}">
+                                        {% unless i['multiple_flag'] %}
+                                          <option data-default="0" value="{{ option['key'] }}" selected="selected">未設定</option>
+                                        {% endunless %}
+                                        {% for option in free_column_options %}
+                                          {% if option['default'] == true %}{% assign default = '1' %}{% else %}{% assign default = '0' %}{% endif %}
+                                          {% if i['value'] contains option['value'] %}{% assign selected = 'selected="selected"' %}{% else %}{% assign selected = "" %}{% endif %}
+                                          {% if i['value'].size == 1 and i['value'][0] == '' and option['default'] == true %}{% assign selected = 'selected="selected"' %}{% elsif i['is_valid_format'] == false and option['default'] == true %}{% assign selected = 'selected="selected"' %}{% endif %}
+                                          <option data-default="{{ default }}" value="{{ option['key'] }}"  {{ selected }}>{{ option['value'] | escape }}</option>
+                                        {% endfor %}
+                                      </select>
+                                    </label>
+                                {% endcase %}
+                            {% endcase %}
+
+                            </td>
+                          </tr>
+                        {% endfor %}
+                        </tbody>
+                      </table>
+                      {% if info['category'] and info['category_multiple_answer'] %}
+                        <button class="category-btn-wrapper category-plus p-checkout__list__block__inner__button u-color__btn" data-id="{{ custom_info_hash[0] }}" data-seq="{{ seq_hash[0] }}" type="button" style="display: none;">
+                          <i class="u-icon--plus"></i>
+                          <span class="category-btn">入力欄追加</span>
+                        </button>
+                      {% endif %}
+                  </div>
+                  {% endfor %}
+                </div>
+                {% endfor %}
+              {% endif %}
+            </div>
+
+          <div class="p-account__inner__content__form__bottom">
+            <!-- 送信ボタン -->
+            <input class="p-account__inner__content__form__bottom__btn u-text--btn u-color__btn--bg" type="submit" name="commit" value="{{ 'general.action.save.value' | t }}" data-disable-with="{{ 'general.action.saving.value' | t }}"/>
+            <!-- 退会ボタン -->
+            {% if base_info.customer_cancelable? %}
+              <a class="p-account__inner__content__form__bottom__leave u-color__text--base u-font--body u-color__bg--alert js-notransition" data-confirm="{{ 'general.message.is_really_withdraw.value' | t }}" rel="nofollow" data-method="delete" href="/shop/customer">{{ 'account.general.unsubscribe.value' | t }}</a>
+            {% endif %}
+          </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<style>
+  /**
+   * @TODO: 以下のチケット対応時にbundle.cssに移す
+   * 【カスタム項目】【ベーシックテーマ】バリデーション時のエラーメッセージが項目に被る
+   * https://super-studio.atlassian.net/browse/ECFTASK4-1898
+   **/
+  @media screen and (min-width: 720px) and (max-width: 1024px) {
+    .c-form_table--edit {
+      table-layout: fixed;
+    }
+    .c-form_table--edit > tbody > tr > th {
+      display: block;
+    }
+    .c-form_table--edit > tbody > tr > td {
+      display: block;
+    }
+  }
+  @media screen and (min-width: 1025px) {
+    .c-form_table--edit {
+      table-layout: fixed;
+    }
+    .c-form_table--edit > tbody > tr > th {
+      width: 40%;
+      overflow-wrap: break-word;
+      white-space: initial;
+    }
+    .c-form_table--edit > tbody > tr > td {
+      width: 60%;
+    }
+  }
+
+</style>

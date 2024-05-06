@@ -1,0 +1,148 @@
+{{ 'shop/products' | javascript_include_tag }}
+
+{% assign p = product %}
+<main class="l-container js-main-container" role="main" id="product-show-view">
+  <div id="add_product_async_view">
+    <div id="cart-addition-failure" class="p-product_alert" style="display:none;">
+      <div class="control-alert alert-danger">
+        <div class="text u-color__bg--bg u-color__text--alert">
+            <div>
+              <p id="addition-failure-message"></p>
+              <p id="btn-show-addition-failure-details" class="p-product_alert__details_show_btn" style="display:none;">さらに詳しく</p>
+            </div>
+
+            <div>
+              <p id="addition-failure-details" class="p-product_alert__details" style="display:none;"></p>
+              <p id="btn-hide-addition-failure-details" class="p-product_alert__details_hide_btn" style="display:none;">閉じる</p>
+            </div>
+        </div>
+      </div>
+    </div>
+    <div id="favorite-failure" class="p-product_alert" style="display:none;">
+      <div class="control-alert alert-danger">
+        <div class="text u-color__bg--bg u-color__text--alert">
+          <p id="favorite-failure-message"></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="l-container__row">
+      <div class="p-product_content">
+        {%- comment -%} パンくず (PC) {%- endcomment -%}
+        <div class="p-product_content__breadcrumbs p-product_content__breadcrumbs--pc">
+          {% for ancestry in product_categories_ancestry %}
+            <ol class="c-breadcrumbs u-text--body">
+              <li class="c-breadcrumbs__item">
+                <a class="c-breadcrumbs__item__inner u-text--link" href="/shop">TOP</a>
+              </li>
+              {% for path in ancestry %}
+                <li class="c-breadcrumbs__item">
+                  <a class="c-breadcrumbs__item__inner u-text--link" href="/shop/product_categories/{{ path.slug }}">{{ path.name }}</a>
+                </li>
+              {% endfor %}
+              <li class="c-breadcrumbs__item">{{ product.name }}</li>
+            </ol>
+          {% endfor %}
+        </div>
+        {%- comment -%} 商品詳細 {%- endcomment -%}
+        {% section 'products_show_content' %}
+      </div>
+    </div>
+    {% comment %} review {% endcomment %}
+    {% if base_info.use_review? %}
+      {% section 'products_show_review' %}
+    {% endif %}
+    {% comment %} 関連商品 {% endcomment %}
+    {% if base_info.use_related_products_on_detail? and p.active_related_products.size != 0 %}
+      {% section 'products_show_recommend' %}
+    {% endif %}
+
+    {%- comment -%} パンくず (SP) {%- endcomment -%}
+    <div class="p-product_content__breadcrumbs p-product_content__breadcrumbs--sp u-color__border--border footer_bg">
+      {% for ancestry in product_categories_ancestry %}
+        <ol class="c-breadcrumbs u-text--body">
+          <li class="c-breadcrumbs__item">
+            <a class="c-breadcrumbs__item__inner u-text--link" href="/shop">TOP</a>
+          </li>
+          {% for path in ancestry %}
+            <li class="c-breadcrumbs__item">
+              <a class="c-breadcrumbs__item__inner u-text--link" href="/shop/product_categories/{{ path.slug }}">{{ path.name }}</a>
+            </li>
+          {% endfor %}
+          <li class="c-breadcrumbs__item">{{ product.name }}</li>
+        </ol>
+      {% endfor %}
+    </div>
+
+  </div>
+</main>
+<link rel="stylesheet" href="{{ theme_file_root_path }}/assets/product.css" type="text/css">
+<script src="{{ theme_file_root_path }}/assets/product.js" type="text/javascript"></script>
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    "name": "{{ product.name }}",
+    "description": "{{ description }}",
+    {% if product.thumbnail.url %}
+    "image": "{{ product.thumbnail.url| escape }}",
+    {% else %}
+    "image": "{{ 'missing' | image_url }}",
+    {% endif %}
+    "offers": {
+      "@type": "Offer",
+      {% if product.out_of_stock? %}
+      "availability": "https://schema.org/OutOfStock",
+      {% else %}
+      "availability": "https://schema.org/InStock",
+      {% endif %}
+      "price": "{{ product.first_price_include_tax }}",
+      "priceCurrency": "JPY"
+  {% assign is_readable = product.id | check_review_reading_rule %}
+  {% if product.reviews_count > 0 and base_info.use_review? and is_readable and use_review_section %}
+    },
+    "aggregateRating" : {
+      "@type": "AggregateRating",
+      "reviewCount": "{{ product.reviews_count }}",
+      "ratingValue": "{{ product.average_star_eval }}"
+    },
+    "review": [
+    {% for review in reviews %}
+      {% if review.name == empty %}
+        {% continue %}
+      {% endif %}
+      {
+        "@type": "Review",
+        "author": {
+          "@type": "Person",
+          "name": "{{ review.name }}"
+        },
+        "datePublished": "{{ review.created_at | date: "%Y-%m-%d" }}",
+        "reviewBody": "{{ review.comment }}",
+        "reviewRating": {
+          "@type": "Rating",
+          "ratingValue": "{{ review.star }}"
+        }
+      {% if forloop.last %}
+      }
+      {% else %}
+      },
+      {% endif %}
+    {% endfor %}
+    ]
+  {% else %}
+    }
+  {% endif %}
+  }
+</script>
+
+{% content_for meta_description %}
+{% endcontent_for %}
+
+{% content_for meta_keywords %}
+{% endcontent_for %}
+
+{% content_for title %}
+{% endcontent_for %}
+
+{% content_for additional_header_content %}{{ product.additional_header_content }}{% endcontent_for %}

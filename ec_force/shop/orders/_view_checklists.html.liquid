@@ -1,0 +1,22 @@
+<div id='view-invite-code' class="p-checkout__list__block u-color__border--border">
+  <div class="p-checkout__list__block__inner">
+    <table class="c-form_table">
+      <tbody>
+        <tr>
+          <th></th>
+          <td>
+            <div class="c-form_table__newsletter">
+              {% for checklist in order_checklists %}
+                <label class="c-form_table__checkbox u-text--body">
+                  <input type="checkbox" name="checklist_{{ checklist.id }}" class="u-color__border--input validate[required]">
+                  {{ checklist.name }}
+                  <span class="c-form_table__checkbox__frame u-color__btn"></span>
+                </label>
+              {% endfor %}
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

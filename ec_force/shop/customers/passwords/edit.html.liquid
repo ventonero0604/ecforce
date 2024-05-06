@@ -1,0 +1,39 @@
+{{ 'shop/customers/passwords' | javascript_include_tag }}
+
+<main class="l-container" role="main" id="customers-password-edit-view">
+  <div class="l-container__row u-margin__top--60">
+    <header class="p-page_header">
+      <div class="p-page_header__inner">
+        <h1 class="p-page_header__inner__title u-text--head">{{ 'account.password.reset_password.value' | t }}</h1>
+      </div>
+    </header>
+  </div>
+  <div class="l-container__row u-margin__top--60 u-margin__bottom--100">
+    <form class="p-account_form" role="form" id="new_customer" action="/shop/customers/password" accept-charset="UTF-8" method="post">
+      {{ 'notice' | flash: 'control-alert alert-success', 'text u-color__bg--bg u-color__text--alert' }}
+      {{ 'alert' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+      {{ 'error' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+      {% csrf_meta_tags %}
+
+      <input type="hidden" name="_method" value="put">
+      <input type="hidden" name="customer[reset_password_token]" id="customer_reset_password_token" value='{{ reset_password_token }}'>
+      <div class="p-account_form__inner">
+        <table class="c-form_table">
+          <tbody>
+            <tr>
+              <th class="u-text--body">{{ 'account.password.new_password.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+              <td><input autofocus="autofocus" class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[validatePasswordForCustomerByAdminSetting]]" type="password" id="password" placeholder="{{ 'customer.placeholder.password.value' | t }}" name="customer[password]"></td>
+            </tr>
+            <tr>
+              <th class="u-text--body">{{ 'account.password.new_password_confirm.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+              <td><input class="u-text--input u-color__input--bg u-color__border--input validate[required,equals[password]]" type="password" placeholder="{{ 'customer.placeholder.password.value' | t }}" name="customer[password_confirmation]" id="customer_password_confirmation"></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="p-account_form__inner__bottom">
+          <input class="p-account_form__inner__bottom__btn u-text--btn u-color__btn--bg" type="submit" value="{{ 'account.password.reset_password.value' | t }}" name="commit">
+        </div>
+      </div>
+    </form>
+  </div>
+</main>

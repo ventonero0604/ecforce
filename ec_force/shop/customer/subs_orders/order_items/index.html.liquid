@@ -1,0 +1,175 @@
+{{ 'shop/customer/subs_orders/order_items' | javascript_include_tag }}
+
+<main class="l-container" role="main">
+  <div class="l-container__row u-margin__top--60 u-margin__bottom--100">
+    <div class="p-account">
+      <div class="p-account__inner">
+        <div class="p-account__inner__menu u-color__border--border">
+          {% include 'ec_force/shop/snippets/sidebar.html' %}
+        </div>
+        <div class="p-account__inner__content">
+          <ul class="c-breadcrumbs">
+            <li class="c-breadcrumbs__item u-text--link">
+              <a class="c-breadcrumbs__item__inner" href="/shop/customer">{{ 'account.general.mypage.value' | t }}</a>
+            </li>
+            <li class="c-breadcrumbs__item u-text--link">
+              <a class="c-breadcrumbs__item__inner" href="/shop/customer/subs_orders">{{ 'subs_orders.general.subs_orders.value' | t }}</a>
+            </li>
+            <li class="c-breadcrumbs__item u-text--body">
+              <span class="c-breadcrumbs__item__inner">{{ 'subs_orders.products.edit_recurring_order_item.value' | t }}</span>
+            </li>
+          </ul>
+          <!-- フラッシュメッセージ -->
+          {{ 'notice' | flash: 'control-alert alert-success', 'text u-color__bg--bg u-color__text--alert' }}
+          {{ 'alert' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+          {{ 'error' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+          <h1 class="p-account__inner__content__title u-text--head">{{ 'orders.general.order_number.value' | t }}：{{ subs_order.number }}</h1>
+          <!-- ポイント機能有効時 -->
+          {% if base_info.use_point? and base_info.point_event_redeem %}
+            <div class="p-account__inner__content__lead u-text--body">
+              <!-- 現在の所持ポイント -->
+              <p>{{ 'points.general.current_customer_point.value' | t }}{{ current_customer.point_total | number_with_delimiter }}</p>
+              <!-- ポイント利用上限 -->
+              <p>{{ 'points.general.point_upper_limit.value' | t }}{{ base_info.point_event_redeem.point_upper_limit | number_with_delimiter }}</p>
+              <!-- ポイント利用下限 -->
+              <p>{{ 'points.general.point_lower_limit.value' | t }}{{ base_info.point_event_redeem.point_lower_limit | number_with_delimiter }}</p>
+            </div>
+          {% endif %}
+          <div class="p-subscription_edit">
+            <div class="p-subscription_edit__block u-color__border--border">
+              <div class="p-subscription_edit__block__title u-text--subhead">{{ 'subs_orders.products.current_item_information.value' | t }}</div>
+                {% for order_item in subs_order.order_items %}
+                  <div class="p-history_list__item__detail">
+                    <div class="c-cart_item u-color__border--border">
+                      <a class="c-cart_item__img" href="/shop/products/{{ order_item.product.master.sku }}">
+                        {% if order_item.product.thumbnail.url %}
+                          {% assign thumbnail = order_item.product.thumbnail.url  %}
+                        {% else %}
+                          {% assign thumbnail = 'missing' | image_url  %}
+                        {% endif %}
+                        <div class="c-cart_item__img__inner" style="background-image:url('{{ thumbnail }}')"></div>
+                      </a>
+                      <div class="c-cart_item__info">
+                        <a class="c-cart_item__info__title u-text--subhead" href="/shop/products/{{ order_item.product.master.sku }}">{{ order_item.variant.product.name }}</a>
+                        <div class="c-cart_item__info__total">
+                          <!-- 個数 -->
+                          <div class="c-cart_item__info__total__quantity u-text--body">{{ 'products.stock.quantity.value' | t }}：
+                            {{ order_item.quantity }}
+                          </div>
+                          {% if order_item.point_exchange_reserved? %}
+                            <div class="c-cart_item__info__total__quantity u-text--body">
+                              {{ order_item.point_exchange_quantity }}{{ 'subs_orders.general.point_product_exchange_quantity.value' | t }}
+                            </div>
+                          {% endif %}
+                          {% if order_item.set_item_selected? %}
+                            <div class="c-cart_item__info__total__quantity u-text--body">{{ 'subs_orders.general.set_product_quantity.value' | t }}
+                              {{ order_item.set_item_quantity }}
+                            </div>
+                          {% endif %}
+                          {% if order_item.skip? %}
+                            <div class="c-cart_item__info__total__quantity u-text--body">{{ 'delivery.next.skip_next_delivery.value' | t }}</div>
+                          {% endif %}
+                          <div class="c-cart_item__info__total__quantity u-text--body">
+                            &yen;{{ order_item.price | number_with_delimiter }}
+                          </div>
+                        </div>
+                        <!-- 規格 -->
+                        <div class="c-cart_item__info__variant u-text--body">
+                          {% for option_value in order_item.variant.option_values %}
+                            {% unless forloop.first %}
+                              &nbsp;/&nbsp;
+                            {% endunless %}
+                            {{ option_value.option_type.presentation }}: {{ option_value.presentation }}
+                          {% endfor %}
+                        </div>
+                        <div class="c-cart_item__info__total">
+                          <!-- 価格 -->
+                          <div class="c-cart_item__info__total__price u-text--body">
+                            {% if order_item.point_exchange_reserved? %}
+                              &yen;{{ order_item.subtotal_price_integer | number_with_delimiter }}/{{ 'points.general.point_product_exchange.value' | t }}{{ order_item.point_exchange_reservation.point_redeem }}{{ 'points.general.point_right_parenthesis.value' | t }}
+                            {% else %}
+                              &yen;{{ order_item.subtotal_price_integer | number_with_delimiter }}
+                            {% endif %}
+                          </div>
+                        </div>
+                        <!-- 編集リンク -->
+                        <div class="c-cart_item__info__total">
+                          {% if base_info.variant_changeable_on_mypage? or base_info.variant_quantity_changeable_on_mypage? %}
+                            {% unless order_item.bundled_item? or order_item.set_item_selected? or order_item.set?%}
+                              <a class="p-subscription_detail__block__head__btn u-text--btn u-color__btn--bg" href="/shop/customer/subs_orders/{{ subs_order.number }}/order_items/{{ order_item.id }}/edit">{{ 'general.action.change.value' | t }}</a>
+                            {% endunless %}
+                          {% endif %}
+                        </div>
+                        {% comment %}
+                          セット商品編集リンク
+                          ECFDEV-12413　コメントアウトで対応
+                          <div class="c-cart_item__info__total">
+                            {% if order_item.set? %}
+                              <a class="p-subscription_detail__block__head__btn u-text--btn u-color__btn--bg" href="/shop/customer/subs_orders/{{ subs_order.number }}/sets/edit">{{ 'products.sets.edit_set_item.value' | t }}</a>
+                            {% endif %}
+                          </div>
+                        {% endcomment %}
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+                <!-- ポイント商品交換予約 -->
+                {% if base_info.use_point? and base_info.exchange_items_with_points? and base_info.variant_point_exchange_on_mypage? and subs_order.active? %}
+                  <div class="p-subscription_edit__block u-color__border--border" id="point-exchangeable-item-view">
+                    <div class="p-subscription_edit__block__title u-text--subhead">
+                      {{ 'points.general.point_exchangeable_item.value' | t }}
+                    </div>
+                    {% for variant in point_exchangeable_variants %}
+                      <div class="p-history_list__item__detail">
+                        <div class="c-cart_item u-color__border--border">
+                          <!-- 商品名 -->
+                          <a class="c-cart_item__img" href="/shop/products/{{ order_item.product.master.sku }}">
+                            {% if variant.product.thumbnail.url %}
+                              {% assign thumbnail = variant.product.thumbnail.url  %}
+                            {% else %}
+                              {% assign thumbnail = 'missing' | image_url  %}
+                            {% endif %}
+                            <div class="c-cart_item__img__inner" style="background-image:url('{{ thumbnail }}')"></div>
+                          </a>
+                          <div class="c-cart_item__info">
+                            <a class="c-cart_item__info__title u-text--subhead" href="/shop/products/{{ variant.sku }}">{{ variant.name }}</a>
+                            <div class="c-cart_item__info__total">
+                              <!-- 規格 -->
+                              <div class="c-cart_item__info__total__quantity u-text--body">
+                                {% if variant.option_values_presentation != blank %}
+                                  {{ variant.option_values_presentation }}
+                                {% endif %}
+                              </div>
+                            </div>
+                            <div class="c-cart_item__info__total">
+                              <!-- 価格 -->
+                              <div class="c-cart_item__info__total__price u-text--body">
+                                {{ variant.sales_price | number_with_delimiter }}ポイント
+                              </div>
+                            </div>
+                            <!-- 操作 -->
+                            <form id="new_order_item" action="/shop/customer/subs_orders/{{ subs_order.number }}/point_exchange_reservations" accept-charset="UTF-8" method="post">
+                              <div class="c-cart_item__info__total">
+                                <input name="utf8" type="hidden" value="✓">
+                                {% csrf_meta_tags %}
+                                <input value="{{ variant.id }}" type="hidden" name="order_item[variant_id]" id="order_item_variant_id">
+                                <input class="p-subscription_detail__block__head__btn u-text--btn u-color__btn--bg" type="submit" name="commit" value="{{ 'points.general.use_point_reservation.value' | t }}" data-disable-with="{{ 'general.action.saving.value' | t }}">
+                              </div>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+                <!-- 戻るリンク -->
+                <a class="p-account__inner__content__form__bottom__link u-text--link" href="/shop/customer/subs_orders/{{ subs_order.number }}">{{ 'general.action.back.value' | t }}</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

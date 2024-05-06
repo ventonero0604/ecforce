@@ -1,0 +1,16 @@
+{% if section.disabled == true or section.disabled == 'true' %}
+  {% assign visibility_value = "none" %}
+{% endif %}
+{% if smartphone %}
+  {% assign eye_catch_path = mobile_eye_catch %}
+{% else %}
+  {% assign eye_catch_path = eye_catch %}
+{% endif %}
+
+{% if eye_catch_path %}
+  <section class="p-selection_eye_catch" data-section-id="{{ id }}" data-section-type="{{ section.type }}" style="display: {{ visibility_value }};">
+    <div class="p-selection_eye_catch_inner p-show_selection">
+      <img class="p-selection__eye_catch" src="{{ eye_catch_path }}">
+    </div>
+  </section>
+{% endif %}

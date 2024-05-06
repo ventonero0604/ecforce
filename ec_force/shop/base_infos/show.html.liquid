@@ -1,0 +1,87 @@
+{{ 'shop/info' | javascript_include_tag }}
+
+<main class="l-container" role="main">
+  <div class="l-container__row u-margin__top--60">
+    <header class="p-page_header">
+      <div class="p-page_header__inner">
+        <!-- ショップ名(任意) -->
+        <h1 class="p-page_header__inner__title u-text--head">{{ 'base_info.base_info.about.value' | t }}</h1>
+      </div>
+    </header>
+  </div>
+  <div class="l-container__row u-margin__top--60 u-margin__bottom--100">
+    <section class="p-page_table">
+      <div class="p-page_table__inner">
+        <table class="c-table">
+          <tbody>
+            <!-- ショップ名 -->
+            <tr class="u-color__border--border">
+              <th class="u-text--strong">{{ 'base_info.base_info.shop_name.value' | t }}</th>
+              <td class="u-text--body">{{ base_info.shop_name }}</td>
+            </tr>
+            <!-- 会社名(屋号) -->
+            <tr class="u-color__border--border">
+              <th class="u-text--strong">{{ 'base_info.base_info.company_name.value' | t }}</th>
+              <td class="u-text--body">{{ base_info.company_name }}</td>
+            </tr>
+            <!-- 所在地 -->
+            <tr class="u-color__border--border">
+              <th class="u-text--strong">{{ 'base_info.general.address.value' | t }}</th>
+              <td class="u-text--body">
+                <!-- 所在地(郵便番号) -->
+                {{ 'base_info.general.post_mark.value' | t }}{{ base_info.zip01 }}{{ 'base_info.general.zip_code_delimiter.value' | t }}{{ base_info.zip02 }}{{ 'base_info.general.zip_code_end.value' | t }}
+                <!-- 所在地(住所) -->
+                {{ base_info.prefecture_name }}
+                {{ base_info.addr01 }}
+                {{ base_info.addr02 }}
+              </td>
+            </tr>
+            <!-- 電話番号 -->
+            <tr class="u-color__border--border">
+              <th class="u-text--strong">{{ 'customer.general.tel.value' | t }}</th>
+              <td class="u-text--body">{{ base_info.tel }}</td>
+            </tr>
+            <!-- FAX番号(任意) -->
+            {% unless base_info.fax == blank %}
+            <tr class="u-color__border--border">
+              <th class="u-text--strong">{{ 'customer.general.fax.value' | t }}</th>
+              <td class="u-text--body">{{ base_info.fax }}</td>
+            </tr>
+            {% endunless %}
+            <!-- メールアドレス -->
+            <tr class="u-color__border--border">
+              <th class="u-text--strong">{{ 'customer.general.email.value' | t }}</th>
+              <td class="u-text--body">{{ base_info.contact_email }}</td>
+            </tr>
+            <!-- 営業時間 -->
+            <tr class="u-color__border--border">
+              <th class="u-text--strong">{{ 'base_info.base_info.business_hour.value' | t }}</th>
+              <td class="u-text--body">{{ base_info.business_hour }}</td>
+            </tr>
+            <!-- 取扱商品 -->
+            <tr class="u-color__border--border">
+              <th class="u-text--strong">{{ 'base_info.base_info.good_traded.value' | t }}</th>
+              <td class="u-text--body">{{ base_info.good_traded }}</td>
+            </tr>
+            <!-- メッセージ(任意) -->
+            {% unless base_info.message == blank %}
+              <tr class="u-color__border--border">
+                <th class="u-text--strong">{{ 'base_info.base_info.message.value' | t }}</th>
+                <td class="u-text--body">{{ base_info.message }}</td>
+              </tr>
+            {% endunless %}
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</main>
+
+{% content_for meta_description %}
+{% endcontent_for %}
+
+{% content_for meta_keywords %}
+{% endcontent_for %}
+
+{% content_for title %}
+{% endcontent_for %}

@@ -1,0 +1,146 @@
+{% if section.disabled == "true" or section.disabled == true %}
+  <section data-section-id="{{id}}" data-section-type="{{section.type}}" style="display: none;">
+{% else %}
+  <section data-section-id="{{id}}" data-section-type="{{section.type}}">
+{% endif %}
+  {% if section.settings.information_design == 'media' %}
+    <div class="l-container__row u-margin__top--80 u-margin__bottom--80">
+      <div class="p-media">
+        <div class="p-media__inner media-innerdisp-conut-{{section.settings.information_size}}">
+          <header class="p-news__inner__title">
+            <h2 class="p-news__inner__title__en u-text--head">{{ section.settings.head | escape }}</h2>
+            <span class="p-news__inner__title__jp u-text--subhead">{{ section.settings.subhead | escape }}</span>
+          </header>
+          <ul class="p-media__inner__list">
+            {% for article in informations limit:section.settings.information_size %}
+              <li class="p-media__inner__list__item u-color__border--border medium-up--one-{{section.settings.information_size}}" id="media_{{ forloop.index }}">
+                <a class="c-column_item__inner" href="/shop/information/{{ article.slug }}">
+                  <div class="c-media_item">
+                    <div class="c-media_item__img">
+                      {% if article.thumbnail.url %}
+                        <div class="c-media_item__img__inner" style="background-image:url('{{ article.thumbnail.url }}')"></div>
+                      {% else %}
+                        <div class="c-media_item__img__inner" style="background-image:url('{{ default_information_thumbnail_url }}')"></div>
+                      {% endif %}
+                    </div>
+                    <div class="c-media_item__text u-text--subhead">{{ article.title }}</div>
+                  </div>
+                </a>
+              </li>
+            {% endfor %}
+            {% if preview_count and customize_preview_mode %}
+              {% for i in (preview_count..section.settings.information_size) %}
+                <li class="p-media__inner__list__item u-color__border--border medium-up--one-{{section.settings.information_size}}" id="media_{{ i }}">
+                  <div class="c-media_item">
+                    <div class="c-media_item__img">
+                      <div class="c-media_item__img__inner"
+                           style="background-image:url({{ theme_file_root_path }}/assets/images/media.jpg)"></div>
+                    </div>
+                    <div class="c-media_item__text u-text--subhead">ここにニュースが入ります。</div>
+                  </div>
+                </li>
+              {% endfor %}
+            {% endif %}
+          </ul>
+          {% if section.settings.view_more == true or section.settings.view_more == 'true' %}
+            <div class="p-news__inner__more">
+              <a class="p-news__inner__more__btn u-text--btn u-color__btn--bg" href="/shop/information_categories/{{section.settings.information_slug}}">{{ 'general.action.view_more.value' | t }}</a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  {% if section.settings.information_design == 'news' %}
+    <div class="l-container__row u-margin__top--80 u-margin__bottom--80">
+      <div class="p-news">
+        <div class="p-news__inner">
+          <header class="p-news__inner__title">
+            <h2 class="p-news__inner__title__en u-text--head">{{ section.settings.head | escape }}</h2>
+            <span class="p-news__inner__title__jp u-text--subhead">{{ section.settings.subhead | escape }}</span>
+          </header>
+          <div class="p-news__inner__list">
+            {% for information in informations limit:section.settings.information_size %}
+              <article class="c-news_item u-color__border--border" id="news_{{ forloop.index }}">
+                <a class="c-news_item__inner" href="/shop/information/{{ information.slug }}">
+                  <time
+                    class="c-news_item__inner__date u-text--subhead">{{ information.published_at | date: '%Y.%m.%d' }}</time>
+                  <div class="c-news_item__inner__title u-text--subhead">{{ information.title }}</div>
+                </a>
+              </article>
+            {% endfor %}
+            {% if preview_count and customize_preview_mode %}
+              {% for i in (preview_count..section.settings.information_size) %}
+                <article class="c-news_item u-color__border--border" id="news_{{ i }}">
+                  <a class="c-news_item__inner" href="#">
+                    <time
+                      class="c-news_item__inner__date u-text--subhead">202x.xx.xx</time>
+                    <div class="c-news_item__inner__title u-text--subhead">ここにニュースが入ります</div>
+                  </a>
+                </article>
+              {% endfor %}
+            {% endif %}
+          </div>
+          {% if section.settings.view_more == true or section.settings.view_more == 'true' %}
+            <div class="p-news__inner__more">
+              <a class="p-news__inner__more__btn u-text--btn u-color__btn--bg" href="/shop/information_categories/{{section.settings.information_slug}}">{{ 'general.action.view_more.value' | t }}</a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  {% if section.settings.information_design == 'column' %}
+    <div class="l-container__row u-margin__top--80 u-margin__bottom--80">
+      <div class="p-column">
+        <div class="p-column__inner">
+          <header class="p-column__inner__title">
+            <h2 class="p-column__inner__title__en u-text--head">{{ section.settings.head | escape }}</h2>
+            <span class="p-column__inner__title__jp u-text--subhead">{{ section.settings.subhead | escape }}</span>
+          </header>
+          <ul class="p-column__inner__list">
+            {% for article in informations limit:section.settings.information_size %}
+              <li class="p-column__inner__list__item medium-up--one-{{section.settings.information_size}}" id="column_{{ forloop.index }}">
+                <article class="c-column_item">
+                  <a class="c-column_item__inner" href="/shop/information/{{ article.slug }}">
+                    {% if article.thumbnail.url %}
+                      <div class="c-column_item__inner__img" style="background-image:url({{ article.thumbnail.url }})"></div>
+                    {% else %}
+                      <div class="c-column_item__inner__img" style="background-image:url('{{ default_information_thumbnail_url }}')"></div>
+                    {% endif %}
+                    <div class="c-column_item__inner__title u-text--subhead">{{ article.title }}</div>
+                    <time
+                      class="c-column_item__inner__date u-text--body">{{ article.published_at | date: '%Y.%m.%d' }}</time>
+                    <div
+                      class="c-column_item__inner__more u-text--link">{{ 'general.action.read_more.value' | t }}</div>
+                  </a>
+                </article>
+              </li>
+            {% endfor %}
+            {% if preview_count and customize_preview_mode %}
+              {% for i in (preview_count..section.settings.information_size) %}
+                <li class="p-column__inner__list__item medium-up--one-{{section.settings.information_size}}" id="column_{{ i }}">
+                  <article class="c-column_item">
+                    <a class="c-column_item__inner" href="#">
+                      <div class="c-column_item__inner__img"
+                           style="background-image:url({{ theme_file_root_path }}/assets/images/column.jpg)"></div>
+                      <div class="c-column_item__inner__title u-text--subhead">ここにニュースが入ります</div>
+                      <time class="c-column_item__inner__date u-text--body">202x.xx.xx</time>
+                      <div
+                        class="c-column_item__inner__more u-text--link">{{ 'general.action.read_more.value' | t }}</div>
+                    </a>
+                  </article>
+                </li>
+              {% endfor %}
+            {% endif %}
+          </ul>
+          {% if section.settings.view_more == true or section.settings.view_more == 'true' %}
+            <div class="p-column__inner__more">
+              <a class="p-column__inner__more__btn u-text--btn u-color__btn--bg" href="/shop/information_categories/{{section.settings.information_slug}}">{{ 'general.action.view_more.value' | t }}</a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</section>

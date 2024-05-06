@@ -1,0 +1,94 @@
+{
+  "id": "sale_ranking_show_content",
+  "type": "sale_ranking_show_content-section",
+  "name": {
+    "ja": "コンテンツ"
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "head",
+      "label": {
+        "ja": "見出し"
+      }
+    },
+    {
+      "type": "header",
+      "id": "count",
+      "label": {
+        "ja": "表示件数"
+      }
+    },
+    {
+      "type": "range",
+      "id": "sale_ranking_size",
+      "label": {
+        "ja": "ランキング表示件数"
+      },
+      "min": 1,
+      "max": 50,
+      "step": 1,
+      "unit": {
+        "ja": "件"
+      }
+    },
+    {
+      "type": "range",
+      "id": "sale_ranking_line_size",
+      "label": {
+        "ja": "行あたりの表示件数"
+      },
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "unit": {
+        "ja": "件"
+      }
+    },
+    {
+      "type": "checkbox",
+      "id": "product_show",
+      "label": {
+        "ja": "商品詳細表示"
+      }
+    },
+    {
+      "type": "checkbox",
+      "id": "product_review_star_show",
+      "label": {
+        "ja": "レビュー評価表示"
+      }
+    },
+    {
+      "type": "checkbox",
+      "id": "product_review_count_show",
+      "label": {
+        "ja": "レビュー件数表示"
+      }
+    },
+    {
+      "type": "range",
+      "id": "product_show_description_size",
+      "label": {
+        "ja": "詳細文字数制限"
+      },
+      "min": 1,
+      "max": 100,
+      "step": 1,
+      "unit": {
+        "ja": "文字"
+      }
+    },
+    {
+      "type": "link",
+      "id": "body",
+      "link_url": "/admin/store_infos/settings/function/edit",
+      "link_text": {
+        "ja": "ショップ管理から設定してください"
+      },
+      "label": {
+        "ja": "詳細設定"
+      }
+    }
+  ]
+}

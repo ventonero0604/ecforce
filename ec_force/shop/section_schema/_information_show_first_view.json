@@ -1,0 +1,16 @@
+{
+  "id": "information_show_first_view",
+  "type": "information_show_first_view-section",
+  "name": {
+    "ja": "ファーストビュー"
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "image",
+      "label": {
+        "ja": "ニュースサムネイル画像表示"
+      }
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "id": "products_show_review",
+  "type": "products_show_review-section",
+  "name": {
+    "ja": "レビュー"
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "review",
+      "label": {
+        "ja": "レビュー表示"
+      }
+    },
+    {
+      "type": "text",
+      "id": "head",
+      "label": {
+        "ja": "見出し"
+      }
+    },
+    {
+      "type": "color",
+      "id": "color_products_show_review_bg",
+      "label": {
+        "ja": "背景"
+      }
+    }
+  ]
+}

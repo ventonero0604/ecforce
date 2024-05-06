@@ -1,0 +1,479 @@
+<section class="p-cart_content u-color__border--border" data-section-id='carts_show_content' data-section-type='carts_show_content-section'>
+  {% if order_items.size == 0 and customize_preview_mode != true %}
+    <p class="u-text--body" style="text-align: center;">{{ 'orders.general.empty.value' | t }}</p>
+  {% else %}
+    <div class="p-cart_content__inner">
+      <div class="p-cart_content__inner__product">
+        {%- comment -%}アラートメッセージのキャプチャ{%- endcomment -%}
+        {%- capture alert_message_capture -%}
+          {%- comment -%}ギフトアイテム{%- endcomment -%}
+          {%- if gift_alert_list.size > 0 -%}
+            <div class="p-cart_content__message-body">
+              <p class="p-cart_content__message-text">※個数をご確認ください</p>
+              {%- for alert in gift_alert_list -%}
+                <p class="p-cart_content__message-text">{{ alert }}</p>
+              {%- endfor -%}
+            </div>
+          {%- endif -%}
+          {%- comment -%}予約商品{%- endcomment -%}
+          {%- if enabled_pre_order and order.pre_order_variants? and pre_order_settings.message_when_pre_order_product_in_cart != '' -%}
+            <div class="p-cart_content__message-body">
+              <p class="p-cart_content__message-text" style="white-space: pre-wrap;">{{ pre_order_settings.message_when_pre_order_product_in_cart }}</p>
+            </div>
+          {%- endif -%}
+        {%- endcapture -%}
+
+        {%- comment -%}アラートがあるときだけ表示する（ネガティブマージンを持つため必要なければ表示しない）{%- endcomment -%}
+        {%- assign alert_message_capture = alert_message_capture | strip -%}
+        {%- if alert_message_capture != '' -%}
+          <div class="p-cart_content__message-container">{{ alert_message_capture }}</div>
+        {%- endif -%}
+
+        {%- comment -%}管理画面のプレビュー{%- endcomment -%}
+        {% if customize_preview_mode %}
+          <div class="c-cart_item u-color__border--border">
+            <a class="c-cart_item__img" href="/shop/products/{{ item.product.master.sku }}">
+              {% if item.thumbnail %}
+                {% assign item_thumbnail = item.thumbnail %}
+              {% else %}
+                {% assign item_thumbnail = 'missing' | image_url %}
+              {% endif %}
+              <div class="c-cart_item__img__inner" style="background-size:contain;background-image:url('{{ item_thumbnail }}')"></div>
+            </a>
+            <div class="c-cart_item__info">
+              <div class="c-cart_item__info__category u-text--body">
+                {% assign _category = '' %}
+                {% for category in item.product.product_categories %}
+                  {% if category.product_category_visibility %}
+                    {% unless _category == '' %}
+                      {% assign _category = _category | append: ', ' %}
+                    {% endunless %}
+                    {% assign _category = _category | append: category.name %}
+                  {% endif %}
+                {% endfor %}
+                {{ _category }}
+              </div>
+              <a class="c-cart_item__info__title u-text--subhead" href="/shop/products/{{ item.product.master.sku }}">{{ item.product.name }}</a>
+              <div class="c-cart_item__info__variant u-text--body">
+                {% assign option_cnt = 0 %}
+                {% for option_value in item.option_values %}
+                  {% unless option_cnt == 0 %}
+                    &nbsp;/&nbsp;
+                  {% endunless %}
+                  {{ option_value.option_type.presentation }}：{{ option_value.presentation }}
+                  {% assign option_cnt = option_cnt | plus: 1 %}
+                {% endfor %}
+              </div>
+              {%- comment -%}バッジ表示開始{%- endcomment -%}
+              {% if pre_order_badge_flg_hash[item.product.master.id] or delivery_group_badge_flg_hash[item.product.id] or concurrent_purchase_group_badge_flg_hash[item.product.id] %}
+                <div class="c-product_item__inner__badge u-text--body">
+                  <ul class="c-cart_item__badges">
+                    {% if pre_order_badge_flg_hash[item.product.master.id] %}
+                      <li class="c-badge">{{ 'products.pre_order.display_mark.value' | t }}</li>
+                    {% endif %}
+                    {% for delivery_group_name in item.product.delivery_group_names %}
+                      <li class="c-badge c-badge--delivery-group">{{ delivery_group_name }}</li>
+                    {% endfor %}
+                    {% for concurrent_purchase_badge_name in item.product.concurrent_purchase_badge_names %}
+                      <li class="c-badge c-badge--concurrent-purchase-group">{{ concurrent_purchase_badge_name }}</li>
+                    {% endfor %}
+                  </ul>
+                </div>
+              {% endif %}
+              {%- comment -%}バッジ表示終了{%- endcomment -%}
+              <form class="c-cart_item__info__quantity" action="/shop/cart" method="post">
+                {% authenticity_token_tag %}
+                <input name="_method" type="hidden" value="put">
+                <input name="variant_id" type="hidden" value="{{ item.id }}">
+                {% if item.limit_quantity? %}
+                  {% assign min_quantity = item.min_quantity %}
+                  {% assign max_quantity = item.max_quantity %}
+                {% else %}
+                  {% assign min_quantity = 1 %}
+                  {% assign max_quantity = 10 %}
+                {% endif %}
+                <label class="c-order_quantity">
+                  <input name="quantity" class="c-order_quantity__input u-color--input u-color__input--bg u-color__border--input" type="number" min="{{ min_quantity }}" max="{{ max_quantity }}" value="1">
+                  <button class="c-order_quantity__minus u-color--input" type="button"><i class="u-icon--minus"></i></button>
+                  <button class="c-order_quantity__plus u-color--input" type="button"><i class="u-icon--plus"></i></button>
+                </label>
+                <button type="submit" class="c-cart_item__info__quantity__submit u-text--btn u-color__btn--bg">{{ 'general.action.update.value' | t }}</button>
+              </form>
+            </div>
+            <div class="c-cart_item__action">
+              <div class="c-cart_item__action__delete">
+                <a class="c-cart_item__action__delete__btn u-text--link" rel="nofollow" data-method="delete" href="/shop/cart/delete?variant_id={{ item.id }}">
+                  <i class="u-icon--close"></i>
+                  <span>{{ 'general.action.delete.value' | t }}</span>
+                </a>
+              </div>
+              <div class="c-cart_item__action__price u-text--subhead">&yen;{{ item.list_price | times: 1 | number_with_delimiter }}</div>
+            </div>
+          </div>
+        {% else %}
+          {%- comment -%}カート商品一覧{%- endcomment -%}
+          {% for item in order_items %}
+            <div class="c-cart_item u-color__border--border">
+              <a class="c-cart_item__img" href="/shop/products/{{ item.product.master.sku }}">
+                {% if item.available_thumbnail %}
+                  {% assign item_thumbnail = item.available_thumbnail %}
+                {% else %}
+                  {% assign item_thumbnail = 'missing' | image_url %}
+                {% endif %}
+                <div class="c-cart_item__img__inner" style="background-size:contain;background-image:url('{{ item_thumbnail }}')"></div>
+              </a>
+              <div class="c-cart_item__info">
+                <div class="c-cart_item__info__category u-text--body">
+                  {% assign _category = '' %}
+                  {% for category in item.product.product_categories %}
+                    {% if category.product_category_visibility %}
+                      {% unless _category == '' %}
+                        {% assign _category = _category | append: ', ' %}
+                      {% endunless %}
+                      {% assign _category = _category | append: category.name %}
+                    {% endif %}
+                  {% endfor %}
+                  {{ _category }}
+                </div>
+                <a class="c-cart_item__info__title u-text--subhead"
+                   href="/shop/products/{{ item.product.master.sku }}">{{ item.product.name }}</a>
+                <div class="c-cart_item__info__variant u-text--body">
+                  {% assign option_cnt = 0 %}
+                  {% for option_value in item.variant.option_values %}
+                    {% unless option_cnt == 0 %}
+                      &nbsp;/&nbsp;
+                    {% endunless %}
+                    {{ option_value.option_type.presentation }}：{{ option_value.presentation }}
+                    {% assign option_cnt = option_cnt | plus: 1 %}
+                  {% endfor %}
+                </div>
+                {%- comment -%}バッジ表示開始{%- endcomment -%}
+                {% if pre_order_badge_flg_hash[item.variant.id] or delivery_group_badge_flg_hash[item.product.id] or concurrent_purchase_group_badge_flg_hash[item.product.id] %}
+                  <div class="c-product_item__inner__badge u-text--body">
+                    <ul class="c-cart_item__badges">
+                      {% if pre_order_badge_flg_hash[item.variant.id] %}
+                        <li class="c-badge">{{ 'products.pre_order.display_mark.value' | t }}</li>
+                      {% endif %}
+                      {% for delivery_group_name in item.product.delivery_group_names %}
+                        <li class="c-badge c-badge--delivery-group">{{ delivery_group_name }}</li>
+                      {% endfor %}
+                      {% for concurrent_purchase_badge_name in item.product.concurrent_purchase_badge_names %}
+                        <li class="c-badge c-badge--concurrent-purchase-group">{{ concurrent_purchase_badge_name }}</li>
+                      {% endfor %}
+                    </ul>
+                  </div>
+                {% endif %}
+                {%- comment -%}バッジ表示終了{%- endcomment -%}
+
+                {% unless item.set_item_quantity != 0 or item.product.distribution_club or item.distribution_item_quantity != 0 or item.product.set %}
+                  <form class="c-cart_item__info__quantity" action="/shop/cart" method="post">
+                    {% authenticity_token_tag %}
+                    <input name="_method" type="hidden" value="put">
+                    <input name="variant_id" type="hidden" value="{{ item.variant_id }}">
+                    {% if item.variant.limit_quantity? %}
+                      {% assign min_quantity = item.variant.min_quantity %}
+                      {% assign max_quantity = item.variant.max_quantity %}
+                    {% else %}
+                      {% assign min_quantity = 1 %}
+                      {% assign max_quantity = 10 %}
+                    {% endif %}
+                    <label class="c-order_quantity">
+                      <input name="quantity"
+                            class="c-order_quantity__input u-color--input u-color__input--bg u-color__border--input"
+                            type="number" min="{{ min_quantity }}" max="{{ max_quantity }}" value="{{ item.quantity }}">
+                      <button class="c-order_quantity__minus u-color--input" type="button"><i class="u-icon--minus"></i>
+                      </button>
+                      <button class="c-order_quantity__plus u-color--input" type="button"><i class="u-icon--plus"></i>
+                      </button>
+                    </label>
+                    <button type="submit"
+                            class="c-cart_item__info__quantity__submit u-text--btn u-color__btn--bg">{{ 'general.action.update.value' | t }}</button>
+                  </form>
+                {% endunless %}
+              </div>
+              <div class="c-cart_item__action">
+                <div class="c-cart_item__action__delete">
+                  {% if item.set_item_quantity == 0 and item.distribution_item_quantity == 0 %}
+                    <a class="c-cart_item__action__delete__btn u-text--link js-notransition" rel="nofollow" data-method="delete"
+                  {% else %}
+                    <a class="c-cart_item__action__delete__btn u-text--link hide" rel="nofollow" data-method="delete"
+                  {% endif %}
+                    href="/shop/cart/delete?variant_id={{ item.variant_id }}">
+                    <i class="u-icon--close"></i>
+                    <span>{{ 'general.action.delete.value' | t }}</span>
+                  </a>
+                </div>
+                <div class="c-cart_item__action__price u-text--subhead">
+                  &yen;{{ item.subtotal_with_campaign_discount_integer | number_with_delimiter }}</div>
+              </div>
+            </div>
+          {% endfor %}
+          {% if gift_assignable_order_items.size > 0 and gifts.size > 0 %}
+            <button type="button" class="p-cart_content__button --add-gift js-modal__open" data-target-modal-id="js-gift__modal">{{ 'orders.gift.add_to_cart.value' | t }}</button>
+          {% endif %}
+        {% endif %}
+      </div>
+
+      {%- comment -%}ギフト包装設定{%- endcomment -%}
+      {% if gift_order_items.size > 0 %}
+        <div class="p-cart_content__inner__gift">
+          <h2 class="p-cart_content__title u-text--head">{{ 'orders.gift.title.value' | t }}</h2>
+          {%- comment -%}
+            gift_order_items, gift_oi : ギフト設定で選択した包装
+            gift_target_relations, gift_relation : gift_oreder_items を適用する商品
+          {%- endcomment -%}
+          {% for gift_oi in gift_order_items %}
+            <div class="c-cart_item --gift u-color__border--border">
+              {% for gift_relation in gift_oi.gift_target_relations %}
+                {%- comment -%}ギフト商品を選択した商品のリスト{%- endcomment -%}
+                  {%- comment -%}削除ボタン{%- endcomment -%}
+                  {% capture delete_button_capture %}
+                    <a class="c-cart_item__action__delete__btn u-text--link js-notransition"
+                       data-method="put"
+                       href="/shop/cart/delete_gift_relation?variant_id={{gift_oi.variant_id}}&gift_relation[id]={{ gift_relation.id }}&gift_relation[gift_quantity]={{ gift_relation.gift_quantity }}">削除</a>
+                  {% endcapture %}
+                  {%- comment -%}熨斗{%- endcomment -%}
+                  {% capture part_of_noshi_capture %}
+                    <div class="c-cart_item__part-of-noshi --grid-area-part-of-noshi">
+                      <p class="c-cart_item__text --color-head">名入れ</p>
+                      <div class="c-input-with-button">
+                        <input class="c-input-with-button__input c-input  u-color--input u-color__input--bg u-color__border--input" type="text" name="gift_relation[name_part_of_noshi]" value="{{ gift_relation.name_part_of_noshi | escape }}" placeholder="例）山田 花子">
+                        <button type="submit" class="c-input-with-button__button c-cart_item__info__quantity__submit --only-PC u-text--btn u-color__btn--bg">{{ 'general.action.update.value' | t }}</button>
+                      </div>
+                    </div>
+                  {% endcapture %}
+                  {%- comment -%}ギフト商品の数量設定{%- endcomment -%}
+                  {% capture gift_quantity_capture %}
+                    <div class="c-cart_item__item-quantity --grid-area-order-item-quantity">
+                      <div class="c-input-with-button">
+                        <label class="c-order_quantity c-input-with-button__input">
+                          <input name="gift_relation[gift_quantity]"
+                                 class="c-order_quantity__input u-color--input u-color__input--bg u-color__border--input"
+                                 type="number" min="1" max="{{ gift_relation.order_item.quantity }}" value="{{ gift_relation.gift_quantity }}">
+                          <button class="c-order_quantity__minus u-color--input" type="button"><i class="u-icon--minus"></i></button>
+                          <button class="c-order_quantity__plus u-color--input" type="button"><i class="u-icon--plus"></i></button>
+                        </label>
+                        <button type="submit" class="c-input-with-button__button c-cart_item__info__quantity__submit u-text--btn u-color__btn--bg">{{ 'general.action.update.value' | t }}</button>
+                        <div class="c-cart_item__delete --only-PC">
+                          {{ delete_button_capture }}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="c-cart_item__delete --only-SP">
+                      {{ delete_button_capture }}
+                    </div>
+                  {% endcapture %}
+
+                  {%- comment -%}ギフト商品の情報（ループの最初だけ表示する）{%- endcomment -%}
+                  {% if forloop.first %}
+                    <div class="c-cart_item__img --no-hover">
+                      {% if gift_oi.available_thumbnail %}
+                        {% assign src = gift_oi.available_thumbnail %}
+                      {% else %}
+                        {% assign src = 'missing' | image_url %}
+                      {% endif %}
+                      <div class="c-cart_item__img__inner" style="background-size:contain;background-image:url('{{ src }}')"></div>
+                    </div>
+                    <div class="c-cart_item__info">
+                      <div class="c-cart_item__gift-summary">
+                        <p class="c-cart_item__text --color-head">{{ gift_oi.variant.name }}</p>
+                        <div class="c-cart_item__info__variant u-text--body">
+                          {% for option_value in gift_oi.variant.option_values %}
+                            {{ option_value.option_type.presentation }}：{{ option_value.presentation }}
+                            {% unless forloop.last %}&nbsp;/&nbsp;{% endunless %}
+                          {% endfor %}
+                        </div>
+                      </div>
+                      <div class="c-cart_item__gift-info u-text--body">
+                        <p class="c-cart_item__text --color-head --title">{{ 'orders.gift.target_item.value' | t }}</p>
+                  {% endif %}
+                  {%- comment -%}ギフトを適用する商品{%- endcomment -%}
+                    <div class="c-cart_item__gift-relation">
+                      <div class="--grid-area-order-item-summary">
+                        <p class="c-cart_item__text --color-head">{{ gift_relation.variant.name }}</p>
+                        {% if gift_relation.variant.option_values.size > 0 %}
+                          <p class="c-cart_item__text --options">
+                            {% for option_value in gift_relation.variant.option_values %}
+                              {{ option_value.option_type.presentation }}：{{ option_value.presentation }}
+                              {% unless forloop.last %}&nbsp;/&nbsp;{% endunless %}
+                            {% endfor %}
+                          </p>
+                        {% endif %}
+                        {% if gift_relation.description_part_of_noshi != blank %}
+                          <p class="c-cart_item__text --catalog">表書き：{{ gift_relation.description_part_of_noshi }}</p>
+                        {% endif %}
+                      </div>
+                      {%- comment -%}SP用の数量、名入れ変更フォーム{%- endcomment -%}
+                      <form action="/shop/cart/update_gift_relation" method="post" class="c-cart_item__gift-form --only-SP">
+                        {% authenticity_token_tag %}
+                        <input type="hidden" name="_method" value="put">
+                        <input type="hidden" name="variant_id" value="{{ gift_oi.variant_id }}">
+                        <input type="hidden" name="gift_relation[id]" value="{{ gift_relation.id }}">
+                        {% if gift_oi.variant.gift.noshi? == true %}
+                          {{ part_of_noshi_capture }}
+                        {% endif %}
+                        {{ gift_quantity_capture }}
+                      </form>
+                      {%- comment -%}PC用の数量、名入れ変更フォーム{%- endcomment -%}
+                      <form action="/shop/cart/update_gift_relation" method="post" class="c-cart_item__gift-form --only-PC">
+                        {% authenticity_token_tag %}
+                        <input type="hidden" name="_method" value="put">
+                        <input type="hidden" name="variant_id" value="{{ gift_oi.variant_id }}">
+                        <input type="hidden" name="gift_relation[id]" value="{{ gift_relation.id }}">
+                        {{ gift_quantity_capture }}
+                      </form>
+                      {% if gift_oi.variant.gift.noshi? == true %}
+                        <form action="/shop/cart/update_gift_relation" method="post" class="c-cart_item__gift-form --only-PC">
+                          {% authenticity_token_tag %}
+                          <input type="hidden" name="_method" value="put">
+                          <input type="hidden" name="variant_id" value="{{ gift_oi.variant_id }}">
+                          <input type="hidden" name="gift_relation[id]" value="{{ gift_relation.id }}">
+                          {{ part_of_noshi_capture }}
+                        </form>
+                      {% endif %}
+                    </div>
+                  {%- comment -%}注文したギフトの数量と値段{%- endcomment -%}
+                  {% if forloop.last %}
+                  </div>
+                  <div class="c-cart_item__gift-subtotal u-text--subhead">
+                    <span class="c-cart_item__text --gift-quantity">{{ 'products.stock.quantity.value' | t }}：{{ gift_oi.quantity }}</span>
+                    <span class="c-cart_item__text --gift-subtotal">&yen; {{ gift_oi.subtotal_with_campaign_discount_integer | number_with_delimiter }}</span>
+                  </div>
+                </div>
+                  {% endif %}
+            {% endfor %}
+          </div>
+        {% endfor %}
+        {% if gift_assignable_order_items.size > 0 and gifts.size > 0 %}
+          <button type="button" class="p-cart_content__button --add-gift js-modal__open" data-target-modal-id="js-gift__modal">{{ 'orders.gift.add_to_cart.value' | t }}</button>
+        {% endif %}
+        </div>
+      {% endif %}
+
+      <div class="p-cart_content__inner__side">
+        <div class="c-cart_submit u-color__border--border">
+          {% if customer_signed_in and customize_preview_mode != true %}
+            <div class="c-cart_submit__block u-color__border--border">
+              <a class="c-cart_submit__block__submit u-text--btn u-color__btn--bg" href="/shop/order/new">{{ 'orders.general.to_checkout.value' | t }}</a>
+            </div>
+          {% else %}
+            {% if section.settings.login_form_on_top %}
+              <form class="c-cart_submit__block u-color__border--border" action="/shop/customers/sign_in?customer_return_to=%2Fshop%2Forder%2Fnew" id="new_customer" method="post">
+                {% authenticity_token_tag %}
+                <div class="c-cart_submit__block__title u-text--subhead">{{ 'account.general.members_guest.value' | t }}</div>
+                <div class="c-form_input">
+                  <input class="c-cart_submit__block__input u-text--input u-color__input--bg u-color__border--input validate[required,custom[email]]" type="email" placeholder="{{ 'customer.placeholder.email.value' | t }}" id="customer_email" name="customer[email]" value="{{ line_email }}">
+                </div>
+                <div class="c-form_input">
+                  <input class="c-cart_submit__block__input u-text--input u-color__input--bg u-color__border--input validate[required,minSize[8]]" type="password" placeholder="{{ 'customer.placeholder.password.value' | t }}" id="customer_password" name="customer[password]">
+                </div>
+                <button class="c-cart_submit__block__submit u-text--btn u-color__btn--bg" type="submit">{{ 'account.general.login_and_purchase.value' | t }}</button>
+              </form>
+              <div class="c-cart_submit__block u-color__border--border">
+                <a class="c-cart_submit__block__submit u-text--btn u-color__btn--bg" href="/shop/order/new?register_as_member=1">{{ 'account.general.register_and_purchase.value' | t }}</a>
+                {% if section.settings.guest == true or section.settings.guest == 'true' %}
+                  <a class="c-cart_submit__block__link u-text--link" href="/shop/order/new?register_as_member=0">{{ 'account.general.not_register_and_purchase.value' | t }}</a>
+                {% endif %}
+              </div>
+            {% else %}
+              <div class="c-cart_submit__block u-color__border--border">
+                <a class="c-cart_submit__block__submit u-text--btn u-color__btn--bg" href="/shop/order/new?register_as_member=1">{{ 'account.general.register_and_purchase.value' | t }}</a>
+                {% if section.settings.guest == true or section.settings.guest == 'true' %}
+                  <a class="c-cart_submit__block__link u-text--link" href="/shop/order/new?register_as_member=0">{{ 'account.general.not_register_and_purchase.value' | t }}</a>
+                {% endif %}
+              </div>
+              <form class="c-cart_submit__block u-color__border--border" action="/shop/customers/sign_in?customer_return_to=%2Fshop%2Forder%2Fnew" id="new_customer" method="post">
+                {% authenticity_token_tag %}
+                <div class="c-cart_submit__block__title u-text--subhead">{{ 'account.general.members_guest.value' | t }}</div>
+                <div class="c-form_input">
+                  <input class="c-cart_submit__block__input u-text--input u-color__input--bg u-color__border--input validate[required,custom[email]]" type="email" placeholder="{{ 'customer.placeholder.email.value' | t }}" id="customer_email" name="customer[email]" value="{{ line_email }}">
+                </div>
+                <div class="c-form_input">
+                  <input class="c-cart_submit__block__input u-text--input u-color__input--bg u-color__border--input validate[required,minSize[8]]" type="password" placeholder="{{ 'customer.placeholder.password.value' | t }}" id="customer_password" name="customer[password]">
+                </div>
+                <button class="c-cart_submit__block__submit u-text--btn u-color__btn--bg" type="submit">{{ 'account.general.login_and_purchase.value' | t }}</button>
+              </form>
+            {% endif %}
+            {% if line_settings['display_btn'] == '1' %}
+              {% if customer_signed_in == false and encrypted_line_id == null %}
+                <!-- LINE ID 連携ボタン（リンク） -->
+                <div class="line_ec">
+                  <div class="button-container">
+                    <a class="button btn-line line-token-set-btn" href="#">
+                      <span class="before-btn-line" style="background-image:url('{{ theme_file_root_path }}/assets/images/login-line.png')"></span>
+                      {{ 'account.line.line_login.value' | t }}
+                      <span class="after-btn-line"></span>
+                    </a>
+                  </div>
+                </div>
+              {% elsif customer_signed_in == true and current_customer.line_id? == false %}
+                <!-- LINE ID 連携ボタン（リンク） -->
+                <div class="line_ec" style="display: block;">
+                  <div class="button-container" style="margin: auto;">
+                    <a class="button btn-line line-token-set-btn" href="#">
+                      <span class="before-btn-line" style="background-image:url('{{ theme_file_root_path }}/assets/images/login-line.png')"></span>
+                      {{ 'account.line.line_id.value' | t }}
+                      <span class="after-btn-line"></span>
+                    </a>
+                  </div>
+                </div>
+              {% endif %}
+            {% endif %}
+          {% endif %}
+        </div>
+        {%- comment -%}注文金額詳細{%- endcomment -%}
+        <div class="c-billing_list u-color__bg--bg">
+          <div class="c-billing_list__title u-text--subhead u-color__border--border">{{ 'orders.amount.order_amount.value' | t }}</div>
+          <ul class="c-billing_list__detail u-color__border--border">
+            <li class="c-billing_list__detail__item">
+              <dl class="c-billing_list__detail__item__row">
+                <dt class="c-billing_list__detail__item__row__title u-text--body">{{ 'orders.amount.subtotal.value' | t }}</dt>
+                <dd class="c-billing_list__detail__item__row__price u-text--body">&yen;{{ order.subtotal_with_campaign_discount | number_with_delimiter }}</dd>
+              </dl>
+            </li>
+            <li class="c-billing_list__detail__item">
+              <dl class="c-billing_list__detail__item__row">
+                <dt class="c-billing_list__detail__item__row__title u-text--body">{{ 'orders.amount.tax.value' | t }}</dt>
+                <dd class="c-billing_list__detail__item__row__price u-text--body">&yen;{{ order.subtotal_tax_with_campaign_discount | number_with_delimiter }}</dd>
+              </dl>
+              {% if order.subtotal8_with_campaign_discount > 0 %}
+                <div class="c-billing_list__detail__item__tax">
+                  <div class="c-billing_list__detail__item__tax__rate u-text--strong">{{ 'orders.amount.10_percent_target.value' | t }}</div>
+                  <ul class="c-billing_list__detail__item__tax__list">
+                    <li class="c-billing_list__detail__item__tax__list__item">
+                      <div class="c-billing_list__detail__item__tax__list__item__title u-text--body">{{ 'orders.amount.subtotal.value' | t }}</div>
+                      <div class="c-billing_list__detail__item__tax__list__item__price u-text--body">&yen;{{ order.subtotal10_with_campaign_discount | number_with_delimiter }}</div>
+                    </li>
+                    <li class="c-billing_list__detail__item__tax__list__item">
+                      <div class="c-billing_list__detail__item__tax__list__item__title u-text--body">{{ 'orders.amount.tax.value' | t }}</div>
+                      <div class="c-billing_list__detail__item__tax__list__item__price u-text--body">&yen;{{ order.subtotal10_tax_with_campaign_discount | number_with_delimiter }}</div>
+                    </li>
+                  </ul>
+                </div>
+                <div class="c-billing_list__detail__item__tax">
+                  <div class="c-billing_list__detail__item__tax__rate u-text--strong">{{ 'orders.amount.8_percent_target.value' | t }}</div>
+                  <ul class="c-billing_list__detail__item__tax__list">
+                    <li class="c-billing_list__detail__item__tax__list__item">
+                      <div class="c-billing_list__detail__item__tax__list__item__title u-text--body">{{ 'orders.amount.subtotal.value' | t }}</div>
+                      <div class="c-billing_list__detail__item__tax__list__item__price u-text--body">&yen;{{ order.subtotal8_with_campaign_discount | number_with_delimiter }}</div>
+                    </li>
+                    <li class="c-billing_list__detail__item__tax__list__item">
+                      <div class="c-billing_list__detail__item__tax__list__item__title u-text--body">{{ 'orders.amount.tax.value' | t }}</div>
+                      <div class="c-billing_list__detail__item__tax__list__item__price u-text--body">&yen;{{ order.subtotal8_tax_with_campaign_discount | number_with_delimiter }}</div>
+                    </li>
+                  </ul>
+                </div>
+              {% endif %}
+            </li>
+          </ul>
+          <div class="c-billing_list__total">
+            <div class="c-billing_list__total__title u-text--subhead">{{ 'orders.amount.total.value' | t }}</div>
+            <div class="c-billing_list__total__price u-text--subhead">&yen;{{ order.subtotal_include_tax_with_campaign_discount | number_with_delimiter }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</section>
+
+{% include 'ec_force/shop/carts/view_gift.html' %}

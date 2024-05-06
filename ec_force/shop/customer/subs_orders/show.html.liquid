@@ -1,0 +1,548 @@
+{{ 'shop/customer/subs_orders' | javascript_include_tag }}
+
+{%- comment -%}この注文にセット商品が含まれるかどうか{%- endcomment -%}
+{%- for item in subs_order.order_items -%}
+  {% if base_info.variant_changeable_on_mypage? and item.set? %}
+    {% assign has_set = true %}
+  {% endif %}
+{%- endfor -%}
+
+<main class="l-container" role="main">
+  <div class="l-container__row u-margin__top--60 u-margin__bottom--100">
+    {{ 'notice' | flash: 'control-alert alert-success', 'text u-color__bg--bg u-color__text--alert' }}
+    {{ 'alert' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+    {{ 'error' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+    <div class="p-account">
+      <div class="p-account__inner">
+        <div class="p-account__inner__menu u-color__border--border">
+          {% include 'ec_force/shop/snippets/sidebar.html' %}
+        </div>
+        <div class="p-account__inner__content">
+          <ul class="c-breadcrumbs">
+            <li class="c-breadcrumbs__item u-text--link">
+              <a class="c-breadcrumbs__item__inner" href="/shop/customer">{{ 'account.general.mypage.value' | t }}</a>
+            </li>
+            <li class="c-breadcrumbs__item u-text--link">
+              <a class="c-breadcrumbs__item__inner" href="/shop/customer/subs_orders">{{ 'subs_orders.general.subs_orders.value' | t }}</a>
+            </li>
+            <li class="c-breadcrumbs__item u-text--body">
+              <span class="c-breadcrumbs__item__inner">{{ 'subs_orders.general.recurring_detail.value' | t }}</span>
+            </li>
+          </ul>
+          <div class="p-account__inner__content__title">
+            <h1 class="u-text--head">
+              {{ 'orders.general.order_number.value' | t }}：{{ subs_order.number }}
+            </h1>
+          </div>
+          <div class="p-subscription_detail">
+            <div class="p-subscription_detail__block">
+              <table class="c-account_table u-color__border--border">
+                <tbody>
+                  <tr class="u-color__border--border u-color__bg--bg">
+                    <th class="u-text--strong">{{ 'subs_orders.general.subs_order_status.value' | t }}</th>
+                    <th class="u-text--strong">{{ 'delivery.delivery_cycle.delivery_cycle.value' | t }}</th>
+                    <th class="u-text--strong">{{ 'delivery.next.delivered_at.value' | t }}</th>
+                    <th class="u-text--strong">{{ 'subs_orders.general.subs_order_remaining_number_of_orders.value' | t }}</th>
+                  </tr>
+                  <tr class="u-color__border--border">
+                    <td class="u-text--body" data-title="{{ 'subs_orders.general.subs_order_status.value' | t }}：">{{ subs_order.human_state_name }}</td>
+                    <td class="u-text--body" data-title="{{ 'delivery.delivery_cycle.delivery_cycle.value' | t }}：">
+                      {% if subs_order.payment_schedule == 'term' %}
+                        {{ subs_order.scheduled_to_be_delivered_every_x_day }}{{ 'delivery.delivery_cycle.delivered_every_other_day.value' | t }}
+                      {% elsif subs_order.payment_schedule == 'date' %}
+                        {{ subs_order.scheduled_to_be_delivered_every_x_month }}{{ 'delivery.delivery_cycle.every_other_month.value' | t }}
+                        {% if subs_order.scheduled_to_be_delivered_on_xth_day == 99 %}
+                          {{ 'delivery.delivery_cycle.last_day.value' | t }}{{ 'delivery.delivery_cycle.delivery_to.value' | t }}
+                        {% else %}
+                          {{ subs_order.scheduled_to_be_delivered_on_xth_day }}{{ 'delivery.delivery_cycle.delivery_to_day.value' | t }}
+                        {% endif %}
+                      {% elsif subs_order.payment_schedule == 'day_of_week' %}
+                        {{ subs_order.scheduled_to_be_delivered_every_x_month }}{{ 'delivery.delivery_cycle.every_other_month.value' | t }}{{ subs_order.scheduled_to_be_delivered_on_xth_day_of_week }}{{ 'delivery.delivery_cycle.th.value' | t }}{{ subs_order.human_scheduled_to_be_delivered_every_x_day_of_week }}{{ 'delivery.delivery_cycle.delivery_to_weekday.value' | t }}
+                      {% endif %}
+                    </td>
+                    <td class="u-text--body" data-title="{{ 'delivery.next.delivered_at.value' | t }}：">{{ subs_order.scheduled_to_be_delivered_at | date: "%Y/%m/%d" }}</td>
+                    <!-- 自動注文発生件数 -->
+                    <td class="u-text--body" data-title="{{ 'subs_orders.general.subs_order_remaining_number_of_orders.value' | t }}：">
+                      {% if subs_order.remaining_number_of_orders %}
+                        {{ 'general.general.count_left.value' | t }}{{ subs_order.remaining_number_of_orders }}{{ 'general.general.times.value' | t }}
+                      {% else %}
+                        {{ 'general.general.unlimited.value' | t }}
+                      {% endif %}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="p-subscription_detail__block">
+              <div class="p-subscription_detail__block__head">
+                <h2 class="p-subscription_detail__block__head__title u-text--subhead">{{ 'delivery.delivery_cycle.delivery_products.value' | t }}</h2>
+                <div class="p-subscription_detail__block__head__navigation">
+                  {%- comment -%}セット商品編集{%- endcomment -%}
+                  {% if has_set %}
+                    <a class="p-subscription_detail__block__head__btn u-text--btn u-color__btn--bg" href="/shop/customer/subs_orders/{{ subs_order.number }}/sets/edit">{{ 'products.sets.edit_set_item.value' | t }}</a>
+                  {% endif %}
+                  {%- comment -%}ポイント交換予約{%- endcomment -%}
+                  {% if base_info.use_point? and base_info.exchange_items_with_points? and base_info.variant_point_exchange_on_mypage? and subs_order.active? %}
+                    <a class="p-subscription_detail__block__head__btn u-text--btn u-color__btn--bg" href="/shop/customer/subs_orders/{{ subs_order.number }}/order_items#point-exchangeable-item-view">{{ 'points.general.point_exchangeable_item.value' | t }}</a>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="p-subscription_detail__block__wrapper">
+                <div class="p-subscription_detail__block__list">
+                  {% for item in subs_order.order_items %}
+                    <div class="c-cart_item u-color__border--border">
+                      <a class="c-cart_item__img" href="/shop/products/{{ item.product.master.sku }}">
+                        {% if item.variant.thumbnails.first.url %}
+                          {% assign thumbnail = item.variant.thumbnails.first.url %}
+                        {% elsif item.product.master.thumbnails.url %}
+                          {% assign thumbnail = item.product.master.thumbnails.url %}
+                        {% elsif item.product.thumbnail.url %}
+                          {% assign thumbnail = item.product.thumbnail.url %}
+                        {% else %}
+                          {% assign thumbnail = 'missing' | image_url %}
+                        {% endif %}
+                        <div class="c-cart_item__img__inner" style="background-image:url('{{ thumbnail }}')"></div>
+                      </a>
+                      <div class="c-cart_item__info">
+                        {%- comment -%}マイページ上で変更できる商品か{%- endcomment -%}
+                        {% assign is_changeable_on_my_page = false %}
+                        {% if base_info.variant_changeable_on_mypage? %}
+                          {% unless item.bundled_item? or item.set_item_selected? or item.set? %}
+                            {% assign is_changeable_on_my_page = true %}
+                          {% endunless %}
+                        {% endif %}
+                        {%- comment -%}編集リンク{%- endcomment -%}
+                        <div class="p-subscription_detail__management">
+                          {% if is_changeable_on_my_page or changeable_subs_order %}
+                            <div class="c-toggle_menu u-text--body">
+                              <label class="c-toggle_menu__head u-text--link js-c-toggle_menu">{{ 'subs_orders.general.manage_edit.value' | t }}</label>
+                              <ul class="c-toggle_menu__list">
+                                {% if is_changeable_on_my_page %}
+                                  <li class="c-toggle_menu__item"><a class="c-toggle_menu__link" href="/shop/customer/subs_orders/{{ subs_order.number }}/order_items/{{ item.id }}/edit">{{ 'general.action.edit.value' | t }}</a></li>
+                                {% endif %}
+                                {% if changeable_subs_order and item.not_set_and_distribution_item? and item.bundled_item? == false %}
+                                  <li class="c-toggle_menu__item"><a class="c-toggle_menu__link" href="/shop/customer/subs_orders/{{ subs_order.number }}/delivery_cycles/edit?item_id={{ item.id }}">{{ 'delivery.delivery_cycle.change_delivery_cycle.value' | t }}</a></li>
+                                {% endif %}
+                              </ul>
+                            </div>
+                          {% endif %}
+                        </div>
+
+                        <div class="c-cart_item__info__category u-text--body">
+                          {% assign _category = '' %}
+                          {% for category in item.product.product_categories %}
+                            {% if category.product_category_visibility %}
+                              {% unless _category == '' %}
+                                {% assign _category = _category | append: ', ' %}
+                              {% endunless %}
+                              {% assign _category = _category | append: category.name %}
+                            {% endif %}
+                          {% endfor %}
+                          {{ _category }}
+                        </div>
+                        <a class="c-cart_item__info__title u-text--subhead" href="/shop/products/{{ item.product.master.sku }}">{{ item.product.name }}</a>
+                        <div class="c-cart_item__info__variant u-text--body">
+                          {% assign option_cnt = 0 %}
+                          {% for option_value in item.variant.option_values %}
+                            {% unless option_cnt == 0 %}
+                              &nbsp;/&nbsp;
+                            {% endunless %}
+                            {{ option_value.option_type.presentation }}：{{ option_value.presentation }}
+                            {% assign option_cnt = option_cnt | plus: 1 %}
+                          {% endfor %}
+                        </div>
+                        <div class="c-cart_item__info__total">
+                          <div class="c-cart_item__info__total__quantity u-text--body">{{ 'products.stock.quantity.value' | t }}：
+                          {% if item.point_exchange_reserved? %}
+                            {{ item.quantity }}
+                            &nbsp;/&nbsp;
+                            {{ item.point_exchange_quantity }}{{ 'subs_orders.general.point_product_exchange_quantity.value' | t }}
+                          {% else %}
+                            {{ item.quantity }}
+                          {% endif %}
+                          </div>
+                          {% if item.subtotal_price_integer > 0 %}
+                            <div class="c-cart_item__info__total__price u-text--body">&yen;{{ item.price | number_with_delimiter }}</div>
+                          {% else %}
+                            <div class="c-cart_item__info__total__price u-text--body">&yen;0</div>
+                          {% endif %}
+                        </div>
+                        {%- comment -%}バッジ表示開始{%- endcomment -%}
+                        {% if delivery_group_badge_flg_hash[item.product.id] or concurrent_purchase_group_badge_flg_hash[item.product.id] %} 
+                          <div class="c-cart_item__info__badge u-text--body">
+                            <ul class="c-cart_item__badges">
+                              {% for delivery_group_name in item.product.delivery_group_names %}
+                                <li class="c-badge c-badge--delivery-group">{{ delivery_group_name }}</li>
+                              {% endfor %}
+                              {% for concurrent_purchase_badge_name in item.product.concurrent_purchase_badge_names %}
+                                <li class="c-badge c-badge--concurrent-purchase-group">{{ concurrent_purchase_badge_name }}</li>
+                              {% endfor %}
+                            </ul>
+                          </div>
+                        {% endif %}
+                        {%- comment -%}バッジ表示終了{%- endcomment -%}
+                      </div>
+                    </div>
+                  {% endfor %}
+                </div>
+                <div class="c-billing_list u-color__bg--bg">
+                  <div class="c-billing_list__title u-text--subhead u-color__border--border">{{ 'orders.amount.order_amount.value' | t }}</div>
+                  <ul class="c-billing_list__detail u-color__border--border">
+                    <li class="c-billing_list__detail__item">
+                      <!-- 商品代金 -->
+                      {% for item in subs_order.order_items %}
+                        <dl class="c-billing_list__detail__item__row">
+                          <dt class="c-billing_list__detail__item__row__title u-text--body">{{ item.product.name }}</dt>
+                          <dd class="c-billing_list__detail__item__row__price u-text--body">&yen;{{ item.subtotal_price_integer | number_with_delimiter }}</dd>
+                        </dl>
+                      {% endfor %}
+                    </li>
+                  </ul>
+                  <!-- 小計 -->
+                  <div class="c-billing_list__total">
+                    <div class="c-billing_list__total__title u-text--subhead">{{ 'orders.amount.subtotal.value' | t }}</div>
+                    <div class="c-billing_list__total__price u-text--subhead">&yen;{{ subs_order.subtotal | plus: tax | number_with_delimiter }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="p-subscription_detail__block">
+              <div class="p-subscription_detail__block__head">
+                <h2 class="p-subscription_detail__block__head__title u-text--subhead">{{ 'orders.shipping_address.shipping_address.value' | t }}</h2>
+                <div class="p-subscription_detail__block__head__navigation">
+                  <a class="p-subscription_detail__block__head__btn u-text--btn u-color__btn--bg" href="/shop/customer/subs_orders/{{ subs_order.number }}/shipping_address/edit">{{ 'general.action.change.value' | t }}</a>
+                </div>
+              </div>
+              <table class="c-account_table u-color__border--border">
+                <tbody>
+                  <tr class="u-color__border--border u-color__bg--bg">
+                    <th class="u-text--strong">{{ 'customer.general.name.value' | t }}</th>
+                    <th class="u-text--strong">{{ 'customer.general.kana.value' | t }}</th>
+                    <th class="u-text--strong">{{ 'customer.general.zip.value' | t }}</th>
+                    <th class="u-text--strong">{{ 'customer.general.address.value' | t }}</th>
+                    <th class="u-text--strong">{{ 'customer.general.tel.value' | t }}</th>
+                  </tr>
+                  <tr class="u-color__border--border">
+                    <td class="u-text--body" data-title="{{ 'customer.general.name.value' | t }}：">{{ subs_order.shipping_address.full_name }}</td>
+                    <td class="u-text--body" data-title="{{ 'customer.general.kana.value' | t }}：">{{ subs_order.shipping_address.full_kana }}</td>
+                    <td class="u-text--body" data-title="{{ 'customer.general.zip.value' | t }}：">&#12306;{{ subs_order.shipping_address.full_zip }}</td>
+                    <td class="u-text--body" data-title="{{ 'customer.general.address.value' | t }}：">{{ subs_order.shipping_address.full_address }}</td>
+                    <td class="u-text--body" data-title="{{ 'customer.general.tel.value' | t }}：">{{ subs_order.shipping_address.full_tel }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="p-subscription_detail__block">
+              <div class="p-subscription_detail__block__head">
+                <h2 class="p-subscription_detail__block__head__title u-text--subhead">{{ 'payments.general.payment_info.value' | t }}</h2>
+                {% if subs_order.active? and (base_info.payment_method_changeable_on_mypage? or (base_info.use_point? and base_info.use_point_reservation?)) %}
+                  <div class="p-subscription_detail__block__head__navigation">
+                    <a class="p-subscription_detail__block__head__btn u-text--btn u-color__btn--bg" href="/shop/customer/subs_orders/{{ subs_order.number }}/edit#payment-edit-view">{{ 'general.action.change.value' | t }}</a>
+                  </div>
+                {% endif %}
+              </div>
+              <table class="c-account_table u-color__border--border">
+                <tbody>
+                  <tr class="u-color__border--border u-color__bg--bg">
+                    <th class="u-text--strong">{{ 'payments.general.payment_method.value' | t }}</th>
+                    <th class="u-text--strong">{{ 'payments.credit_card.payment_times.value' | t }}</th>
+                    <th class="u-text--strong">{{ 'payments.general.human_state_name.value' | t }}</th>
+                    <th class="u-text--strong">{{ 'payments.general.payment_human_state_name.value' | t }}</th>
+                    <th class="u-text--strong">{{ 'points.general.use_point.value' | t }}</th>
+                    <th class="u-text--strong">{{ 'orders.coupon.coupon_code.value' | t }}</th>
+                  </tr>
+                  <tr class="u-color__border--border">
+                    <!-- 支払い方法 -->
+                    <td class="u-text--body" data-title="{{ 'payments.general.payment_method.value' | t }}：">{{ subs_order.payment_method.name }}</td>
+                    <!-- 分割回数 -->
+                    <td class="u-text--body" data-title="{{ 'payments.credit_card.payment_times.value' | t }}：">{{ subs_order.payment.payment_times }}</td>
+                    <!-- 状態 -->
+                    <td class="u-text--body" data-title="{{ 'payments.general.human_state_name.value' | t }}：">{{ subs_order.human_state_name }}</td>
+                    <!-- 決済状況 -->
+                    <td class="u-text--body" data-title="{{ 'payments.general.payment_human_state_name.value' | t }}：">{{ subs_order.payment.human_state_name }}</td>
+                    <!-- ポイント利用 -->
+                    <td class="u-text--body" data-title="{{ 'points.general.use_point.value' | t }}：">
+                      {% if subs_order.all_point_redeem %}
+                        {{ 'points.general.use_point_all_point_redeem.value' | t }}
+                      {% else %}
+                        {{ subs_order.point_redeem | number_with_delimiter }}
+                      {% endif %}
+                    </td>
+                    <!-- クーポンコード -->
+                    <td class="u-text--body" data-title="{{ 'orders.coupon.coupon_code.value' | t }}：">
+                      {% if subs_order.coupon_id %}
+                        {{ 'orders.coupon.use.value' | t }}
+                      {% else %}
+                        {{ 'orders.coupon.unused.value' | t }}
+                      {% endif %}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="p-subscription_detail__block">
+              <div class="p-subscription_detail__block__head">
+                <h2 class="p-subscription_detail__block__head__title u-text--subhead">{{ 'delivery.general.delivery_info.value' | t }}</h2>
+                {% assign delivery_time_changeable_and_available_delivery_times_flg = base_info.scheduled_delivery_time_changeable_on_mypage? %}
+                {% if delivery_time_changeable_and_available_delivery_times_flg %}
+                  {% if subs_order.available_delivery_times.size > 0 %}
+                    {% assign delivery_time_changeable_and_available_delivery_times_flg = true %}
+                  {% else %}
+                    {% assign delivery_time_changeable_and_available_delivery_times_flg = false %}
+                  {% endif %}
+                {% endif %}
+                {% if subs_order.active? and base_info.delivery_cycle_changeable? or base_info.scheduled_to_be_delivered_at_changeable_on_mypage? or delivery_time_changeable_and_available_delivery_times_flg or base_info.skip_next_delivery_on_mypage? %}
+                  <div class="p-subscription_detail__block__head__navigation">
+                    <a class="p-subscription_detail__block__head__btn u-text--btn u-color__btn--bg" href="/shop/customer/subs_orders/{{ subs_order.number }}/edit#delivery-edit-view">{{ 'general.action.change.value' | t }}</a>
+                  </div>
+                {% endif %}
+              </div>
+              <table class="c-account_table u-color__border--border">
+                <tbody>
+                  <tr class="u-color__border--border u-color__bg--bg">
+                    <th class="u-text--strong">{{ 'orders.general.order_completed_at.value' | t }}</th>
+                    <th class="u-text--strong">{{ 'delivery.delivery_cycle.delivery_cycle.value' | t }}</th>
+                    <th class="u-text--strong">{{ 'delivery.next.delivered_at.value' | t }}</th>
+                    <th class="u-text--strong">{{ 'delivery.next.delivery_times.value' | t }}</th>
+                  </tr>
+                  <tr class="u-color__border--border">
+                    <td class="u-text--body" data-title="{{ 'orders.general.order_completed_at.value' | t }}：">{{ subs_order.created_at | date: "%Y/%m/%d" }}<br />{{ subs_order.created_at | date: "%H:%M:%S" }}</td>
+                    <td class="u-text--body" data-title="{{ 'delivery.delivery_cycle.delivery_cycle.value' | t }}：">
+                      {% if subs_order.payment_schedule == 'term' %}
+                        {{ subs_order.scheduled_to_be_delivered_every_x_day }}{{ 'delivery.delivery_cycle.delivered_every_other_day.value' | t }}
+                      {% elsif subs_order.payment_schedule == 'date' %}
+                        {{ subs_order.scheduled_to_be_delivered_every_x_month }}{{ 'delivery.delivery_cycle.every_other_month.value' | t }}
+                        {% if subs_order.scheduled_to_be_delivered_on_xth_day == 99 %}
+                          {{ 'delivery.delivery_cycle.last_day.value' | t }}{{ 'delivery.delivery_cycle.delivery_to.value' | t }}
+                        {% else %}
+                          {{ subs_order.scheduled_to_be_delivered_on_xth_day }}{{ 'delivery.delivery_cycle.delivery_to_day.value' | t }}
+                        {% endif %}
+                      {% elsif subs_order.payment_schedule == 'day_of_week' %}
+                        {{ subs_order.scheduled_to_be_delivered_every_x_month }}{{ 'delivery.delivery_cycle.every_other_month.value' | t }}{{ subs_order.scheduled_to_be_delivered_on_xth_day_of_week }}{{ 'delivery.delivery_cycle.th.value' | t }}{{ subs_order.human_scheduled_to_be_delivered_every_x_day_of_week }}{{ 'delivery.delivery_cycle.delivery_to_weekday.value' | t }}
+                      {% endif %}
+                    </td>
+                    <td class="u-text--body" data-title="{{ 'delivery.next.delivered_at.value' | t }}：">{{ subs_order.scheduled_to_be_delivered_at | date: "%Y/%m/%d" }}</td>
+                    {% if subs_order.scheduled_delivery_time == blank %}
+                      <td class="u-text--body" data-title="{{ 'delivery.next.delivery_times.value' | t }}：">{{ 'general.general.unspecified.value' | t }}</td>
+                    {% else %}
+                      <td class="u-text--body" data-title="{{ 'delivery.next.delivery_times.value' | t }}：">{{ subs_order.scheduled_delivery_time }}</td>
+                    {% endif %}
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            {% if base_info.variant_addable_on_mypage? and products_addable_on_mypage_in_all_variants %}
+              <div class="p-subscription_detail__block">
+                <div class="p-subscription_detail__block__head">
+                  <h2 class="p-subscription_detail__block__head__title u-text--subhead">追加可能商品</h2>
+                </div>
+                <div class="p-subscription_detail__block__additional-items">
+                  <div class="p-subscription_detail__block__additional-items__list{% if addable_products.size > 4 %} js-subs-detail-productslider{% endif %}">
+                    {% for product in addable_products %}
+                      <div class="c-product_item">
+                        <div class="c-product_item__inner__eyecatch">
+                          <a class="c-cart_item__img" href="/shop/customer/subs_orders/{{ subs_order.number }}/order_items/add?product_number={{ product.number }}">
+                            {% if product.variant.thumbnails.first.url %}
+                              {% assign thumbnail = product.variant.thumbnails.first.url %}
+                            {% elsif product.master.thumbnails.url %}
+                              {% assign thumbnail = product.master.thumbnails.url %}
+                            {% elsif product.thumbnail.url %}
+                              {% assign thumbnail = product.thumbnail.url %}
+                            {% else %}
+                              {% assign thumbnail = 'missing' | image_url %}
+                            {% endif %}
+                            <div class="c-product_item__inner__eyecatch__img" style="background-size:contain;background-image:url('{{ thumbnail }}')"></div>
+                          </a>
+                        </div>
+                        <div class="c-product_item__inner__content">
+                          <div class="c-product_item__inner__title u-text--subhead">{{ product.name }}</div>
+                          <div class="c-product_item__inner__category u-text--subhead">
+                            {% assign _category = '' %}
+                            {% for category in product.product_categories %}
+                              {% unless _category == '' %}
+                                {% assign _category = _category | append: ', ' %}
+                              {% endunless %}
+                              {% assign _category = _category | append: category.name %}
+                            {% endfor %}
+                            {{ _category }}
+                          </div>
+                          {% assign options = "" %}
+                          {% assign options = options | append: product.id | append: "," | append: subs_order.times %}
+                          {% assign options_array = options | split: "," %}
+                          <div class="c-product_item__inner__price u-text--body">
+                            <span class="price">&yen;{{ options_array | liquid_recurring_time_price | number_with_delimiter }}</span>
+                            <span>&nbsp;(税込価格</span>
+                            <span id="price">&yen;{{ options_array | liquid_recurring_time_price_include_tax | number_with_delimiter }}</span>
+                            <span>)</span>
+                          </div>
+                          <div class="c-product_item__inner__price u-text--body" style="word-break: break-all;">
+                          </div>
+                          {%- comment -%}バッジ表示開始{%- endcomment -%}
+                          {% if delivery_group_badge_flg_hash[product.id] or concurrent_purchase_group_badge_flg_hash[product.id] %}
+                            <div class="c-cart_item__info__badge u-text--body">
+                              <ul class="c-cart_item__badges">
+                                {% for delivery_group_name in product.delivery_group_names %}
+                                  <li class="c-badge c-badge--delivery-group">{{ delivery_group_name }}</li>
+                                {% endfor %}
+                                {% for concurrent_purchase_badge_name in product.concurrent_purchase_badge_names %}
+                                  <li class="c-badge c-badge--concurrent-purchase-group">{{ concurrent_purchase_badge_name }}</li>
+                                {% endfor %}
+                              </ul>
+                            </div>
+                          {% endif %}
+                          {%- comment -%}バッジ表示終了{%- endcomment -%}
+                        </div>
+                        <a href="/shop/customer/subs_orders/{{ subs_order.number }}/order_items/add?product_number={{ product.number }}">
+                          <div class="c-product_item__inner__addbtn">
+                            <button type="button" class="c-product_item__inner__addbtn__btn u-color__btn--bg u-text--btn">
+                              <span>追加する</span>
+                            </button>
+                          </div>
+                        </a>
+                      </div>
+                    {% endfor %}
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          </div>
+          <div class="p-subscription_edit">
+            {% if subs_order.active? and base_info.use_delvery_calendar? %}
+              <div class="p-account__inner__content__form__bottom">
+                <a class="p-account__inner__content__form__bottom__btn u-text--btn u-color__btn--bg" href="/shop/customer/subs_orders/{{ subs_order.number }}/calendars?date={{ subs_order.scheduled_to_be_delivered_at | date: '%Y-%m-%d' }}" >配送カレンダー</a>
+              </div>
+            {% endif %}
+            {% if base_info.subs_order_cancelable? and subs_order.active? == true and subs_order.remaining_block_times == 0 %}
+              <!-- 定期購入停止リンク -->
+              <div class="p-account__inner__content__form__bottom">
+                {% if base_info.subs_order_cancelable_reason? and reasons.size != 0 %}
+                  <a href="/shop/customer/subs_orders/{{ subs_order.number }}/cancel" class="p-account__inner__content__form__bottom__btn u-text--btn u-color__btn--bg">{{ 'subs_orders.general.stop_recurring.value' | t }}</a>
+								{% else %}
+                	<a class="p-account__inner__content__form__bottom__btn u-text--btn u-color__btn--bg js-notransition" href="/shop/customer/subs_orders/{{ subs_order.number }}" data-method="delete" data-confirm="{{ 'general.message.is_really_stop.value' | t }}">{{ 'subs_orders.general.stop_recurring.value' | t }}</a>
+								{% endif %}
+              </div>
+            {% elsif subs_order.active? == false and subs_order.reorderable_display_setting? %}
+              <!-- 再開リンク -->
+              <div id='subs-order-show-view' class="c-form_table">
+                <div class="p-subscription_detail__block u-margin__top--60 u-padding__top--30 u-border__top u-color__border--border">
+                  <div class="p-subscription_detail__block__head">
+                    <h2 class="p-subscription_detail__block__head__title u-text--subhead">{{ 'subs_orders.general.resume_recurring.value' | t }}</h2>
+                  </div>
+                  <form class="p-subscription_detail__resume-form" action='/shop/customer/subs_orders/{{ subs_order.number }}' accept-charset='UTF-8' method='post'>
+                    {% csrf_meta_tags %}
+                    <input type='hidden' name='_method' value='put'>
+                    <div class="p-subscription_detail__resume-form__content">
+                      <div class="p-subscription_detail__resume-form__label u-text--strong">
+                        {{ 'delivery.next.delivered_at.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span>
+                      </div>
+                      <div class="p-subscription_detail__resume-form__input">
+                        <label class="c-form_table__select">
+                          <select class="u-text--input u-color__input--bg u-color__border--input validate[required]" id='subs_order_scheduled_to_be_delivered_at' name="subs_order[scheduled_to_be_delivered_at]">
+                            {% assign a = subs_order.scheduled_to_be_delivered_at | date: "%Y/%m/%d" %}
+                            {% for d in option_scheduled_to_be_delivered_at %}
+                              {% assign b = d | date: "%Y/%m/%d" %}
+                              <option value={{ d }} {% if a == b %}selected{% endif %}>{{ d }}</option>
+                            {% endfor %}
+                          </select>
+                          <input type='hidden' name='subs_order[state]' value='active'>
+                          <input type='hidden' name='subs_order[reorderable]' value='true'>
+                        </label>
+                      </div>
+                    </div>
+                    <!-- 支払い方法変更 -->
+                    {% if payment_methods_changable_flg %}
+                      <div id="payment-method-edit-view">
+                        <!-- 支払い方法変更 -->
+                        <div class="p-subscription_detail__resume-form__label u-text--strong">
+                          {{ 'payments.general.payment_method.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span>
+                        </div>
+                        <div class="p-subscription_detail__resume-form__input">
+                          <label class="c-form_table__select">
+                            <select class="u-text--input u-color__input--bg u-color__border--input" name="subs_order[payment_attributes][payment_method_id]" id="subs_order_payment_attributes_payment_method_id">
+                              {% for payment_method in payment_methods %}
+                                <option value="{{ payment_method.id }}" {% if subs_order.payment_method.id == payment_method.id %}selected{% endif %}>{{ payment_method.name }}</option>
+                              {% endfor %}
+                            </select>
+                          </label>
+                        </div>
+                        <!-- クレジットカード選択 -->
+                        <div id="credit-card">
+                          <div class="p-subscription_detail__resume-form__label u-text--strong">
+                            {{ 'payments.credit_card.credit_card.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span>
+                          </div>
+                          <div class="p-subscription_detail__resume-form__input">
+                            <label class="c-form_table__select">
+                              <select class="u-text--input u-color__input--bg u-color__border--input validate[required]" name="subs_order[payment_attributes][source_id]" id="subs_order_payment_attributes_source_id">
+                                <option value="">--</option>
+                                {% for card in credit_cards %}
+                                  <option value="{{ card.id }}" {% if selected_credit_card.id == card.id %}selected{% endif %}>{{ card.display_number_with_default }}</option>
+                                {% endfor %}
+                              </select>
+                            </label>
+                            <input value="EcForce::CreditCard" type="hidden" name="subs_order[payment_attributes][source_type]" id="subs_order_payment_attributes_source_type">
+                            {% if base_info.credit_card_editable? %}
+                              <a href="/shop/customer/cards"><span class="u-text--link">{{ 'payments.credit_card.transition_card.value' | t }}</span></a>
+                            {% endif %}
+                          </div>
+                        </div>
+                        <!-- 分割回数 -->
+                        <div class="form-group">
+                          <div class="p-subscription_detail__resume-form__label u-text--strong">{{ 'payments.credit_card.payment_times.value' | t }}</div>
+                          <div class="p-subscription_detail__resume-form__input">
+                            <label class="c-form_table__select">
+                              <select class="u-text--input u-color__input--bg u-color__border--input" name="subs_order[payment_attributes][payment_times]" id="subs_order_payment_attributes_payment_times">
+                                {% for i in (2..24) %}
+                                  <option value="{{ i }}" {% if subs_order.payment.payment_times == i %}selected{% endif %}>{{ i }}</option>
+                                {% endfor %}
+                              </select>
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                    {% endif %}
+                    <div class="p-subscription_detail__block__bottom">
+                      <input class="p-subscription_detail__block__bottom__btn u-text--btn u-color__btn--bg" type='submit' name='commit' value="{{ 'subs_orders.general.resume_recurring.value' | t }}" data-disable_with='{{ 'general.action.saving.value' | t }}'>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            {% endif %}
+          </div>
+          <!-- カスタム項目 -->
+          <div id="view-free_columns" class="p-history_detail">
+            {% if base_info.use_free_columns? and base_info.use_subs_order_free_columns_mypage? and liquid_custom_field != empty %}
+              <div class="p-free_column_view">
+                <h2 class="p-free_column_view__head u-text--subhead">{{ base_info.subs_order_free_columns_title }}</h2>
+                {% for custom_field_info in liquid_custom_field %}
+                  {% for custom_info in custom_field_info[1] %}
+                    {% assign info = custom_info[1] %}
+                    <div class="p-free_column_view__body">
+                      {% if info['category'] %}
+                        <h3 class="p-free_column_view__category u-text--subhead">{{ info['category'] | escape }}</h3>
+                      {% endif %}
+                      <table class="p-free_column_view__table c-free_column_table">
+                        <tbody>
+                        {% for i_hash in info['info'] %}
+                          {% assign i = i_hash[1] %}
+                          <tr class="c-free_column_table__row">
+                            <th class="c-free_column_table__head u-text--body">{{ i['free_columns_label'] | escape }}</th>
+                            <td class="c-free_column_table__data u-text--body">{{ i['free_column_values_value'] | join: ', ' | escape }}</td>
+                          </tr>
+                        {% endfor %}
+                        </tbody>
+                      </table>
+                    </div>
+                  {% endfor %}
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+          <!-- 戻るボタン -->
+          <div class="p-account__inner__content__form__bottom">
+            <a class="p-account__inner__content__form__bottom__link u-text--link" href="/shop/customer/subs_orders">{{ 'general.action.back.value' | t }}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

@@ -1,0 +1,15 @@
+<section class="p-column_header__panel" data-section-id="information_show_content">
+  <div class="p-column_header__panel__inner u-color__bg--base">
+    <div class="p-column_header__panel__inner__top">
+      <!-- 公開日 -->
+      <time class="p-column_header__panel__inner__top__date u-text--body">
+        {% if section.settings.date == true or section.settings.date == 'true' %}
+          {{ information.published_at | date:'%Y.%m.%d' }}
+        {% endif %}
+      </time>
+      {% include 'ec_force/shop/snippets/sns.html' %}
+    </div>
+    <!-- タイトル -->
+    <h1 class="p-column_header__panel__inner__title u-text--head">{{ information.title }}</h1>
+  </div>
+</section>

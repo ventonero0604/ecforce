@@ -1,0 +1,91 @@
+{{ 'shop/customers/sessions' | javascript_include_tag }}
+
+<main class="l-container" role="main" id="customers-sessions-sign-in-view">
+  <div class="l-container__row u-margin__top--60 u-margin__bottom--100">
+    {{ 'notice' | flash: 'control-alert alert-success', 'text u-color__bg--bg u-color__text--alert' }}
+    {{ 'alert' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+    {{ 'error' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+    <div class="p-login">
+      <div class="p-login__inner">
+        <form class="p-login__inner__login" action="/shop/customers/sign_in" accept-charset="UTF-8" method="post">
+          <header class="p-page_header">
+            <div class="p-page_header__inner">
+              <h1 class="p-page_header__inner__title u-text--head">{{ 'account.general.login.value' | t }}</h1>
+            </div>
+          </header>
+          <table class="c-form_table">
+            <tbody>
+              <!-- メールアドレス -->
+              <tr>
+                {% if base_info.use_sms_active? %}
+                  <th class="u-text--body">{{ 'customer.general.email_or_phone.value' | t }}</th>
+                {% else %}
+                  <th class="u-text--body">{{ 'customer.general.email.value' | t }}</th>
+                {% endif %}
+                <td><input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[email]]" type="email" name="customer[email]" autocomplete="email" id="customer_email_si"></td>
+              </tr>
+              <!-- パスワード -->
+              <tr>
+                <th class="u-text--body">{{ 'account.password.password.value' | t }}</th>
+                <td><input class="u-text--input u-color__input--bg u-color__border--input validate[required]" type="password" name="customer[password]" autocomplete="current-password" id="customer_password_si"></td>
+              </tr>
+              <!-- ログイン状態保持 -->
+              <tr>
+                <th></th>
+                <td>
+                  <label class='c-form_table__checkbox checkbox-inline'>
+                    <input name="customer[remember_me]" type="hidden" value="0">
+                    <input type="checkbox" value="1" class='u-color__border--input' name="customer[remember_me]" id="customer_remember_me">
+                    <span class="c-form_table__checkbox__frame u-color__btn"></span>
+                    <span class="c-form_table__checkbox__text u-text--body">{{ 'account.general.keep_login.value' | t }}</span>
+                  </label>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="p-login__inner__login__bottom">
+            <input class="p-login__inner__login__bottom__submit u-text--btn u-color__btn--bg" type="submit" name="commit" value="{{ 'account.general.login.value' | t }}">
+            <a class="p-login__inner__login__bottom__forget u-text--link" href="/shop/customers/password/new">{{ 'account.password.forgot_password.value' | t }}</a>
+          </div>
+        </form>
+        <div class="p-login__inner__registration">
+          <header class="p-page_header">
+            <div class="p-page_header__inner">
+              <h1 class="p-page_header__inner__title u-text--head">{{ 'account.general.member_registration_title.value' | t }}</h1>
+            </div>
+          </header>
+          <p class="p-login__inner__registration__text u-text--body">{{ 'account.general.member_registration_lead_text.value' | t }}</p>
+          <div class="p-login__inner__registration__bottom">
+            <a class="p-login__inner__registration__bottom__btn u-text--btn u-color__btn--bg" href="/shop/customers/sign_up">{{ 'account.general.new_member_registration.value' | t }}</a>
+          </div>
+          {% if line_settings['display_btn'] == '1' and encrypted_line_id == null %}
+            <div class="p-login__inner__registration__bottom">
+              <div class="alert u-text--body">
+                {{ line_settings['information_context'] }}
+              </div>
+              <!-- LINE ID 連携ボタン（リンク） -->
+              <div class="line_new_ec">
+                <div class="button-container">
+                  <a class="button btn-line line-token-set-btn" href="#">
+                    <span class="before-btn-line" style="background-image:url('{{ theme_file_root_path }}/assets/images/login-line.png')"></span>
+                    {{ 'account.line.line_login.value' | t }}
+                    <span class="after-btn-line"></span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+{% content_for meta_description %}
+{% endcontent_for %}
+
+{% content_for meta_keywords %}
+{% endcontent_for %}
+
+{% content_for title %}
+{% endcontent_for %}

@@ -1,0 +1,185 @@
+{% if pickup_store_is_available == true and delivery_to_address_is_checked == false %}
+  {% assign own_style = 'display: none;' %}
+{% else %}
+  {% assign own_style = '' %}
+{% endif %}
+<div class="p-checkout__list__block u-color__border--border" id='view-payment-schedule' style="{{ own_style }}">
+  {% if order.cv_upsell? %}
+    <input id='payment_schedule' name='preview_order[subs_order_attributes][payment_schedule]' type='hidden'>
+    <input id='payment_schedule_locked' name='preview_order[subs_order_attributes][payment_schedule_locked]' type='hidden'>
+    <input id='scheduled_to_be_delivered_every_x_month' name='preview_order[subs_order_attributes][scheduled_to_be_delivered_every_x_month]' type='hidden'>
+    <input id='scheduled_to_be_delivered_on_xth_day' name='preview_order[subs_order_attributes][scheduled_to_be_delivered_on_xth_day]' type='hidden'>
+    <input id='scheduled_to_be_delivered_every_x_day' name='preview_order[subs_order_attributes][scheduled_to_be_delivered_every_x_day]' type='hidden'>
+    <input id='scheduled_to_be_delivered_on_xth_day_of_week' name='preview_order[subs_order_attributes][scheduled_to_be_delivered_on_xth_day_of_week]' type='hidden'>
+    <input id='scheduled_to_be_delivered_every_x_day_of_week' name='preview_order[subs_order_attributes][scheduled_to_be_delivered_every_x_day_of_week]' type='hidden'>
+    <input id='scheduled_2nd_delivery_date' name='preview_order[subs_order_attributes][scheduled_to_be_delivered_at]' type='hidden'>
+    <input id='scheduled_2nd_delivery_time' name='preview_order[subs_order_attributes][scheduled_delivery_time]' type='hidden'>
+    <input id='scheduled_to_be_delivered_at' type='hidden'>
+    <input id='scheduled_1st_delivery_date' name='preview_order[scheduled_to_be_delivered_at]' type='hidden'>
+    <input id='scheduled_1st_delivery_time' name='preview_order[scheduled_delivery_time]' type='hidden'>
+    <input id='selected_scheduled_delivery_time' value="{{ order.scheduled_delivery_time }}" type='hidden'>
+  {% else %}
+    <input id='payment_schedule' name='order[subs_order_attributes][payment_schedule]' type='hidden'>
+    <input id='payment_schedule_locked' name='order[subs_order_attributes][payment_schedule_locked]' type='hidden'>
+    <input id='scheduled_to_be_delivered_every_x_month' name='order[subs_order_attributes][scheduled_to_be_delivered_every_x_month]' type='hidden'>
+    <input id='scheduled_to_be_delivered_on_xth_day' name='order[subs_order_attributes][scheduled_to_be_delivered_on_xth_day]' type='hidden'>
+    <input id='scheduled_to_be_delivered_every_x_day' name='order[subs_order_attributes][scheduled_to_be_delivered_every_x_day]' type='hidden'>
+    <input id='scheduled_to_be_delivered_on_xth_day_of_week' name='order[subs_order_attributes][scheduled_to_be_delivered_on_xth_day_of_week]' type='hidden'>
+    <input id='scheduled_to_be_delivered_every_x_day_of_week' name='order[subs_order_attributes][scheduled_to_be_delivered_every_x_day_of_week]' type='hidden'>
+    <input id='scheduled_2nd_delivery_date' name='order[subs_order_attributes][scheduled_to_be_delivered_at]' type='hidden'>
+    <input id='scheduled_2nd_delivery_time' name='order[subs_order_attributes][scheduled_delivery_time]' type='hidden'>
+    <input id='scheduled_to_be_delivered_at' type='hidden'>
+    <input id='scheduled_1st_delivery_date' name='order[scheduled_to_be_delivered_at]' type='hidden'>
+    <input id='scheduled_1st_delivery_time' name='order[scheduled_delivery_time]' type='hidden'>
+    <input id='selected_scheduled_delivery_time' value="{{ order.scheduled_delivery_time }}" type='hidden'>
+  {% endif %}
+
+  <!-- お届けサイクル -->
+  <div class="p-checkout__list__block__inner" id='container_payment_schedule'>
+    <h2 id="form_label_caption_delivery" class="p-checkout__list__block__inner__title u-text--subhead">{{ 'delivery.general.payment_schedule.value' | t }}</h2>
+    <h2 id="form_label_caption_delivery_pre_order" class="p-checkout__list__block__inner__title u-text--subhead" style="display:none;">{{ 'delivery.general.pre_order_payment_schedule.value' | t }}</h2>
+    <table class="c-form_table">
+      <tbody>
+        <!-- お届けサイクルの指定 -->
+        <tr id='container_delivery_cycle' {% unless order.subs_order %} style="display: none;" {% endunless %}>
+          <th class="u-text--body">{{ 'delivery.delivery_cycle.payment_delivery_cycle.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+          <td>
+            <label class="c-form_table__select">
+              <select class="u-text--input u-color__input--bg u-color__border--input validate[required]" id='select_payment_schedule'>
+                <option value="date" {% if order.subs_order.payment_schedule == "date" %}selected{% endif %}>{{ 'delivery.delivery_cycle.specify_by_date.value' | t }}</option>
+                <option value="term" {% if order.subs_order.payment_schedule == "term" %}selected{% endif %}>{{ 'delivery.delivery_cycle.specify_by_term.value' | t }}</option>
+                <option value="day_of_week" {% if order.subs_order.payment_schedule == "day_of_week" %}selected{% endif %}>{{ 'delivery.delivery_cycle.specify_by_day_of_week.value' | t }}</option>
+              </select>
+            </label>
+          </td>
+        </tr>
+        <!-- 日付で指定 -->
+        <tr id='container_delivery_schedule_by_date' style='display:none;'>
+          <th></th>
+          <td>
+            <div class="c-form_table__tel">
+              <label class="c-form_table__select">
+                <select class="u-text--input u-color__input--bg u-color__border--input validate[required]" id='select_scheduled_to_be_delivered_every_x_month'>
+                  {% for d in order.available_delivery_dates %}
+                    <option value='{{ d.month }}' {% if order.subs_order.scheduled_to_be_delivered_every_x_month == d.month %}selected{% endif %}>{{ d.month }}{{ 'delivery.delivery_cycle.months.value' | t }}</option>
+                  {% endfor %}
+                </select>
+              </label>
+              <span class="u-text--body">{{ 'delivery.delivery_cycle.every_time.value' | t }}</span>
+              <label class="c-form_table__select">
+                <select class="u-text--input u-color__input--bg u-color__border--input validate[required]" id='select_scheduled_to_be_delivered_on_xth_day'>
+                  {% for d in (1..28) %}
+                    <option value='{{ d }}' {% if order.subs_order.scheduled_to_be_delivered_on_xth_day == d %}selected{% endif %}>{{ d }}{{ 'delivery.delivery_cycle.select_scheduled_to_be_delivered_every_x_day.value' | t }}</option>
+                  {% endfor %}
+                  <option value="99" {% if order.subs_order.scheduled_to_be_delivered_on_xth_day == "99" %}selected{% endif %}>{{ 'delivery.delivery_cycle.last_day.value' | t }}</option>
+                </select>
+              </label>
+              <span class="u-text--body">{{ 'delivery.delivery_cycle.delivery_to.value' | t }}</span>
+            </div>
+          </td>
+        </tr>
+        <!-- 間隔で指定 -->
+        <tr id='container_delivery_schedule_by_term' style='display:none;'>
+          <th></th>
+          <td>
+            <div class="c-form_table__tel">
+              <label class="c-form_table__select">
+                <select class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[integer]]" id='select_scheduled_to_be_delivered_every_x_day'>
+                  {% for i in order.available_delivery_intervals %}
+                    {% if order.subs_order %}
+                      <option value="{{ i.day }}" {% if order.subs_order.scheduled_to_be_delivered_every_x_day == i.day %} selected {% endif %}>{{ i.day }}{{ 'delivery.delivery_cycle.select_scheduled_to_be_delivered_every_x_day.value' | t }}</option>
+                    {% else %}
+                      <option value="{{ i.day }}">{{ i.day }}{{ 'delivery.delivery_cycle.select_scheduled_to_be_delivered_every_x_day.value' | t }}</option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
+              </label>
+              <span class="u-text--body">{{ 'delivery.delivery_cycle.delivery_every.value' | t }}</span>
+            </div>
+          </td>
+        </tr>
+        <!-- 曜日で指定 -->
+        <tr id='container_delivery_schedule_by_day_of_week' style='display:none;'>
+          <th></th>
+          <td>
+            <div class="c-form_table__tel">
+              <label class="c-form_table__select">
+                <select class="u-text--input u-color__input--bg u-color__border--input validate[required]" id='select_scheduled_to_be_delivered_every_x_month_by_day_of_week'>
+                  {% for d in order.available_delivery_dates %}
+                    <option value='{{ d.month }}'>{{ d.month }}{{ 'delivery.delivery_cycle.months.value' | t }}</option>
+                  {% endfor %}
+                </select>
+              </label>
+              <span class="u-text--body">{{ 'delivery.delivery_cycle.every_time.value' | t }}</span>
+              <label class="c-form_table__select">
+                <select class="u-text--input u-color__input--bg u-color__border--input validate[required]" id='select_scheduled_to_be_delivered_on_xth_day_of_week'>
+                  {% for n in (1..4) %}
+                    <option value='{{ n }}'>{{ n }}</option>
+                  {% endfor %}
+                </select>
+              </label>
+              <span class="u-text--body">{{ 'delivery.delivery_cycle.th.value' | t }}</span>
+              <label class="c-form_table__select">
+                <select class="u-text--input u-color__input--bg u-color__border--input validate[required]" id='select_scheduled_to_be_delivered_every_x_day_of_week'>
+                  {% for d in (0..6) %}
+                    <option value='{{ d }}'>{{ day_of_weeks[d] }}</option>
+                  {% endfor %}
+                </select>
+              </label>
+              <span class="u-text--body">{{ 'delivery.delivery_cycle.delivery_to_weekday.value' | t }}</span>
+            </div>
+          </td>
+        </tr>
+        <!-- お届け日 -->
+        <tr id='container_delivery_schedule_date' style='display:none;'>
+          <!-- お届け日の選択 -->
+          <th class="u-text--body">{{ 'delivery.general.payment_schedule.value' | t }}</th>
+          <td>
+            <label class="c-form_table__select">
+              <select class="u-text--input u-color__input--bg u-color__border--input" id='select_scheduled_to_be_delivered_at'>
+                {% if order.recurring_item? %}
+                  {% assign allow_nil = subs_order_settings['allow_nil_in_delivery_date?'] %}
+                {% else %}
+                  {% assign allow_nil = order_settings['allow_nil_in_delivery_date?'] %}
+                {% endif %}
+                {% if allow_nil %}
+                  <option value=''>{{ 'general.general.unspecified.value' | t }}</option>
+                {% endif %}
+                {% for d in option_scheduled_to_be_delivered_at %}
+                  {% assign a = order.scheduled_to_be_delivered_at | date: "%Y-%m-%d" %}
+                  {% assign b = d | date: "%Y-%m-%d" %}
+                  <option value="{{ d }}" {% if a == b %}selected{% endif %}>{{ d }}</option>
+                {% endfor %}
+              </select>
+            </label>
+          </td>
+        </tr>
+        <!-- お届け時間 -->
+        <tr id='container_delivery_schedule_time' style='display:none;'>
+          <th class="u-text--body">{{ 'delivery.general.delivery_time.value' | t }}</th>
+          <td>
+            <label class="c-form_table__select">
+              <select class="u-text--input u-color__input--bg u-color__border--input" id='select_scheduled_delivery_time'>
+              </select>
+            </label>
+          </td>
+        </tr>
+        <tr id='container_scheduled_delivery_dates' style='display:none;'>
+          <th class="u-text--body">{{ 'delivery.general.scheduled_delivery_dates.value' | t }}</th>
+          <td>
+            <div class="c-form_table__text u-text--body" id='scheduled_1st_delivery_date_text' style='display:none;'></div>
+            <div class="c-form_table__text u-text--body" id='scheduled_2nd_delivery_date_text' style='display:none;'></div>
+          </td>
+        </tr>
+        <!-- お届け予定時期（予約販売） -->
+        <tr id='container_pre_ordered_delivery_description' style='display:none;'>
+          <th id='pre_ordered_delivery_description_label_single' class="u-text--body default-hide">{{ 'delivery.general.pre_ordered_delivery_description_snapshot.value' | t }}</th>
+          <th id='pre_ordered_delivery_description_label_recurring' class="u-text--body default-hide">{{ 'delivery.general.pre_ordered_delivery_description_snapshot_recurring.value' | t }}</th>
+          <td>
+            <div id='pre_ordered_delivery_description' class="c-form_table__text u-text--body" id='scheduled_1st_delivery_date_text' style='display:none;'></div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -1,0 +1,82 @@
+{
+  "id": "sale_ranking",
+  "type": "sale_ranking-section",
+  "name": {
+    "ja": "ランキング"
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "head",
+      "label": {
+        "ja": "見出し"
+      }
+    },
+    {
+      "type": "text",
+      "id": "subhead",
+      "label": {
+        "ja": "小見出し"
+      }
+    },
+    {
+      "type": "header",
+      "id": "display_header",
+      "label": {
+        "ja": "表示項目"
+      }
+    },
+    {
+      "type": "checkbox",
+      "id": "product_show",
+      "label": {
+        "ja": "商品詳細表示"
+      },
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "product_name",
+      "label": {
+        "ja": "商品名表示"
+      },
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "product_price",
+      "label": {
+        "ja": "商品価格表示"
+      },
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "product_category_name",
+      "label": {
+        "ja": "商品カテゴリー名表示"
+      },
+      "default": true
+    },
+    {
+      "type": "header",
+      "id": "count",
+      "label": {
+        "ja": "表示件数"
+      }
+    },
+    {
+      "type": "range",
+      "id": "sale_ranking_size",
+      "label": {
+        "ja": "ランキング表示件数"
+      },
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "unit": {
+        "ja": "件"
+      }
+    }
+  ]
+}

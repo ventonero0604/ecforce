@@ -1,0 +1,2985 @@
+{
+  "ja": {
+    "general": {
+      "tab_name": "一般",
+      "general": {
+        "group_name": "一般",
+        "home": {
+          "label": "ホームページ",
+          "value": "TOP",
+          "updated": 0,
+          "default": "TOP"
+        },
+        "registered_at": {
+          "label": "登録日",
+          "value": "登録日",
+          "updated": 0,
+          "default": "登録日"
+        },
+        "created_at": {
+          "label": "作成日",
+          "value": "作成日",
+          "updated": 0,
+          "default": "作成日"
+        },
+        "updated_at": {
+          "label": "更新日",
+          "value": "更新日",
+          "updated": 0,
+          "default": "更新日"
+        },
+        "default": {
+          "label": "デフォルト",
+          "value": "デフォルト",
+          "updated": 0,
+          "default": "デフォルト"
+        },
+        "yes": {
+          "label": "はい",
+          "value": "はい",
+          "updated": 0,
+          "default": "はい"
+        },
+        "no": {
+          "label": "いいえ",
+          "value": "いいえ",
+          "updated": 0,
+          "default": "いいえ"
+        },
+        "none": {
+          "label": "なし",
+          "value": "なし",
+          "updated": 0,
+          "default": "なし"
+        },
+        "required": {
+          "label": "必須マーク",
+          "value": "*",
+          "updated": 0,
+          "default": "*"
+        },
+        "count_left": {
+          "label": "残り",
+          "value": "残り",
+          "updated": 0,
+          "default": "残り"
+        },
+        "times": {
+          "label": "XX回",
+          "value": "回",
+          "updated": 0,
+          "default": "回"
+        },
+        "expired": {
+          "label": "有効期限",
+          "value": "有効期限",
+          "updated": 0,
+          "default": "有効期限"
+        },
+        "expired_each": {
+          "label": "有効期限別",
+          "value": "有効期限別",
+          "updated": 0,
+          "default": "有効期限別"
+        },
+        "unlimited": {
+          "label": "無制限",
+          "value": "無制限",
+          "updated": 0,
+          "default": "無制限"
+        },
+        "unspecified": {
+          "label": "指定なし",
+          "value": "指定なし",
+          "updated": 0,
+          "default": "指定なし"
+        },
+        "unset": {
+          "label": "未設定",
+          "value": "未設定",
+          "updated": 0,
+          "default": "未設定"
+        },
+        "valid": {
+          "label": "有効",
+          "value": "有効",
+          "updated": 0,
+          "default": "有効"
+        },
+        "invalid": {
+          "label": "無効",
+          "value": "無効",
+          "updated": 0,
+          "default": "無効"
+        }
+      },
+      "searches": {
+        "group_name": "検索",
+        "search_result": {
+          "label": "検索結果",
+          "value": "検索結果",
+          "updated": 0,
+          "default": "検索結果"
+        },
+        "search": {
+          "label": "検索",
+          "value": "検索する",
+          "updated": 0,
+          "default": "検索する"
+        },
+        "all_search_result": {
+          "label": "検索結果全件数",
+          "value": "全",
+          "updated": 0,
+          "default": "全"
+        },
+        "search_result_count": {
+          "label": "検索結果表示件数",
+          "value": "件",
+          "updated": 0,
+          "default": "件"
+        },
+        "page_all_search_result": {
+          "label": "ページャー全件数",
+          "value": "件中",
+          "updated": 0,
+          "default": "件中"
+        },
+        "page_search_result_count": {
+          "label": "ページャー表示件数",
+          "value": "件を表示しています",
+          "updated": 0,
+          "default": "件を表示しています"
+        },
+        "placeholder": {
+          "label": "プレースホルダー",
+          "value": "フリーワード",
+          "updated": 0,
+          "default": "フリーワード"
+        },
+        "sales_price": {
+          "label": "販売価格",
+          "value": "販売価格",
+          "updated": 0,
+          "default": "販売価格"
+        },
+        "maximum_price": {
+          "label": "金額（上限）（プレースホルダー）",
+          "value": "金額（上限）",
+          "updated": 0,
+          "default": "金額（上限）"
+        },
+        "minimum_price": {
+          "label": "金額（下限）（プレースホルダー）",
+          "value": "金額（下限）",
+          "updated": 0,
+          "default": "金額（下限）"
+        },
+        "stock_item": {
+          "label": "在庫あり",
+          "value": "在庫あり",
+          "updated": 0,
+          "default": "在庫あり"
+        },
+        "review": {
+          "label": "レビューあり",
+          "value": "レビューあり",
+          "updated": 0,
+          "default": "レビューあり"
+        },
+        "product_label": {
+          "label": "商品ラベル",
+          "value": "ラベル",
+          "updated": 0,
+          "default": "ラベル"
+        },
+        "product_category": {
+          "label": "商品カテゴリー",
+          "value": "商品カテゴリー",
+          "updated": 0,
+          "default": "商品カテゴリー"
+        },
+        "sort_title": {
+          "label": "並び替え",
+          "value": "並び替え：",
+          "updated": 0,
+          "default": "並び替え："
+        },
+        "recommend_sort": {
+          "label": "おすすめ順",
+          "value": "おすすめ順",
+          "updated": 0,
+          "default": "おすすめ順"
+        },
+        "high_price_sort": {
+          "label": "価格の高い順",
+          "value": "価格の高い順",
+          "updated": 0,
+          "default": "価格の高い順"
+        },
+        "low_price_sort": {
+          "label": "価格の安い順",
+          "value": "価格の安い順",
+          "updated": 0,
+          "default": "価格の安い順"
+        },
+        "new_release_sort": {
+          "label": "発売日降順",
+          "value": "発売日降順",
+          "updated": 0,
+          "default": "発売日降順"
+        },
+        "old_release_sort": {
+          "label": "発売日昇順",
+          "value": "発売日昇順",
+          "updated": 0,
+          "default": "発売日昇順"
+        },
+        "review_sort": {
+          "label": "レビュー評価順",
+          "value": "レビュー評価順",
+          "updated": 0,
+          "default": "レビュー評価順"
+        },
+        "sale_sort": {
+          "label": "人気順",
+          "value": "人気順",
+          "updated": 0,
+          "default": "人気順"
+        }
+      },
+      "action": {
+        "group_name": "アクション",
+        "register": {
+          "label": "登録",
+          "value": "登録",
+          "updated": 0,
+          "default": "登録"
+        },
+        "new_registration": {
+          "label": "新規登録",
+          "value": "新しく登録する",
+          "updated": 0,
+          "default": "新しく登録する"
+        },
+        "add": {
+          "label": "追加",
+          "value": "追加する",
+          "updated": 0,
+          "default": "追加する"
+        },
+        "add_cart": {
+          "label": "購入手続きへ",
+          "value": "購入手続きへ",
+          "updated": 0,
+          "default": "購入手続きへ"
+        },
+        "add_cart_async": {
+          "label": "画面遷移しないでカート追加",
+          "value": "カートに商品を追加",
+          "updated": 0,
+          "default": "カートに商品を追加"
+        },
+        "update": {
+          "label": "更新",
+          "value": "更新",
+          "updated": 0,
+          "default": "更新"
+        },
+        "edit": {
+          "label": "編集",
+          "value": "編集する",
+          "updated": 0,
+          "default": "編集する"
+        },
+        "change": {
+          "label": "変更",
+          "value": "変更する",
+          "updated": 0,
+          "default": "変更する"
+        },
+        "delete": {
+          "label": "削除",
+          "value": "削除する",
+          "updated": 0,
+          "default": "削除する"
+        },
+        "save": {
+          "label": "保存",
+          "value": "保存する",
+          "updated": 0,
+          "default": "保存する"
+        },
+        "saving": {
+          "label": "保存中",
+          "value": "保存中...",
+          "updated": 0,
+          "default": "保存中..."
+        },
+        "submit": {
+          "label": "送信",
+          "value": "送信する",
+          "updated": 0,
+          "default": "送信する"
+        },
+        "copy": {
+          "label": "コピー",
+          "value": "コピー",
+          "updated": 0,
+          "default": "コピー"
+        },
+        "product_name_and_keyword": {
+          "label": "フリーワード",
+          "key": "product_name_and_keyword",
+          "value": "フリーワード"
+        },
+        "view_detail": {
+          "label": "詳細を見る",
+          "value": "詳細を見る",
+          "updated": 0,
+          "default": "詳細を見る"
+        },
+        "view_more": {
+          "label": "もっと見る",
+          "value": "もっと見る",
+          "updated": 0,
+          "default": "もっと見る"
+        },
+        "read_more": {
+          "label": "READ MORE",
+          "value": "READ MORE",
+          "updated": 0,
+          "default": "READ MORE"
+        },
+        "confirm_input": {
+          "label": "入力内容確認へ",
+          "value": "入力内容確認へ",
+          "updated": 0,
+          "default": "入力内容確認へ"
+        },
+        "fix_input_content": {
+          "label": "入力内容修正",
+          "value": "入力内容を修正する",
+          "updated": 0,
+          "default": "入力内容を修正する"
+        },
+        "set_default": {
+          "label": "デフォルト設定",
+          "value": "デフォルトに設定する",
+          "updated": 0,
+          "default": "デフォルトに設定する"
+        },
+        "next": {
+          "label": "次の記事へ",
+          "value": "次の記事へ",
+          "updated": 0,
+          "default": "次の記事へ"
+        },
+        "previous": {
+          "label": "前の記事へ",
+          "value": "前の記事へ",
+          "updated": 0,
+          "default": "前の記事へ"
+        },
+        "share_article": {
+          "label": "この記事をシェア",
+          "value": "この記事をシェア",
+          "updated": 0,
+          "default": "この記事をシェア"
+        },
+        "back": {
+          "label": "戻る",
+          "value": "戻る",
+          "updated": 0,
+          "default": "戻る"
+        },
+        "return_list": {
+          "label": "一覧へ戻る",
+          "value": "一覧へ戻る",
+          "updated": 0,
+          "default": "一覧へ戻る"
+        },
+        "return_top": {
+          "label": "トップに戻る",
+          "value": "トップに戻る",
+          "updated": 0,
+          "default": "トップに戻る"
+        },
+        "cancel": {
+          "label": "キャンセル",
+          "value": "キャンセル",
+          "updated": 0,
+          "default": "キャンセル"
+        },
+        "cancel_addition": {
+          "label": "追加をキャンセル",
+          "value": "追加をキャンセル",
+          "updated": 0,
+          "default": "追加をキャンセル"
+        },
+        "cancel_changes": {
+          "label": "変更をキャンセル",
+          "value": "変更をキャンセル",
+          "updated": 0,
+          "default": "変更をキャンセル"
+        },
+        "remove": {
+          "label": "外す",
+          "value": "外す",
+          "updated": 0,
+          "default": "外す"
+        },
+        "co_selling_product_single": {
+          "label": "単品",
+          "value": "単品",
+          "updated": 0,
+          "default": "単品"
+        },
+        "co_selling_product_recurring": {
+          "label": "定期",
+          "value": "定期",
+          "updated": 0,
+          "default": "定期"
+        },
+        "co_selling_product_single_purchase": {
+          "label": "単品購入",
+          "value": "単品購入",
+          "updated": 0,
+          "default": "単品購入"
+        },
+        "co_selling_product_recurring_purchase": {
+          "label": "定期購入",
+          "value": "定期購入",
+          "updated": 0,
+          "default": "定期購入"
+        }
+      },
+      "message": {
+        "group_name": "メッセージ",
+        "input_required": {
+          "label": "必須項目",
+          "value": "は入力必須項目です。",
+          "updated": 0,
+          "default": "は入力必須項目です。"
+        },
+        "please_selected_option": {
+          "label": "選択してください",
+          "value": "選択してください",
+          "updated": 0,
+          "default": "選択してください"
+        },
+        "check_lead_text": {
+          "label": "チェックを入れてください",
+          "value": "チェックを入れてください",
+          "updated": 0,
+          "default": "チェックを入れてください"
+        },
+        "login_error_message": {
+          "label": "ログインしてください",
+          "value": "ログインしてください",
+          "updated": 0,
+          "default": "ログインしてください"
+        },
+        "save_lead_text": {
+          "label": "編集時保存喚起",
+          "value": "編集が完了したら必ず「保存」ボタンをクリックしてください。",
+          "updated": 0,
+          "default": "編集が完了したら必ず「保存」ボタンをクリックしてください。"
+        },
+        "is_really_delete": {
+          "label": "削除確認",
+          "value": "本当に削除しますか？",
+          "updated": 0,
+          "default": "本当に削除しますか？"
+        },
+        "is_really_stop": {
+          "label": "停止確認",
+          "value": "本当に停止しますか？",
+          "updated": 0,
+          "default": "本当に停止しますか？"
+        },
+        "is_really_withdraw": {
+          "label": "退会確認",
+          "value": "一度退会すると、アカウントは復元できなくなり、同じ定期受注は再開できなくなります。本当に退会しますか？",
+          "updated": 0,
+          "default": "一度退会すると、アカウントは復元できなくなり、同じ定期受注は再開できなくなります。本当に退会しますか？"
+        },
+        "is_really_cancel_order": {
+          "label": "注文キャンセル確認",
+          "value": "本当にキャンセルしますか?",
+          "updated": 0,
+          "default": "本当にキャンセルしますか?"
+        },
+        "is_really_cancel_reservation": {
+          "label": "予約キャンセル確認",
+          "value": "本当に予約キャンセルしますか?",
+          "updated": 0,
+          "default": "本当に予約キャンセルしますか?"
+        },
+        "is_really_remove": {
+          "label": "適用外確認",
+          "value": "本当に外しますか？",
+          "updated": 0,
+          "default": "本当に外しますか？"
+        },
+        "when_out_of_pre_order_period": {
+          "label": "予約受付期間外",
+          "value": "予約受付期間外のためカートに商品を追加できません。",
+          "updated": 0,
+          "default": "予約受付期間外のためカートに商品を追加できません。"
+        }
+      }
+    },
+    "base_info": {
+      "tab_name": "基本情報",
+      "general": {
+        "group_name": "一般",
+        "address": {
+          "label": "所在地",
+          "value": "所在地",
+          "updated": 0,
+          "default": "所在地"
+        },
+        "post_mark": {
+          "label": "郵便記号",
+          "value": "〒&nbsp;",
+          "updated": 0,
+          "default": "〒&nbsp;"
+        },
+        "zip_code_delimiter": {
+          "label": "郵便番号区切り文字",
+          "value": "-",
+          "updated": 0,
+          "default": "-"
+        },
+        "zip_code_end": {
+          "label": "郵便番号末尾",
+          "value": "&nbsp;",
+          "updated": 0,
+          "default": "&nbsp;"
+        }
+      },
+      "base_info": {
+        "group_name": "当サイトについて",
+        "about": {
+          "label": "当サイトについて",
+          "value": "当サイトについて",
+          "updated": 0,
+          "default": "当サイトについて"
+        },
+        "shop_name": {
+          "label": "ショップ名",
+          "value": "ショップ名",
+          "updated": 0,
+          "default": "ショップ名"
+        },
+        "company_name": {
+          "label": "会社名(屋号)",
+          "value": "会社名(屋号)",
+          "updated": 0,
+          "default": "会社名(屋号)"
+        },
+        "business_hour": {
+          "label": "営業時間",
+          "value": "営業時間",
+          "updated": 0,
+          "default": "営業時間"
+        },
+        "good_traded": {
+          "label": "取扱商品",
+          "value": "取扱商品",
+          "updated": 0,
+          "default": "取扱商品"
+        },
+        "message": {
+          "label": "メッセージ",
+          "value": "メッセージ",
+          "updated": 0,
+          "default": "メッセージ"
+        }
+      },
+      "law_info": {
+        "group_name": "特定商取引法",
+        "law_info": {
+          "label": "特定商取引法に基づく表記",
+          "value": "特定商取引法に基づく表記",
+          "updated": 0,
+          "default": "特定商取引法に基づく表記"
+        },
+        "company_name": {
+          "label": "販売業者名",
+          "value": "販売業者名",
+          "updated": 0,
+          "default": "販売業者名"
+        },
+        "manager": {
+          "label": "販売責任者",
+          "value": "販売責任者",
+          "updated": 0,
+          "default": "販売責任者"
+        },
+        "shop_name": {
+          "label": "サイト名",
+          "value": "サイト名",
+          "updated": 0,
+          "default": "サイト名"
+        },
+        "url": {
+          "label": "ホームページURL",
+          "value": "ホームページURL",
+          "updated": 0,
+          "default": "ホームページURL"
+        },
+        "price": {
+          "label": "販売価格",
+          "value": "販売価格",
+          "updated": 0,
+          "default": "販売価格"
+        },
+        "quantity": {
+          "label": "販売数量",
+          "value": "販売数量",
+          "updated": 0,
+          "default": "販売数量"
+        }
+      },
+      "privacy": {
+        "group_name": "プライバシーポリシー",
+        "privacy_policy": {
+          "label": "プライバシーポリシー",
+          "value": "プライバシーポリシー",
+          "updated": 0,
+          "default": "プライバシーポリシー"
+        },
+        "title": {
+          "label": "プライバシーポリシータイトル",
+          "value": "個人情報の取扱について",
+          "updated": 0,
+          "default": "個人情報の取扱について"
+        },
+        "text": {
+          "label": "プライバシーポリシーテキスト",
+          "value": "は当サイトをご利用になるみなさまのプライバシーを尊重し、個人情報の管理に細心の注意を払い、これを取扱うものとします。",
+          "updated": 0,
+          "default": "は当サイトをご利用になるみなさまのプライバシーを尊重し、個人情報の管理に細心の注意を払い、これを取扱うものとします。"
+        },
+        "agree": {
+          "label": "に同意",
+          "value": "に同意",
+          "updated": 0,
+          "default": "に同意"
+        },
+        "error_message": {
+          "label": "規約同意喚起メッセージ",
+          "value": "プライバリーポリシーに同意していただく必要がございます。",
+          "updated": 0,
+          "default": "プライバリーポリシーに同意していただく必要がございます。"
+        }
+      },
+      "pages": {
+        "group_name": "ページ",
+        "customer_term": {
+          "label": "利用規約",
+          "value": "利用規約",
+          "updated": 0,
+          "default": "利用規約"
+        },
+        "use_guide": {
+          "label": "ご利用ガイド",
+          "value": "ご利用ガイド",
+          "updated": 0,
+          "default": "ご利用ガイド"
+        },
+        "informations": {
+          "label": "ニュース一覧",
+          "value": "ニュース一覧",
+          "updated": 0,
+          "default": "ニュース一覧"
+        }
+      }
+    },
+    "account": {
+      "tab_name": "アカウント",
+      "general": {
+        "group_name": "一般",
+        "member_info": {
+          "label": "会員情報",
+          "value": "会員情報",
+          "updated": 0,
+          "default": "会員情報"
+        },
+        "members_guest": {
+          "label": "会員のお客様",
+          "value": "会員のお客様",
+          "updated": 0,
+          "default": "会員のお客様"
+        },
+        "customer_info": {
+          "label": "お客様情報",
+          "value": "お客様情報",
+          "updated": 0,
+          "default": "お客様情報"
+        },
+        "mypage": {
+          "label": "マイページ",
+          "value": "マイページ",
+          "updated": 0,
+          "default": "マイページ"
+        },
+        "menu": {
+          "label": "アカウントメニュー",
+          "value": "アカウントメニュー",
+          "updated": 0,
+          "default": "アカウントメニュー"
+        },
+        "login": {
+          "label": "ログイン",
+          "value": "ログイン",
+          "updated": 0,
+          "default": "ログイン"
+        },
+        "logout": {
+          "label": "ログアウト",
+          "value": "ログアウト",
+          "updated": 0,
+          "default": "ログアウト"
+        },
+        "to_login_page": {
+          "label": "ログインページへ",
+          "value": "ログインページへ",
+          "updated": 0,
+          "default": "ログインページへ"
+        },
+        "login_and_purchase": {
+          "label": "ログインして購入",
+          "value": "ログインして購入",
+          "updated": 0,
+          "default": "ログインして購入"
+        },
+        "register_and_purchase": {
+          "label": "会員登録をして購入",
+          "value": "会員登録をして購入手続きをする",
+          "updated": 0,
+          "default": "会員登録をして購入手続きをする"
+        },
+        "not_register_and_purchase": {
+          "label": "会員登録をしないで購入",
+          "value": "会員登録をしないで購入",
+          "updated": 0,
+          "default": "会員登録をしないで購入"
+        },
+        "input_customer_info": {
+          "label": "お客様基本情報のご入力",
+          "value": "お客様基本情報のご入力",
+          "updated": 0,
+          "default": "お客様基本情報のご入力"
+        },
+        "new_member_registration": {
+          "label": "新規会員登録",
+          "value": "新規会員登録",
+          "updated": 0,
+          "default": "新規会員登録"
+        },
+        "member_registration_value": {
+          "label": "会員登録",
+          "value": "会員登録する",
+          "updated": 0,
+          "default": "会員登録する"
+        },
+        "member_registration_title": {
+          "label": "会員登録タイトル",
+          "value": "会員登録がまだの方はこちら",
+          "updated": 0,
+          "default": "会員登録がまだの方はこちら"
+        },
+        "member_registration_lead_text": {
+          "label": "会員登録リードテキスト",
+          "value": "ご利用には会員登録が必要です。<br />下記リンクより会員登録へお進みください。",
+          "updated": 0,
+          "default": "ご利用には会員登録が必要です。<br />下記リンクより会員登録へお進みください。"
+        },
+        "not_member_registration": {
+          "label": "会員登録していないお客様",
+          "value": "会員登録していないお客様",
+          "updated": 0,
+          "default": "会員登録していないお客様"
+        },
+        "registered_member": {
+          "label": "すでにアカウントをお持ちの方はこちら",
+          "value": "すでにアカウントをお持ちの方はこちら",
+          "updated": 0,
+          "default": "すでにアカウントをお持ちの方はこちら"
+        },
+        "keep_login": {
+          "label": "ログイン保持",
+          "value": "ログイン状態を保持する",
+          "updated": 0,
+          "default": "ログイン状態を保持する"
+        },
+        "unsubscribe": {
+          "label": "退会",
+          "value": "退会",
+          "updated": 0,
+          "default": "退会"
+        },
+        "error_message": {
+          "label": "規約同意喚起メッセージ",
+          "value": "会員登録には、各種規約に同意していただく必要がございます。",
+          "updated": 0,
+          "default": "会員登録には、各種規約に同意していただく必要がございます。"
+        },
+        "caution_to_register_and_purchase": {
+          "label": "会員登録をして購入時の注意喚起",
+          "value": "※招待コード等の「<span class=\"u-text--strong\">登録済み会員</span>」向けの機能をご利用の方は<a class=\"u-text--link\" href=\"/shop/customers/sign_up?customer_return_to=%2Fshop%2Forder%2Fnew\">コチラ</a>より会員登録ください。",
+          "updated": 0,
+          "default": "※招待コード等の「<span class=\"u-text--strong\">登録済み会員</span>」向けの機能をご利用の方は<a class=\"u-text--link\" href=\"/shop/customers/sign_up?customer_return_to=%2Fshop%2Forder%2Fnew\">コチラ</a>より会員登録ください。"
+        }
+      },
+      "password": {
+        "group_name": "パスワード",
+        "password": {
+          "label": "パスワード",
+          "value": "パスワード",
+          "updated": 0,
+          "default": "パスワード"
+        },
+        "password_confirmation": {
+          "label": "パスワード（確認）",
+          "value": "パスワード（確認）",
+          "updated": 0,
+          "default": "パスワード（確認）"
+        },
+        "password_change": {
+          "label": "パスワード変更",
+          "value": "パスワード変更",
+          "updated": 0,
+          "default": "パスワード変更"
+        },
+        "current_password": {
+          "label": "現在のパスワード",
+          "value": "現在のパスワード",
+          "updated": 0,
+          "default": "現在のパスワード"
+        },
+        "new_password": {
+          "label": "新しいパスワード",
+          "value": "新しいパスワード",
+          "updated": 0,
+          "default": "新しいパスワード"
+        },
+        "new_password_confirm": {
+          "label": "新しいパスワード（確認用）",
+          "value": "新しいパスワード（確認用）",
+          "updated": 0,
+          "default": "新しいパスワード（確認用）"
+        },
+        "forgot_password": {
+          "label": "パスワードをお忘れの方",
+          "value": "パスワードをお忘れの方",
+          "updated": 0,
+          "default": "パスワードをお忘れの方"
+        },
+        "password_reset": {
+          "label": "パスワードリセット",
+          "value": "パスワードリセット",
+          "updated": 0,
+          "default": "パスワードリセット"
+        },
+        "password_reset_lead_text": {
+          "label": "パスワードリセットリードテキスト",
+          "value": "会員登録時に設定したアドレスを入力してください。<br />パスワードリセットのご案内が送信されます。",
+          "updated": 0,
+          "default": "会員登録時に設定したメールアドレスを入力してください。<br />パスワードリセットのご案内が送信されます。"
+        },
+        "password_reset_sms_lead_text": {
+          "label": "パスワードリセットリードテキスト(SMS対応)",
+          "value": "会員登録時に設定したメールアドレスまたは携帯電話番号を入力してください。<br />パスワードリセットのご案内が送信されます。",
+          "updated": 0,
+          "default": "会員登録時に設定したメールアドレスまたは携帯電話番号を入力してください。<br />パスワードリセットのご案内が送信されます。"
+        },
+        "password_reset_value": {
+          "label": "パスワードをリセットする",
+          "value": "パスワードをリセットする",
+          "updated": 0,
+          "default": "パスワードをリセットする"
+        },
+        "reset_password": {
+          "label": "パスワード再設定",
+          "value": "パスワード再設定",
+          "updated": 0,
+          "default": "パスワード再設定"
+        },
+        "send_reset_password_mail": {
+          "label": "パスワードリセットの案内をメール送信する",
+          "value": "パスワードリセットの案内をメール送信する",
+          "updated": 0,
+          "default": "パスワードリセットの案内をメール送信する"
+        }
+      },
+      "line": {
+        "group_name": "LINE",
+        "line_id": {
+          "label": "LINE ID 連携",
+          "value": "LINE ID 連携",
+          "updated": 0,
+          "default": "LINE ID 連携"
+        },
+        "line_login": {
+          "label": "LINEでログイン",
+          "value": "LINEでログイン",
+          "updated": 0,
+          "default": "LINEでログイン"
+        }
+      },
+      "smaregi": {
+        "group_name": "スマレジ",
+        "barcode_link": {
+          "label": "スマレジ会員バーコード表示",
+          "value": "スマレジ会員バーコード表示",
+          "updated": 0,
+          "default": "スマレジ会員バーコード表示"
+        },
+        "barcode_title": {
+          "label": "スマレジ会員バーコード",
+          "value": "スマレジ会員バーコード",
+          "updated": 0,
+          "default": "スマレジ会員バーコード"
+        }
+      }
+    },
+    "customer": {
+      "tab_name": "顧客",
+      "general": {
+        "group_name": "一般",
+        "name": {
+          "label": "お名前",
+          "value": "お名前",
+          "updated": 0,
+          "default": "お名前"
+        },
+        "kana": {
+          "label": "フリガナ",
+          "value": "フリガナ",
+          "updated": 0,
+          "default": "フリガナ"
+        },
+        "title": {
+          "label": "敬称",
+          "value": "様",
+          "updated": 0,
+          "default": "様"
+        },
+        "sex": {
+          "label": "性別",
+          "value": "性別",
+          "updated": 0,
+          "default": "性別"
+        },
+        "man": {
+          "label": "男性",
+          "value": "男性",
+          "updated": 0,
+          "default": "男性"
+        },
+        "woman": {
+          "label": "女性",
+          "value": "女性",
+          "updated": 0,
+          "default": "女性"
+        },
+        "birth": {
+          "label": "生年月日",
+          "value": "生年月日",
+          "updated": 0,
+          "default": "生年月日"
+        },
+        "year": {
+          "label": "年",
+          "value": "年",
+          "updated": 0,
+          "default": "年"
+        },
+        "month": {
+          "label": "月",
+          "value": "月",
+          "updated": 0,
+          "default": "月"
+        },
+        "day": {
+          "label": "日",
+          "value": "日",
+          "updated": 0,
+          "default": "日"
+        },
+        "address": {
+          "label": "住所",
+          "value": "住所",
+          "updated": 0,
+          "default": "住所"
+        },
+        "zip": {
+          "label": "郵便番号",
+          "value": "郵便番号",
+          "updated": 0,
+          "default": "郵便番号"
+        },
+        "prefecture": {
+          "label": "都道府県",
+          "value": "都道府県",
+          "updated": 0,
+          "default": "都道府県"
+        },
+        "tel": {
+          "label": "電話番号",
+          "value": "電話番号",
+          "updated": 0,
+          "default": "電話番号"
+        },
+        "fax": {
+          "label": "FAX番号",
+          "value": "FAX番号",
+          "updated": 0,
+          "default": "FAX番号"
+        },
+        "company_name": {
+          "label": "会社名",
+          "value": "会社名",
+          "updated": 0,
+          "default": "会社名"
+        },
+        "job": {
+          "label": "職種",
+          "value": "職種",
+          "updated": 0,
+          "default": "職種"
+        },
+        "email": {
+          "label": "メールアドレス",
+          "value": "メールアドレス",
+          "updated": 0,
+          "default": "メールアドレス"
+        },
+        "email_or_phone": {
+          "label": "メールアドレスまたは携帯電話番号",
+          "value": "メールアドレスまたは携帯電話番号",
+          "updated": 0,
+          "default": "メールアドレスまたは携帯電話番号"
+        },
+        "confirm_email": {
+          "label": "メールアドレス確認用",
+          "value": "メールアドレス確認用",
+          "updated": 0,
+          "default": "メールアドレス確認用"
+        },
+        "optin_text": {
+          "label": "オプトインテキスト",
+          "value": "ショップからのお知らせを受け取る",
+          "updated": 0,
+          "default": "ショップからのお知らせを受け取る"
+        },
+        "mail_magazine": {
+          "label": "メールマガジン",
+          "value": "メールマガジン",
+          "updated": 0,
+          "default": "メールマガジン"
+        },
+        "receive_mail_magazine": {
+          "label": "受信する",
+          "value": "受信する",
+          "updated": 0,
+          "default": "受信する"
+        },
+        "not_receive_mail_magazine": {
+          "label": "受信しない",
+          "value": "受信しない",
+          "updated": 0,
+          "default": "受信しない"
+        }
+      },
+      "invite_code": {
+        "group_name": "招待コード",
+        "invite_code": {
+          "label": "招待コード",
+          "value": "招待コード",
+          "updated": 0,
+          "default": "招待コード"
+        },
+        "invite_codes_invitee_limit": {
+          "label": "招待コード使用上限数",
+          "value": "招待コード使用上限数",
+          "updated": 0,
+          "default": "招待コード使用上限数"
+        },
+        "used_times": {
+          "label": "使用済み回数",
+          "value": "使用済み回数",
+          "updated": 0,
+          "default": "使用済み回数"
+        },
+        "available_invited_times": {
+          "label": "使用可能回数",
+          "value": "使用可能回数",
+          "updated": 0,
+          "default": "使用可能回数"
+        },
+        "placeholder": {
+          "label": "プレースホルダー",
+          "value": "例）390039ca82",
+          "updated": 0,
+          "default": "例）390039ca82"
+        },
+        "invite_code_text": {
+          "label": "招待コードテキスト",
+          "value": "招待コードをお持ちのお客様はこちらにご入力ください。",
+          "updated": 0,
+          "default": "招待コードをお持ちのお客様はこちらにご入力ください。"
+        },
+        "no_longer_issue_invitation_code": {
+          "label": "招待コード発行上限",
+          "value": "※招待コードの発行上限に達しました",
+          "updated": 0,
+          "default": "※招待コードの発行上限に達しました"
+        },
+        "new_invite_code": {
+          "label": "招待コード発行",
+          "value": "招待コードを発行する",
+          "updated": 0,
+          "default": "招待コードを発行する"
+        }
+      },
+      "placeholder": {
+        "group_name": "プレースホルダー",
+        "full_name": {
+          "label": "姓 名",
+          "value": "姓 名",
+          "updated": 0,
+          "default": "姓 名"
+        },
+        "family_name": {
+          "label": "姓",
+          "value": "姓",
+          "updated": 0,
+          "default": "姓"
+        },
+        "name": {
+          "label": "名",
+          "value": "名",
+          "updated": 0,
+          "default": "名"
+        },
+        "full_kana_name": {
+          "label": "セイ メイ",
+          "value": "セイ メイ",
+          "updated": 0,
+          "default": "セイ メイ"
+        },
+        "family_kana_name": {
+          "label": "セイ",
+          "value": "セイ",
+          "updated": 0,
+          "default": "セイ"
+        },
+        "kana_name": {
+          "label": "メイ",
+          "value": "メイ",
+          "updated": 0,
+          "default": "メイ"
+        },
+        "full_zip": {
+          "label": "郵便番号",
+          "value": "例）1500031",
+          "updated": 0,
+          "default": "例）1500031"
+        },
+        "zip01": {
+          "label": "郵便番号1",
+          "value": "例）150",
+          "updated": 0,
+          "default": "例）150"
+        },
+        "zip02": {
+          "label": "郵便番号2",
+          "value": "例）0031",
+          "updated": 0,
+          "default": "例）0031"
+        },
+        "full_tel": {
+          "label": "電話番号",
+          "value": "例）00000000000",
+          "updated": 0,
+          "default": "例）00000000000"
+        },
+        "tel01": {
+          "label": "電話番号1",
+          "value": "例）000",
+          "updated": 0,
+          "default": "例）000"
+        },
+        "tel02": {
+          "label": "電話番号2",
+          "value": "例）0000",
+          "updated": 0,
+          "default": "例）0000"
+        },
+        "tel03": {
+          "label": "電話番号3",
+          "value": "例）0000",
+          "updated": 0,
+          "default": "例）0000"
+        },
+        "company": {
+          "label": "会社名",
+          "value": "例）株式会社○○○商店",
+          "updated": 0,
+          "default": "例）株式会社○○○商店"
+        },
+        "email": {
+          "label": "メールアドレス",
+          "value": "例）○○○@example.com",
+          "updated": 0,
+          "default": "例）○○○@example.com"
+        },
+        "password": {
+          "label": "パスワード",
+          "value": "半角英数字8文字以上",
+          "updated": 0,
+          "default": "半角英数字8文字以上"
+        },
+        "password_confirmation": {
+          "label": "パスワード（確認）",
+          "value": "半角英数字8文字以上",
+          "updated": 0,
+          "default": "半角英数字8文字以上"
+        }
+      }
+    },
+    "products": {
+      "tab_name": "商品",
+      "general": {
+        "group_name": "一般",
+        "all_product": {
+          "label": "すべての商品",
+          "value": "すべての商品",
+          "updated": 0,
+          "default": "すべての商品"
+        },
+        "product_category_all_product": {
+          "label": "商品カテゴリの全商品",
+          "value": "の全商品",
+          "updated": 0,
+          "default": "の全商品"
+        },
+        "products_name": {
+          "label": "商品名",
+          "value": "商品名",
+          "updated": 0,
+          "default": "商品名"
+        },
+        "new": {
+          "label": "NEW",
+          "value": "NEW",
+          "updated": 0,
+          "default": "NEW"
+        },
+        "view_product": {
+          "label": "商品を見る",
+          "value": "商品を見る",
+          "updated": 0,
+          "default": "商品を見る"
+        }
+      },
+      "price": {
+        "group_name": "商品価格",
+        "list_price": {
+          "label": "通常価格",
+          "value": "通常価格",
+          "updated": 0,
+          "default": "通常価格"
+        },
+        "sales_price": {
+          "label": "販売価格",
+          "value": "販売価格",
+          "updated": 0,
+          "default": "販売価格"
+        },
+        "tax_included": {
+          "label": "税込価格",
+          "value": "税込価格",
+          "updated": 0,
+          "default": "税込価格"
+        }
+      },
+      "stock": {
+        "group_name": "在庫",
+        "quantity": {
+          "label": "数量",
+          "value": "数量",
+          "updated": 0,
+          "default": "数量"
+        },
+        "sold_out": {
+          "label": "SOLD OUT",
+          "value": "SOLD OUT",
+          "updated": 0,
+          "default": "SOLD OUT"
+        },
+        "stock_waiting_list": {
+          "label": "再入荷お知らせ",
+          "value": "再入荷お知らせ",
+          "updated": 0,
+          "default": "再入荷お知らせ"
+        }
+      },
+      "favorites": {
+        "group_name": "お気に入り",
+        "favorite_list": {
+          "label": "お気に入り一覧",
+          "value": "お気に入り一覧",
+          "updated": 0,
+          "default": "お気に入り一覧"
+        },
+        "no_product": {
+          "label": "お気に入りなし",
+          "value": "お気に入り登録している商品はありません。",
+          "updated": 0,
+          "default": "お気に入り登録している商品はありません。"
+        },
+        "add": {
+          "label": "お気に入り追加",
+          "value": "お気に入りに追加",
+          "updated": 0,
+          "default": "お気に入りに追加"
+        },
+        "adding": {
+          "label": "お気に入り登録中",
+          "value": "登録中...",
+          "updated": 0,
+          "default": "登録中..."
+        },
+        "cancell": {
+          "label": "お気に入り解除",
+          "value": "お気に入り解除",
+          "updated": 0,
+          "default": "お気に入り解除"
+        },
+        "cancelling": {
+          "label": "お気に入り解除中",
+          "value": "解除中",
+          "updated": 0,
+          "default": "解除中"
+        }
+      },
+      "reviews": {
+        "group_name": "レビュー",
+        "review_title": {
+          "label": "レビューを書き込む",
+          "value": "レビューを書き込む",
+          "updated": 0,
+          "default": "レビューを書き込む"
+        },
+        "review_name": {
+          "label": "投稿者名",
+          "value": "投稿者名",
+          "updated": 0,
+          "default": "投稿者名"
+        },
+        "recommended_level": {
+          "label": "おすすめレベル",
+          "value": "おすすめレベル",
+          "updated": 0,
+          "default": "おすすめレベル"
+        },
+        "title": {
+          "label": "タイトル",
+          "value": "タイトル",
+          "updated": 0,
+          "default": "タイトル"
+        },
+        "comment": {
+          "label": "コメント",
+          "value": "コメント",
+          "updated": 0,
+          "default": "コメント"
+        },
+        "post": {
+          "label": "投稿",
+          "value": "投稿する",
+          "updated": 0,
+          "default": "投稿する"
+        },
+        "review_post": {
+          "label": "レビュー投稿",
+          "value": "この商品のレビューを投稿する",
+          "updated": 0,
+          "default": "この商品のレビューを投稿する"
+        },
+        "login_and_review": {
+          "label": "ログインしてレビュー投稿",
+          "value": "ログインしてレビューを投稿する",
+          "updated": 0,
+          "default": "ログインしてレビューを投稿する"
+        },
+        "no_reviews": {
+          "label": "レビューなし",
+          "value": "まだレビューはありません",
+          "updated": 0,
+          "default": "まだレビューはありません"
+        }
+      },
+      "sets": {
+        "group_name": "セット商品",
+        "edit_set_item": {
+          "label": "セット商品編集",
+          "value": "セット商品の内容を編集する",
+          "updated": 0,
+          "default": "セット商品の内容を編集する"
+        }
+      },
+      "pre_order": {
+        "group_name": "予約販売",
+        "display_mark": {
+          "label": "予約マーク",
+          "value": "予約商品",
+          "updated": 0,
+          "default": "予約商品"
+        }
+      },
+      "stock_items": {
+        "group_name": "在庫数",
+        "quantity": {
+          "label": "在庫数",
+          "value": "在庫数",
+          "updated": 0,
+          "default": "在庫数"
+        },
+        "in_stock": {
+          "label": "在庫あり",
+          "value": "在庫あり",
+          "updated": 0,
+          "default": "在庫あり"
+        },
+        "sold_out": {
+          "label": "SOLD OUT",
+          "value": "SOLD OUT",
+          "updated": 0,
+          "default": "SOLD OUT"
+        }
+      }
+    },
+    "product_categories": {
+      "tab_name": "商品カテゴリ",
+      "general": {
+        "group_name": "一般",
+        "categories": {
+          "label": "商品カテゴリー一覧",
+          "value": "商品カテゴリー一覧",
+          "updated": 0,
+          "default": "商品カテゴリー一覧"
+        },
+        "empty": {
+          "label": "表示カテゴリーなし",
+          "value": "現在、表示可能な商品カテゴリーはありません。",
+          "updated": 0,
+          "default": "現在、表示可能な商品カテゴリーはありません。"
+        }
+      }
+    },
+    "orders": {
+      "tab_name": "注文",
+      "general": {
+        "group_name": "一般",
+        "cart_info": {
+          "label": "お買い物情報",
+          "value": "お買い物情報",
+          "updated": 0,
+          "default": "お買い物情報"
+        },
+        "cart": {
+          "label": "カート",
+          "value": "カート",
+          "updated": 0,
+          "default": "カート"
+        },
+        "to_cart": {
+          "label": "カートに戻る",
+          "value": "カートに戻る",
+          "updated": 0,
+          "default": "カートに戻る"
+        },
+        "empty": {
+          "label": "カート商品なし",
+          "value": "現在、カートに商品はありません。",
+          "updated": 0,
+          "default": "現在、カートに商品はありません。"
+        },
+        "order_content": {
+          "label": "注文内容",
+          "value": "注文内容",
+          "updated": 0,
+          "default": "注文内容"
+        },
+        "order_number": {
+          "label": "注文番号",
+          "value": "注文番号",
+          "updated": 0,
+          "default": "注文番号"
+        },
+        "order_completed_at": {
+          "label": "購入日時",
+          "value": "購入日時",
+          "updated": 0,
+          "default": "購入日時"
+        },
+        "order_pre_ordered_at": {
+          "label": "予約日時",
+          "value": "予約日時",
+          "updated": "0",
+          "default": "予約日時"
+        },
+        "checkout": {
+          "label": "ご購入手続き",
+          "value": "ご購入手続き",
+          "updated": 0,
+          "default": "ご購入手続き"
+        },
+        "to_checkout": {
+          "label": "ご購入手続きへ",
+          "value": "ご購入手続きへ",
+          "updated": 0,
+          "default": "ご購入手続きへ"
+        },
+        "confirm_order": {
+          "label": "注文確定",
+          "value": "注文を確定する",
+          "updated": 0,
+          "default": "注文を確定する"
+        },
+        "to_confirm": {
+          "label": "ご注文内容確認へ",
+          "value": "ご注文内容確認へ",
+          "updated": 0,
+          "default": "ご注文内容確認へ"
+        },
+        "confirm_title": {
+          "label": "ご注文内容のご確認",
+          "value": "ご注文内容のご確認",
+          "updated": 0,
+          "default": "ご注文内容のご確認"
+        },
+        "complete_lead_text": {
+          "label": "ご注文完了リードテキスト",
+          "value": "ご登録いただいたメールアドレス宛に注文確認メールをお送りいたしました。<br />ご注文内容に間違いがないかご確認ください。<br />万が一、メールが届かない場合、迷惑メールフォルダに振り分けられている可能性がございます。<br />迷惑メールフォルダ等をご確認ください。<br />ご不明な点がございましたら、以下のメールアドレス宛に問い合わせください。<br />",
+          "updated": 0,
+          "default": "ご登録いただいたメールアドレス宛に注文確認メールをお送りいたしました。<br />ご注文内容に間違いがないかご確認ください。<br />万が一、メールが届かない場合、迷惑メールフォルダに振り分けられている可能性がございます。<br />迷惑メールフォルダ等をご確認ください。<br />ご不明な点がございましたら、以下のメールアドレス宛に問い合わせください。<br />"
+        },
+        "complete_lead_sms_text": {
+          "label": "ご注文完了リードテキスト",
+          "value": "ご登録いただいたメールアドレスまたは携帯番号宛に注文確認をお送りいたしました。<br />ご注文内容に間違いがないかご確認ください。<br />万が一、メールが届かない場合、迷惑メールフォルダに振り分けられている可能性がございます。<br />迷惑メールフォルダ等をご確認ください。<br />ご不明な点がございましたら、以下のメールアドレス宛に問い合わせください。<br />",
+          "updated": 0,
+          "default": "ご登録いただいたメールアドレスまたは携帯番号宛に注文確認をお送りいたしました。<br />ご注文内容に間違いがないかご確認ください。<br />万が一、メールが届かない場合、迷惑メールフォルダに振り分けられている可能性がございます。<br />迷惑メールフォルダ等をご確認ください。<br />ご不明な点がございましたら、以下のメールアドレス宛に問い合わせください。<br />"
+        },
+        "complete_text": {
+          "label": "ご注文完了テキスト",
+          "value": "ご注文ありがとうございました",
+          "updated": 0,
+          "default": "ご注文ありがとうございました"
+        },
+        "view_order_detail": {
+          "label": "注文詳細を見る",
+          "value": "注文詳細を見る",
+          "updated": 0,
+          "default": "注文詳細を見る"
+        },
+        "term_error_message": {
+          "label": "規約同意メッセージ",
+          "value": "商品の注文には、各種規約に同意していただく必要がございます。",
+          "updated": 0,
+          "default": "商品の注文には、各種規約に同意していただく必要がございます。"
+        },
+        "phone_note": {
+          "label": "電話番号注意メッセージ",
+          "value": "※ご注文・発送に関するご連絡用にSMS受信可能な携帯電話番号をご入力ください。",
+          "updated": 0,
+          "default": "※ご注文・発送に関するご連絡用にSMS受信可能な携帯電話番号をご入力ください。"
+        }
+      },
+      "amount": {
+        "group_name": "金額",
+        "order_amount": {
+          "label": "ご注文金額",
+          "value": "ご注文金額",
+          "updated": 0,
+          "default": "ご注文金額"
+        },
+        "product_price": {
+          "label": "商品代金",
+          "value": "商品代金",
+          "updated": 0,
+          "default": "商品代金"
+        },
+        "subtotal": {
+          "label": "小計",
+          "value": "小計",
+          "updated": 0,
+          "default": "小計"
+        },
+        "total": {
+          "label": "合計",
+          "value": "合計",
+          "updated": 0,
+          "default": "合計"
+        },
+        "tax": {
+          "label": "消費税",
+          "value": "消費税",
+          "updated": 0,
+          "default": "消費税"
+        },
+        "10_percent_target": {
+          "label": "10%対象",
+          "value": "10%対象",
+          "updated": 0,
+          "default": "10%対象"
+        },
+        "8_percent_target": {
+          "label": "8%対象",
+          "value": "8%対象",
+          "updated": 0,
+          "default": "8%対象"
+        },
+        "charge": {
+          "label": "決済手数料",
+          "value": "決済手数料",
+          "updated": 0,
+          "default": "決済手数料"
+        },
+        "deliv_fee": {
+          "label": "送料",
+          "value": "送料",
+          "updated": 0,
+          "default": "送料"
+        },
+        "discount": {
+          "label": "割引",
+          "value": "割引",
+          "updated": 0,
+          "default": "割引"
+        },
+        "discount_point_amount_before_tax": {
+          "label": "ポイント利用（税率適用前）",
+          "value": "ポイント利用（税率適用前）",
+          "updated": 0,
+          "default": "ポイント利用（税率適用前）"
+        },
+        "discount_point_amount_after_tax": {
+          "label": "ポイント利用（税率適用後）",
+          "value": "ポイント利用（税率適用後）",
+          "updated": 0,
+          "default": "ポイント利用（税率適用後）"
+        },
+        "points": {
+          "label": "付与ポイント",
+          "value": "付与ポイント",
+          "updated": 0,
+          "default": "付与ポイント"
+        },
+        "adjustment_before_tax": {
+          "label": "調整金額（税率適用前）",
+          "value": "調整金額（税率適用前）",
+          "updated": 0,
+          "default": "調整金額（税率適用前）"
+        },
+        "adjustment_after_tax": {
+          "label": "調整金額（税率適用後）",
+          "value": "調整金額（税率適用後）",
+          "updated": 0,
+          "default": "調整金額（税率適用後）"
+        }
+      },
+      "shipping_address": {
+        "group_name": "お届け先",
+        "shipping_addresses": {
+          "label": "お届け先一覧",
+          "value": "お届け先一覧",
+          "updated": 0,
+          "default": "お届け先一覧"
+        },
+        "shipping_address_lead_text": {
+          "label": "お届け先一覧リードテキスト",
+          "value": "お届け先の登録、編集を行うことができます。<br />ご登録いただいたお届け先は次回ご注文時に使用することができます。",
+          "updated": 0,
+          "default": "お届け先の登録、編集を行うことができます。<br />ご登録いただいたお届け先は次回ご注文時に使用することができます。"
+        },
+        "shipping_address": {
+          "label": "お届け先住所",
+          "value": "お届け先住所",
+          "updated": 0,
+          "default": "お届け先住所"
+        },
+        "shipping_addresses_new": {
+          "label": "お届け先追加",
+          "value": "お届け先追加",
+          "updated": 0,
+          "default": "お届け先追加"
+        },
+        "add_shipping_address": {
+          "label": "お届け先を追加する",
+          "value": "お届け先を追加する",
+          "updated": 0,
+          "default": "お届け先を追加する"
+        },
+        "input_shipping_address": {
+          "label": "お届け先のご入力",
+          "value": "お届け先のご入力",
+          "updated": 0,
+          "default": "お届け先のご入力"
+        },
+        "shipping_addresses_edit": {
+          "label": "お届け先編集",
+          "value": "お届け先編集",
+          "updated": 0,
+          "default": "お届け先編集"
+        },
+        "copy_shipping_address": {
+          "label": "お届け先住所をコピー",
+          "value": "お届け先住所をコピー",
+          "updated": 0,
+          "default": "お届け先住所をコピー"
+        },
+        "paste_member_information": {
+          "label": "会員情報を貼り付ける",
+          "value": "会員情報を貼り付ける",
+          "updated": 0,
+          "default": "会員情報を貼り付ける"
+        },
+        "same_as_above_address": {
+          "label": "上記住所と同じ",
+          "value": "上記住所と同じ",
+          "updated": 0,
+          "default": "上記住所と同じ"
+        }
+      },
+      "history": {
+        "group_name": "購入履歴",
+        "purchase_history": {
+          "label": "購入履歴",
+          "value": "購入履歴",
+          "updated": 0,
+          "default": "購入履歴"
+        },
+        "purchase_history_detail": {
+          "label": "購入履歴詳細",
+          "value": "購入履歴詳細",
+          "updated": 0,
+          "default": "購入履歴詳細"
+        },
+        "recent_purchase_history": {
+          "label": "最近の購入履歴",
+          "value": "最近の購入履歴",
+          "updated": 0,
+          "default": "最近の購入履歴"
+        },
+        "still_not_order": {
+          "label": "購入履歴なし",
+          "value": "まだご注文はありません。",
+          "updated": 0,
+          "default": "まだご注文はありません。"
+        },
+        "cancel_order": {
+          "label": "注文キャンセル",
+          "value": "注文をキャンセルする",
+          "updated": 0,
+          "default": "注文をキャンセルする"
+        }
+      },
+      "coupon": {
+        "group_name": "クーポン",
+        "coupon_code": {
+          "label": "クーポンコード",
+          "value": "クーポンコード",
+          "updated": 0,
+          "default": "クーポンコード"
+        },
+        "coupon_name": {
+          "label": "クーポン名",
+          "value": "クーポン名",
+          "updated": 0,
+          "default": "クーポン名"
+        },
+        "invite_coupon": {
+          "label": "招待クーポン",
+          "value": "招待クーポン",
+          "updated": 0,
+          "default": "招待クーポン"
+        },
+        "invite_coupon_code": {
+          "label": "招待クーポンコード",
+          "value": "招待クーポンコード",
+          "updated": 0,
+          "default": "招待クーポンコード"
+        },
+        "invite_coupon_lead_text": {
+          "label": "招待クーポンリードテキスト",
+          "value": "ご紹介いただく購入者様にてお使いいただけるクーポンです。<br />利用方法は、購入者様が購入フォームのクーポンコード欄に、こちらの招待クーポンコードをご入力いただくことでご利用可能です。",
+          "updated": 0,
+          "default": "ご紹介いただく購入者様にてお使いいただけるクーポンです。<br />利用方法は、購入者様が購入フォームのクーポンコード欄に、こちらの招待クーポンコードをご入力いただくことでご利用可能です。"
+        },
+        "no_invite_coupon": {
+          "label": "招待クーポンなし",
+          "value": "現在利用可能な招待クーポンはありません。",
+          "updated": 0,
+          "default": "現在利用可能な招待クーポンはありません。"
+        },
+        "invite_coupon_point": {
+          "label": "招待者ポイント",
+          "value": "※購入者様が招待クーポンをご利用になると、招待した方にもポイントが付与されます。",
+          "updated": 0,
+          "default": "※購入者様が招待クーポンをご利用になると、招待した方にもポイントが付与されます。"
+        },
+        "use_coupon": {
+          "label": "クーポン利用",
+          "value": "クーポン利用",
+          "updated": 0,
+          "default": "クーポン利用"
+        },
+        "use": {
+          "label": "利用中",
+          "value": "利用中",
+          "updated": 0,
+          "default": "利用中"
+        },
+        "unused": {
+          "label": "未使用",
+          "value": "未使用",
+          "updated": 0,
+          "default": "未使用"
+        }
+      },
+      "wrapping": {
+        "group_name": "ラッピング",
+        "wrapping": {
+          "label": "ラッピング",
+          "value": "ラッピング",
+          "updated": 0,
+          "default": "ラッピング"
+        },
+        "wrapping_fee": {
+          "label": "ラッピング代",
+          "value": "ラッピング代",
+          "updated": 0,
+          "default": "ラッピング代"
+        },
+        "wrapping_title": {
+          "label": "ラッピング等",
+          "value": "ラッピング等",
+          "updated": 0,
+          "default": "ラッピング等"
+        },
+        "none": {
+          "label": "無し",
+          "value": "無し",
+          "updated": 0,
+          "default": "無し"
+        }
+      },
+      "pickup_store": {
+        "group_name": "店頭受取",
+        "store_for_pickup": {
+          "label": "受取店舗",
+          "value": "受取店舗",
+          "updated": 0,
+          "default": "受取店舗"
+        },
+        "how_to_receive": {
+          "label": "受取方法",
+          "value": "受取方法",
+          "updated": 0,
+          "default": "受取方法"
+        },
+        "pickup_at_store": {
+          "label": "店頭受取",
+          "value": "店頭受取",
+          "updated": 0,
+          "default": "店頭受取"
+        },
+        "delivery_to_address": {
+          "label": "通常配送",
+          "value": "通常配送",
+          "updated": 0,
+          "default": "通常配送"
+        },
+        "choice_of_pickup_stores": {
+          "label": "受取店舗の選択",
+          "value": "受取店舗の選択",
+          "updated": 0,
+          "default": "受取店舗の選択"
+        },
+        "name": {
+          "label": "店舗名",
+          "value": "店舗名",
+          "updated": 0,
+          "default": "店舗名"
+        },
+        "kana": {
+          "label": "フリガナ",
+          "value": "フリガナ",
+          "updated": 0,
+          "default": "フリガナ"
+        },
+        "zip": {
+          "label": "郵便番号",
+          "value": "郵便番号",
+          "updated": 0,
+          "default": "郵便番号"
+        },
+        "address": {
+          "label": "住所",
+          "value": "住所",
+          "updated": 0,
+          "default": "住所"
+        },
+        "tel": {
+          "label": "電話番号",
+          "value": "電話番号",
+          "updated": 0,
+          "default": "電話番号"
+        },
+        "fax": {
+          "label": "FAX番号",
+          "value": "FAX番号",
+          "updated": 0,
+          "default": "FAX番号"
+        },
+        "business_hours": {
+          "label": "営業時間",
+          "value": "営業時間",
+          "updated": 0,
+          "default": "営業時間"
+        }
+      },
+      "remark": {
+        "group_name": "通信欄",
+        "remark": {
+          "label": "通信欄",
+          "value": "通信欄（残り",
+          "updated": 0,
+          "default": "通信欄（残り"
+        },
+        "remark_end_text": {
+          "label": "残入力可能文字数",
+          "value": "文字）",
+          "updated": 0,
+          "default": "文字）"
+        }
+      },
+      "gift": {
+        "group_name": "ギフトサービス",
+        "add_to_cart": {
+          "label": "ギフトサービスを注文する",
+          "value": "ギフトサービスを注文する",
+          "updated": 0,
+          "default": "ギフトサービスを注文する"
+        },
+        "title": {
+          "label": "ギフトサービスのご注文",
+          "value": "ギフトサービスのご注文",
+          "updated": 0,
+          "default": "ギフトサービスのご注文"
+        },
+        "target_item": {
+          "label": "対象の商品",
+          "value": "対象の商品",
+          "updated": 0,
+          "default": "対象の商品"
+        },
+        "gift_item": {
+          "label": "ギフト商品",
+          "value": "ギフト商品",
+          "updated": 0,
+          "default": "ギフト商品"
+        }
+      },
+      "smaregi_order": {
+        "group_name": "スマレジ受注",
+        "store_name": {
+          "label": "購入店舗",
+          "value": "購入店舗",
+          "updated": 0,
+          "default": "購入店舗"
+        }
+      }
+    },
+    "payments": {
+      "tab_name": "支払い",
+      "general": {
+        "group_name": "一般",
+        "payment_info": {
+          "label": "お支払い情報",
+          "value": "お支払い情報",
+          "updated": 0,
+          "default": "お支払い情報"
+        },
+        "payment_method": {
+          "label": "支払い方法",
+          "value": "支払い方法",
+          "updated": 0,
+          "default": "支払い方法"
+        },
+        "change_payment_method": {
+          "label": "支払い方法変更",
+          "value": "支払い方法変更",
+          "updated": 0,
+          "default": "支払い方法変更"
+        },
+        "human_state_name": {
+          "label": "対応状況",
+          "value": "対応状況",
+          "updated": 0,
+          "default": "対応状況"
+        },
+        "payment_human_state_name": {
+          "label": "決済状況",
+          "value": "決済状況",
+          "updated": 0,
+          "default": "決済状況"
+        }
+      },
+      "credit_card": {
+        "group_name": "クレジットカード",
+        "credit_card": {
+          "label": "クレジットカード",
+          "value": "クレジットカード",
+          "updated": 0,
+          "default": "クレジットカード"
+        },
+        "credit_card_info": {
+          "label": "クレジットカード情報",
+          "value": "クレジットカード情報",
+          "updated": 0,
+          "default": "クレジットカード情報"
+        },
+        "edit_credit_card": {
+          "label": "クレジットカード編集",
+          "value": "クレジットカード編集",
+          "updated": 0,
+          "default": "クレジットカード編集"
+        },
+        "add_card": {
+          "label": "クレジットカード追加",
+          "value": "カード情報を追加する",
+          "updated": 0,
+          "default": "カード情報を追加する"
+        },
+        "can_register_up_to_5_cards": {
+          "label": "クレジットカード登録上限",
+          "value": "カードは５枚まで登録することができます。",
+          "updated": 0,
+          "default": "カードは５枚まで登録することができます。"
+        },
+        "not_exist_credit_card": {
+          "label": "クレジットカード登録なし",
+          "value": "現在登録されているクレジットカードはありません。",
+          "updated": 0,
+          "default": "現在登録されているクレジットカードはありません。"
+        },
+        "card_name": {
+          "label": "カード名義人",
+          "value": "カード名義人",
+          "updated": 0,
+          "default": "カード名義人"
+        },
+        "card_number": {
+          "label": "カード番号",
+          "value": "カード番号",
+          "updated": 0,
+          "default": "カード番号"
+        },
+        "security_code": {
+          "label": "セキュリティコード",
+          "value": "セキュリティコード",
+          "updated": 0,
+          "default": "セキュリティコード"
+        },
+        "security_code_description": {
+          "label": "セキュリティコード説明",
+          "value": "・(VISA MasterCard JCB 等）<br>カード裏面に印字されている下3桁の数字<br>・(American Express）<br>クレジットカードの表面(メインのカード番号の右上）に記載されている 4 桁の数字",
+          "updated": 0,
+          "default": "・(VISA MasterCard JCB 等）<br>カード裏面に印字されている下3桁の数字<br>・(American Express）<br>クレジットカードの表面(メインのカード番号の右上）に記載されている 4 桁の数字"
+        },
+        "payment_times": {
+          "label": "分割回数",
+          "value": "分割回数",
+          "updated": 0,
+          "default": "分割回数"
+        },
+        "read_only_card": {
+          "label": "編集不可クレジットカード",
+          "value": "編集不可能なクレジットカードです。",
+          "updated": 0,
+          "default": "編集不可能なクレジットカードです。"
+        },
+        "transition_card": {
+          "label": "クレジット新規登録はこちら",
+          "value": "クレジット新規登録はこちら",
+          "updated": 0,
+          "default": "クレジット新規登録はこちら"
+        }
+      },
+      "amazon_pay": {
+        "group_name": "Amazonペイ",
+        "amazon_pay": {
+          "label": "AmazonPay",
+          "value": "AmazonPay",
+          "updated": 0,
+          "default": "AmazonPay"
+        },
+        "amazon_pay_title": {
+          "label": "AmazonPayタイトル",
+          "value": "ワンクリックで簡単お申込みする！",
+          "updated": 0,
+          "default": "ワンクリックで簡単お申込みする！"
+        },
+        "amazon_pay_sub_title": {
+          "label": "Amazonアカウントをお持ちの方",
+          "value": "Amazonアカウントをお持ちの方",
+          "updated": 0,
+          "default": "Amazonアカウントをお持ちの方"
+        },
+        "amazon_pay_message": {
+          "label": "AmazonPay使用時のメッセージ",
+          "value": "アカウントに登録しているお支払い情報、お届け先情報をご使用してワンクリックでお申込みが可能です。",
+          "updated": 0,
+          "default": "アカウントに登録しているお支払い情報、お届け先情報をご使用してワンクリックでお申込みが可能です。"
+        },
+        "amazon_pay_not_use_message": {
+          "label": "AmazonPay未使用時のメッセージ",
+          "value": "上記アカウントをお持ちでない方は、下記よりお客様情報をご入力下さい",
+          "updated": 0,
+          "default": "上記アカウントをお持ちでない方は、下記よりお客様情報をご入力下さい"
+        }
+      },
+      "other": {
+        "group_name": "その他",
+        "paypal_error_message": {
+          "label": "PayPalログイン喚起",
+          "value": "ペイパルにログインして、支払いを承認してください",
+          "updated": 0,
+          "default": "ペイパルにログインして、支払いを承認してください"
+        }
+      }
+    },
+    "delivery": {
+      "tab_name": "配送",
+      "general": {
+        "group_name": "一般",
+        "delivery_info": {
+          "label": "配送情報",
+          "value": "配送情報",
+          "updated": 0,
+          "default": "配送情報"
+        },
+        "shipping_slip": {
+          "label": "配送伝票番号",
+          "value": "配送伝票番号",
+          "updated": 0,
+          "default": "配送伝票番号"
+        },
+        "shipping_carrier": {
+          "label": "配達業者",
+          "value": "配達業者",
+          "updated": 0,
+          "default": "配達業者"
+        },
+        "set_shipping_carrier": {
+          "label": "配送業者の指定",
+          "value": "配送業者の指定",
+          "updated": 0,
+          "default": "配送業者の指定"
+        },
+        "scheduled_to_be_delivered_at": {
+          "label": "配送予定日",
+          "value": "配送予定日",
+          "updated": 0,
+          "default": "配送予定日"
+        },
+        "scheduled_to_shipped_at": {
+          "label": "発送予定日",
+          "value": "発送予定日",
+          "updated": 0,
+          "default": "発送予定日"
+        },
+        "shipped_at": {
+          "label": "発送完了日",
+          "value": "発送完了日",
+          "updated": 0,
+          "default": "発送完了日"
+        },
+        "payment_schedule": {
+          "label": "お届け日の指定",
+          "value": "お届け日の指定",
+          "updated": 0,
+          "default": "お届け日の指定"
+        },
+        "pre_order_payment_schedule": {
+          "label": "お届け日時",
+          "value": "お届け日時",
+          "updated": 0,
+          "default": "お届け日時"
+        },
+        "delivery_dates": {
+          "label": "お届け日",
+          "value": "お届け日",
+          "updated": 0,
+          "default": "お届け日"
+        },
+        "scheduled_delivery_dates": {
+          "label": "お届け予定日",
+          "value": "お届け予定日",
+          "updated": 0,
+          "default": "お届け予定日"
+        },
+        "delivery_time": {
+          "label": "お届け時間",
+          "value": "お届け時間",
+          "updated": 0,
+          "default": "お届け時間"
+        },
+        "pre_ordered_delivery_description_snapshot": {
+          "label": "お届け予定時期",
+          "value": "お届け予定時期",
+          "updated": 0,
+          "default": "お届け予定時期"
+        },
+        "pre_ordered_delivery_description_snapshot_recurring": {
+          "label": "初回お届け予定時期",
+          "value": "初回お届け予定時期",
+          "updated": 0,
+          "default": "初回お届け予定時期"
+        }
+      },
+      "delivery_cycle": {
+        "group_name": "配送サイクル",
+        "delivery_cycle": {
+          "label": "配送サイクル",
+          "value": "配送サイクル",
+          "updated": 0,
+          "default": "配送サイクル"
+        },
+        "payment_delivery_cycle": {
+          "label": "お届けサイクルの指定",
+          "value": "お届けサイクルの指定",
+          "updated": 0,
+          "default": "お届けサイクルの指定"
+        },
+        "delivered_every_other_day": {
+          "label": "日ごとに配送",
+          "value": "日ごとに配送",
+          "updated": 0,
+          "default": "日ごとに配送"
+        },
+        "delivery_every": {
+          "label": "ごとに配送",
+          "value": "ごとに配送",
+          "updated": 0,
+          "default": "ごとに配送"
+        },
+        "delivery_to": {
+          "label": "に配送",
+          "value": "に配送",
+          "updated": 0,
+          "default": "に配送"
+        },
+        "last_day": {
+          "label": "末日",
+          "value": "末日",
+          "updated": 0,
+          "default": "末日"
+        },
+        "delivery_to_day": {
+          "label": "日に配送",
+          "value": "日に配送",
+          "updated": 0,
+          "default": "日に配送"
+        },
+        "delivery_to_weekday": {
+          "label": "曜日に配送",
+          "value": "曜日に配送",
+          "updated": 0,
+          "default": "曜日に配送"
+        },
+        "months": {
+          "label": "数ヶ月",
+          "value": "ヶ月",
+          "updated": 0,
+          "default": "ヶ月"
+        },
+        "every_other_month": {
+          "label": "ヶ月ごとの",
+          "value": "ヶ月ごとの",
+          "updated": 0,
+          "default": "ヶ月ごとの"
+        },
+        "every_time": {
+          "label": "ごとの",
+          "value": "ごとの",
+          "updated": 0,
+          "default": "ごとの"
+        },
+        "first_scheduled_to_be_delivered_at": {
+          "label": "１回目お届け日",
+          "value": "１回目お届け日",
+          "updated": 0,
+          "default": "１回目お届け日"
+        },
+        "first_scheduled_to_be_delivered_at_time": {
+          "label": "１回目お届け時間",
+          "value": "１回目お届け時間",
+          "updated": 0,
+          "default": "１回目お届け時間"
+        },
+        "second_scheduled_to_be_delivered_at": {
+          "label": "2回目お届け日",
+          "value": "2回目お届け日",
+          "updated": 0,
+          "default": "2回目お届け日"
+        },
+        "select_scheduled_to_be_delivered_every_x_day": {
+          "label": "配送サイクル指定日（間隔）",
+          "value": "日",
+          "updated": 0,
+          "default": "日"
+        },
+        "specify_by_date": {
+          "label": "日付で指定",
+          "value": "日付で指定",
+          "updated": 0,
+          "default": "日付で指定"
+        },
+        "specify_by_day_of_week": {
+          "label": "曜日で指定",
+          "value": "曜日で指定",
+          "updated": 0,
+          "default": "曜日で指定"
+        },
+        "specify_by_term": {
+          "label": "間隔で指定",
+          "value": "間隔で指定",
+          "updated": 0,
+          "default": "間隔で指定"
+        },
+        "th": {
+          "label": "回目の",
+          "value": "回目の",
+          "updated": 0,
+          "default": "回目の"
+        },
+        "change_delivery_cycle": {
+          "label": "配送サイクルの変更",
+          "value": "配送サイクルの変更",
+          "updated": 0,
+          "default": "配送サイクルの変更"
+        },
+        "please_selected_product": {
+          "label": "変更する商品を選択してください",
+          "value": "変更する商品を選択してください",
+          "updated": 0,
+          "default": "変更する商品を選択してください"
+        },
+        "please_selected_delivery_cycle": {
+          "label": "配送サイクルを設定してください",
+          "value": "配送サイクルを設定してください",
+          "updated": 0,
+          "default": "配送サイクルを設定してください"
+        },
+        "please_confirm_delivery_cycle": {
+          "label": "変更内容を確認してください",
+          "value": "変更内容を確認してください",
+          "updated": 0,
+          "default": "変更内容を確認してください"
+        },
+        "next_delivered_at": {
+          "label": "次回の配送予定日：",
+          "value": "次回の配送予定日：",
+          "updated": 0,
+          "default": "次回の配送予定日："
+        },
+        "fixed_after_change": {
+          "label": "変更後に確定",
+          "value": "変更後に確定",
+          "updated": 0,
+          "default": "変更後に確定"
+        },
+        "delivery_products": {
+          "label": "お届けする商品",
+          "value": "お届けする商品",
+          "updated": 0,
+          "default": "お届けする商品"
+        },
+        "conventional": {
+          "label": "（従来）",
+          "value": "（従来）",
+          "updated": 0,
+          "default": "（従来）"
+        },
+        "change_to_delivery_cycle": {
+          "label": "配送サイクルを変更する",
+          "value": "配送サイクルを変更する",
+          "updated": 0,
+          "default": "配送サイクルを変更する"
+        },
+        "is_really_delivery_cycle_title": {
+          "label": "配送サイクル変更確認タイトル",
+          "value": "配送サイクルを変更します。よろしいですか？",
+          "updated": 0,
+          "default": "配送サイクルを変更します。よろしいですか？"
+        },
+        "confirm_delivery_cycle_text": {
+          "label": "配送サイクル変更確認テキスト",
+          "value": "<p>・送料は配送ごとに必要です。</p><p>・セット割引適用中の場合、値引きの対象外となる場合があります。</p> <p>以上、あらかじめご了承ください。</p>",
+          "updated": 0,
+          "default": "<p>・送料は配送ごとに必要です。</p><p>・セット割引適用中の場合、値引きの対象外となる場合があります。</p> <p>以上、あらかじめご了承ください。</p>"
+        },
+        "all_products_selected_alert_title": {
+          "label": "すべての商品を選択したときのタイトル",
+          "value": "全ての商品が選択されています。",
+          "updated": 0,
+          "default": "全ての商品が選択されています。"
+        },
+        "all_products_selected_alert_text": {
+          "label": "すべての商品を選択したときのテキスト",
+          "value": "お届けする商品の内容に変更が無く、定期便の「配送サイクルのみ」変更したい方は、以下のリンク「定期便を編集する」から設定をお願いします。",
+          "updated": 0,
+          "default": "お届けする商品の内容に変更が無く、定期便の「配送サイクルのみ」変更したい方は、以下のリンク「定期便を編集する」から設定をお願いします。"
+        },
+        "fix_selected_products": {
+          "label": "商品選択を修正する",
+          "value": "商品選択を修正する",
+          "updated": 0,
+          "default": "商品選択を修正する"
+        }
+      },
+      "next": {
+        "group_name": "次回配送予定",
+        "scheduled": {
+          "label": "次回お届け予定",
+          "value": "次回お届け予定",
+          "updated": 0,
+          "default": "次回お届け予定"
+        },
+        "delivered_at": {
+          "label": "次回配送予定日",
+          "value": "次回配送予定日",
+          "updated": 0,
+          "default": "次回配送予定日"
+        },
+        "delivery_times": {
+          "label": "次回配送予定時間",
+          "value": "次回配送予定時間",
+          "updated": 0,
+          "default": "次回配送予定時間"
+        },
+        "current_delivered_at": {
+          "label": "現在の次回配送予定日",
+          "value": "※現在の次回配送予定日：",
+          "updated": 0,
+          "default": "※現在の次回配送予定日："
+        },
+        "current_delivery_times": {
+          "label": "現在の次回配送予定時間",
+          "value": "※現在の次回配送予定時間：",
+          "updated": 0,
+          "default": "※現在の次回配送予定時間："
+        },
+        "change_delivered_at": {
+          "label": "次回配送予定日の変更",
+          "value": "次回配送予定日の変更",
+          "updated": 0,
+          "default": "次回配送予定日の変更"
+        },
+        "change_delivery_times": {
+          "label": "次回配送予定時間の変更",
+          "value": "次回配送予定時間の変更",
+          "updated": 0,
+          "default": "次回配送予定時間の変更"
+        },
+        "recalculate_scheduled_to_be_delivered_at_based_on_last_order": {
+          "label": "次回配送予定日をサイクルに合わせる",
+          "value": "次回配送予定日をサイクルに合わせる",
+          "updated": 0,
+          "default": "次回配送予定日をサイクルに合わせる"
+        },
+        "skip_next_delivery": {
+          "label": "次回配送のスキップ",
+          "value": "次回配送のスキップ",
+          "updated": 0,
+          "default": "次回配送のスキップ"
+        },
+        "skip_next_delivery_info": {
+          "label": "次回配送はスキップされます",
+          "value": "次回配送はスキップされます",
+          "updated": 0,
+          "default": "次回配送はスキップされます"
+        },
+        "skip_scheduled_delivery_time": {
+          "label": "スキップ時次回配送予定日",
+          "value": "※スキップした場合の次回配送予定日：",
+          "updated": 0,
+          "default": "※スキップした場合の次回配送予定日："
+        },
+        "to_delivery_plan_products": {
+          "label": "にお届け予定の商品がございます。",
+          "value": "にお届け予定の商品がございます。",
+          "updated": 0,
+          "default": "にお届け予定の商品がございます。"
+        },
+        "delivered_at_lead_text": {
+          "label": "次回配送予定日の変更リードテキスト",
+          "value": "次回のお届け予定日を変更することができます。<br />既に確定した注文、発送済の注文は変更できませんのでご注意ください。<br />保存する場合は、「保存」ボタンをクリックしてください。",
+          "updated": 0,
+          "default": "次回のお届け予定日を変更することができます。<br />既に確定した注文、発送済の注文は変更できませんのでご注意ください。<br />保存する場合は、「保存」ボタンをクリックしてください。"
+        },
+        "delivery_times_lead_text": {
+          "label": "次回のお届け予定時間の変更リードテキスト",
+          "value": "次回のお届け予定時間を変更することができます。<br />既に確定した注文、発送済の注文は変更できませんのでご注意ください。<br />保存する場合は、「保存」ボタンをクリックしてください。",
+          "updated": 0,
+          "default": "次回のお届け予定時間を変更することができます。<br />既に確定した注文、発送済の注文は変更できませんのでご注意ください。<br />保存する場合は、「保存」ボタンをクリックしてください。"
+        },
+        "skip_next_delivery_lead_text": {
+          "label": "次回配送のスキップのリードテキスト",
+          "value": "次回のお届けをスキップすることができます。<br />既に確定した注文、発送済の注文は変更できませんのでご注意ください。<br />一度スキップを実行すると、次回の配送が完了するまで再度スキップすることができません。",
+          "updated": 0,
+          "default": "次回のお届けをスキップすることができます。<br />既に確定した注文、発送済の注文は変更できませんのでご注意ください。<br />一度スキップを実行すると、次回の配送が完了するまで再度スキップすることができません。"
+        }
+      }
+    },
+    "subs_orders": {
+      "tab_name": "定期",
+      "general": {
+        "group_name": "一般",
+        "exist_subs_order": {
+          "label": "ご利用中の定期購入",
+          "value": "ご利用中の定期購入",
+          "updated": 0,
+          "default": "ご利用中の定期購入"
+        },
+        "no_recurring_product": {
+          "label": "定期購入中の商品はありません。",
+          "value": "定期購入中の商品はありません。",
+          "updated": 0,
+          "default": "定期購入中の商品はありません。"
+        },
+        "subs_orders": {
+          "label": "定期便情報",
+          "value": "定期便情報",
+          "updated": 0,
+          "default": "定期便情報"
+        },
+        "recurring_detail": {
+          "label": "定期便詳細",
+          "value": "定期便詳細",
+          "updated": 0,
+          "default": "定期便詳細"
+        },
+        "edit_recurring": {
+          "label": "定期便編集",
+          "value": "定期便編集",
+          "updated": 0,
+          "default": "定期便編集"
+        },
+        "subs_order_number": {
+          "label": "定期番号",
+          "value": "定期番号",
+          "updated": 0,
+          "default": "定期番号"
+        },
+        "subs_order_remaining_number_of_orders": {
+          "label": "自動注文発生件数",
+          "value": "自動注文発生件数",
+          "updated": 0,
+          "default": "自動注文発生件数"
+        },
+        "subs_order_status": {
+          "label": "ステータス",
+          "value": "ステータス",
+          "updated": 0,
+          "default": "ステータス"
+        },
+        "stop_recurring": {
+          "label": "定期便を停止",
+          "value": "定期便を停止",
+          "updated": 0,
+          "default": "定期便を停止"
+        },
+        "stop_reason": {
+          "label": "停止の理由",
+          "value": "停止の理由",
+          "updated": 0,
+          "default": "停止の理由"
+        },
+        "stop_reason_lead_text": {
+          "label": "停止の理由リードテキスト",
+          "value": "今後のサービス改善のため、<br />定期便を停止する理由を選択してください。",
+          "updated": 0,
+          "default": "今後のサービス改善のため、<br />定期便を停止する理由を選択してください。"
+        },
+        "resume_recurring": {
+          "label": "定期便を再開",
+          "value": "定期便を再開",
+          "updated": 0,
+          "default": "定期便を再開"
+        },
+        "point_product_exchange_quantity": {
+          "label": "個（ポイント商品交換）",
+          "value": "個（ポイント商品交換）",
+          "updated": 0,
+          "default": "個（ポイント商品交換）"
+        },
+        "set_product_quantity": {
+          "label": "個（セット商品）",
+          "value": "個（セット商品）",
+          "updated": 0,
+          "default": "個（セット商品）"
+        },
+        "pre_order_unshipped_text": {
+          "label": "予約中定期の表示",
+          "value": "※予約中",
+          "updated": "1",
+          "default": "※予約中"
+        },
+        "fix_recurring": {
+          "label": "定期便を修正する",
+          "value": "定期便を修正する",
+          "updated": 0,
+          "default": "定期便を修正する"
+        },
+        "manage_edit": {
+          "label": "管理・編集",
+          "value": "管理・編集",
+          "updated": 0,
+          "default": "管理・編集"
+        }
+      },
+      "products": {
+        "group_name": "商品",
+        "current_item_information": {
+          "label": "現在の商品情報",
+          "value": "現在の商品情報",
+          "updated": 0,
+          "default": "現在の商品情報"
+        },
+        "edit_recurring_order_item": {
+          "label": "商品編集",
+          "value": "商品編集",
+          "updated": 0,
+          "default": "商品編集"
+        },
+        "change_item_information": {
+          "label": "商品情報の変更",
+          "value": "商品情報の変更",
+          "updated": 0,
+          "default": "商品情報の変更"
+        },
+        "item_after_change": {
+          "label": "変更後の商品",
+          "value": "変更後の商品",
+          "updated": 0,
+          "default": "変更後の商品"
+        }
+      },
+      "shipping_address": {
+        "group_name": "お届け先",
+        "recurring_edit": {
+          "label": "定期便お届け先編集",
+          "value": "定期便お届け先編集",
+          "updated": 0,
+          "default": "定期便お届け先編集"
+        },
+        "selected_recurring": {
+          "label": "反映対象の定期便の選択",
+          "value": "反映対象の定期便の選択",
+          "updated": 0,
+          "default": "反映対象の定期便の選択"
+        },
+        "reflect_on_all_recurring": {
+          "label": "すべての定期便に反映させる",
+          "value": "すべての定期便に反映させる",
+          "updated": 0,
+          "default": "すべての定期便に反映させる"
+        }
+      },
+      "credit_card": {
+        "group_name": "クレジットカード",
+        "apply_subs_order_lead_text": {
+          "label": "定期受注への反映",
+          "value": "※定期受注のクレジットカード変更は<a class=\"u-text--link\" href=\"/shop/customer/subs_orders\">こちら</a>",
+          "updated": 0,
+          "default": "※定期受注のクレジットカード変更は<a class=\"u-text--link\" href=\"/shop/customer/subs_orders\">こちら</a>"
+        }
+      }
+    },
+    "points": {
+      "tab_name": "ポイント",
+      "general": {
+        "group_name": "一般",
+        "point": {
+          "label": "ポイント",
+          "value": "ポイント",
+          "updated": 0,
+          "default": "ポイント"
+        },
+        "point_event": {
+          "label": "内容",
+          "value": "内容",
+          "updated": 0,
+          "default": "内容"
+        },
+        "point_info": {
+          "label": "ポイント情報",
+          "value": "ポイント情報",
+          "updated": 0,
+          "default": "ポイント情報"
+        },
+        "point_history": {
+          "label": "ポイント履歴",
+          "value": "ポイント履歴",
+          "updated": 0,
+          "default": "ポイント履歴"
+        },
+        "current_customer_point": {
+          "label": "現在の所持ポイント",
+          "value": "※現在の所持ポイント：",
+          "updated": 0,
+          "default": "※現在の所持ポイント："
+        },
+        "customer_total_point": {
+          "label": "合計ポイント",
+          "value": "合計ポイント",
+          "updated": 0,
+          "default": "合計ポイント"
+        },
+        "customer_point": {
+          "label": "所有ポイント",
+          "value": "所有ポイント",
+          "updated": 0,
+          "default": "所有ポイント"
+        },
+        "grant_plan_point": {
+          "label": "付与予定ポイント",
+          "value": "付与予定ポイント",
+          "updated": 0,
+          "default": "付与予定ポイント"
+        },
+        "point_use": {
+          "label": "ポイント利用",
+          "value": "ポイント利用",
+          "updated": 0,
+          "default": "ポイント利用"
+        },
+        "total_points": {
+          "label": "合計ポイント",
+          "value": "合計ポイント",
+          "updated": 0,
+          "default": "合計ポイント"
+        },
+        "use_point": {
+          "label": "ご利用ポイント",
+          "value": "ご利用ポイント",
+          "updated": 0,
+          "default": "ご利用ポイント"
+        },
+        "increase_decrease_points": {
+          "label": "増減ポイント",
+          "value": "増減ポイント",
+          "updated": 0,
+          "default": "増減ポイント"
+        },
+        "point_upper_limit": {
+          "label": "ポイント利用上限",
+          "value": "※ポイント利用上限：",
+          "updated": 0,
+          "default": "※ポイント利用上限："
+        },
+        "point_lower_limit": {
+          "label": "ポイント利用下限",
+          "value": "※ポイント利用下限：",
+          "updated": 0,
+          "default": "※ポイント利用下限："
+        },
+        "point_product_exchange": {
+          "label": "（ポイント商品交換:",
+          "value": "（ポイント商品交換:",
+          "updated": 0,
+          "default": "（ポイント商品交換:"
+        },
+        "point_right_parenthesis": {
+          "label": "ポイント)",
+          "value": "ポイント)",
+          "updated": 0,
+          "default": "ポイント)"
+        },
+        "point_exchangeable_item": {
+          "label": "ポイント商品交換予約",
+          "value": "ポイント商品交換予約",
+          "updated": 0,
+          "default": "ポイント商品交換予約"
+        },
+        "use_point_reservation": {
+          "label": "ポイント利用予約",
+          "value": "ポイント利用予約",
+          "updated": 0,
+          "default": "ポイント利用予約"
+        },
+        "use_point_reservation_lead_text": {
+          "label": "ポイント利用時メッセージ",
+          "value": "ポイントの利用を予約することで、従来価格からポイント消費分（1ポイント＝1円）を値引いた価格で購入することができます。<br />所持ポイントが指定ポイントを下回る場合、所持ポイント分を消費した価格でのご注文となりますのでご注意ください。<br />ポイント利用数が合計金額を上回る場合、合計金額が0円になるまで消費されますのでご注意ください。<br/ >保存する場合は、「保存」ボタンをクリックしてください。",
+          "updated": 0,
+          "default": "ポイントの利用を予約することで、従来価格からポイント消費分（1ポイント＝1円）を値引いた価格で購入することができます。<br />所持ポイントが指定ポイントを下回る場合、所持ポイント分を消費した価格でのご注文となりますのでご注意ください。<br />ポイント利用数が合計金額を上回る場合、合計金額が0円になるまで消費されますのでご注意ください。<br/ >保存する場合は、「保存」ボタンをクリックしてください。"
+        },
+        "use_point_all_point_redeem": {
+          "label": "ポイントを全額消費する",
+          "value": "ポイントを全額消費する",
+          "updated": 0,
+          "default": "ポイントを全額消費する"
+        },
+        "use_point_after_next_order_all": {
+          "label": "次回以降ポイント利用",
+          "value": "次回以降の注文すべてにポイントを利用する",
+          "updated": 0,
+          "default": "次回以降の注文すべてにポイントを利用する"
+        },
+        "use_point_only_next_order": {
+          "label": "次回のみポイント利用",
+          "value": "次回の注文のみにポイントを利用する",
+          "updated": 0,
+          "default": "次回の注文のみにポイントを利用する"
+        },
+        "cancel_point_exchange": {
+          "label": "予約をキャンセル",
+          "value": "予約をキャンセル",
+          "updated": 0,
+          "default": "予約をキャンセル"
+        },
+        "point_no_available": {
+          "label": "保有ポイントなし。",
+          "value": "保有しているポイントはありません。",
+          "updated": 0,
+          "default": "保有しているポイントはありません。"
+        }
+      }
+    },
+    "contact": {
+      "tab_name": "お問い合わせ",
+      "general": {
+        "group_name": "一般",
+        "contact_title": {
+          "label": "お問い合わせ",
+          "value": "お問い合わせ",
+          "updated": 0,
+          "default": "お問い合わせ"
+        },
+        "contact_form": {
+          "label": "お問い合わせフォーム",
+          "value": "お問い合わせフォーム",
+          "updated": 0,
+          "default": "お問い合わせフォーム"
+        },
+        "contact_types": {
+          "label": "お問い合わせ種別",
+          "value": "お問い合わせ種別",
+          "updated": 0,
+          "default": "お問い合わせ種別"
+        },
+        "content": {
+          "label": "お問い合わせ内容",
+          "value": "お問い合わせ内容",
+          "updated": 0,
+          "default": "お問い合わせ内容"
+        },
+        "title": {
+          "label": "お問い合わせ完了",
+          "value": "お問い合わせいただきありがとうございます",
+          "updated": 0,
+          "default": "お問い合わせいただきありがとうございます"
+        },
+        "lead_text": {
+          "label": "お問い合わせ完了説明",
+          "value": "登録いただいたメールアドレス宛に確認のメールを送信しております。<br />万が一、メールが届かない場合、迷惑メールフォルダに振り分けられている可能性がございます。<br />迷惑メールフォルダ等をご確認ください。<br />ご不明な点がございましたら、以下のメールアドレス宛に問い合わせください。<br />",
+          "updated": 0,
+          "default": "登録いただいたメールアドレス宛に確認のメールを送信しております。<br />万が一、メールが届かない場合、迷惑メールフォルダに振り分けられている可能性がございます。<br />迷惑メールフォルダ等をご確認ください。<br />ご不明な点がございましたら、以下のメールアドレス宛に問い合わせください。<br />"
+        },
+        "faq": {
+          "label": "よくあるご質問",
+          "value": "よくあるご質問",
+          "updated": 0,
+          "default": "よくあるご質問"
+        }
+      }
+    },
+    "survey": {
+      "tab_name": "アンケート",
+      "general": {
+        "group_name": "一般",
+        "survey_answer_result": {
+          "label": "アンケート回答結果",
+          "value": "アンケート回答結果",
+          "updated": 0,
+          "default": "アンケート回答結果"
+        },
+        "survey_id": {
+          "label": "アンケートID(パーソナライズID)",
+          "value": "アンケートID",
+          "updated": 0,
+          "default": "アンケートID"
+        },
+        "survey_name": {
+          "label": "アンケート名(パーソナライズ名)",
+          "value": "アンケート名",
+          "updated": 0,
+          "default": "アンケート名"
+        },
+        "answer_id": {
+          "label": "回答ID",
+          "value": "回答ID",
+          "updated": 0,
+          "default": "回答ID"
+        },
+        "answer_started_at": {
+          "label": "開始日",
+          "value": "開始日",
+          "updated": 0,
+          "default": "開始日"
+        },
+        "answer_completed_at": {
+          "label": "完了日",
+          "value": "完了日",
+          "updated": 0,
+          "default": "完了日"
+        },
+        "score": {
+          "label": "スコア",
+          "value": "スコア",
+          "updated": 0,
+          "default": "スコア"
+        },
+        "question_name": {
+          "label": "設問",
+          "value": "設問",
+          "updated": 0,
+          "default": "設問"
+        },
+        "choices": {
+          "label": "選択肢",
+          "value": "選択肢",
+          "updated": 0,
+          "default": "選択肢"
+        },
+        "answer": {
+          "label": "回答",
+          "value": "回答",
+          "updated": 0,
+          "default": "回答"
+        }
+      }
+    }
+  }
+}

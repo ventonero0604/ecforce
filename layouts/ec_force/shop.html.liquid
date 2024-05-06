@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    {{ 'header_prepend' | shop_shared_tag }}
+    {{ 'header_prepend' | shop_page_tag }}
+
+    {% include 'ec_force/shop/sections/head.html' %}
+    {% include 'ec_force/shop/sections/head_google_tag_manager.html' %}
+
+    {{ 'header_append' | shop_shared_tag }}
+    {{ 'header_append' | shop_page_tag }}
+
+    {{ 'theme_customize.css' | asset_url | stylesheet_tag }}
+    {{ 'shop/shared/slideshow' | javascript_include_tag }}
+    {{ 'shop/shared/slick' | javascript_include_tag }}
+  </head>
+  <body>
+    {% include 'ec_force/shop/sections/body_google_tag_manager.html' %}
+
+    {{ 'body_prepend' | shop_shared_tag }}
+    {{ 'body_prepend' | shop_page_tag }}
+
+    {% if customer_signed_in %}
+      <input type="hidden" id="customer-email" value="{{ current_customer.email }}">
+      <input type="hidden" id="customer-number" value="{{ current_customer.number }}">
+    {% endif %}
+
+    {% if settings.settings.action.settings.effect == true or settings.settings..action.settings.effect == 'true' %}
+      <div class="l-wrapper u-font__jp u-color__bg--base u-color__text--main">
+    {% else %}
+      <div class="l-wrapper-none u-font__jp u-color__bg--base u-color__text--main">
+    {% endif %}
+
+      {{ content_for_header }}
+      {{ include_gon }}
+      {{ content_for_layout }}
+      {% if base_info.use_cart_modal? and display_screen_flag_for_cart_modal %}
+        {% include "ec_force/shop/sections/cart_modal.html" %}
+      {% endif %}
+      {% include 'ec_force/shop/sections/footer.html' %}
+      {{ content_for_footer }}
+
+      {% if theme_preview_mode %}
+        {% unless customize_preview_mode %}
+          {% include 'ec_force/shop/snippets/preview_footer.html' %}
+        {% endunless %}
+      {% endif %} 
+    </div>
+
+    {{ 'body_append' | shop_shared_tag }}
+    {{ 'body_append' | shop_page_tag }}
+  </body>
+</html>

@@ -1,0 +1,144 @@
+{% if gift_assignable_order_items.size > 0 and gifts.size > 0 %}
+  <div id="gift-addition" class="p-gift">
+    <dialog class="c-modal  p-gift__modal" id="js-gift__modal" data-close-with-backdrop="true">
+      <button class="p-gift__button --close js-modal__close">
+        <i class="u-icon--close"></i>
+      </button>
+      <div class="p-gift__content">
+        <h1 class="p-gift__title u-text--head">{{ 'orders.gift.title.value' | t }}</h1>
+        <div class="p-gift__pages">
+          {%- comment -%}1. ギフトを設定する商品の選択{%- endcomment -%}
+          <section class="p-gift__section js-gift__section --page-1">
+            <h2 class="p-gift__head u-text--subhead">
+              <span class="c-encircled_number">
+                <span class="c-encircled_number__content">1</span>
+              </span>
+              <span class="p-gift__text">{{ 'orders.gift.target_item.value' | t }}を選択してください</span>
+            </h2>
+            <div class="p-gift__select">
+              <div class="p-gift_order_item">
+                {%- comment -%}ecforceが#select-order-item-for-giftのvalueを読みにくるので、空のinput要素を置いておく{%- endcomment -%}
+                <input type="hidden" id="select-order-item-for-gift" value="">
+                {% for order_item in gift_assignable_order_items %}
+                  {% assign quantity = order_item.quantity | minus: order_item.set_item_quantity %}
+                  <label class="c-cart_item">
+                    <div class="c-cart_item__img">
+                      <div class="c-radio"><input type="radio" name="js-gift__form-ignore[order-item][]" class="js-gift__item --order-item" value="{{ order_item.id }}, {{ quantity }}"></div>
+                      {% if order_item.available_thumbnail %}
+                        {% assign item_thumbnail = order_item.available_thumbnail %}
+                      {% else %}
+                        {% assign item_thumbnail = 'missing' | image_url %}
+                      {% endif %}
+                      <div class="c-cart_item__img__inner" style="background-size:contain;background-image:url('{{ item_thumbnail }}')"></div>
+                    </div>
+                    <div class="c-cart_item__info">
+                      <span class="c-cart_item__info__title u-text--subhead">{{ order_item.product.name }}</span>
+                      <div class="c-cart_item__info__variant u-text--body">
+                        {% assign option_cnt = 0 %}
+                        {% for option_value in order_item.variant.option_values %}
+                          {% unless option_cnt == 0 %}
+                            &nbsp;/&nbsp;
+                          {% endunless %}
+                          {{ option_value.option_type.presentation }}：{{ option_value.presentation }}
+                          {% assign option_cnt = option_cnt | plus: 1 %}
+                        {% endfor %}
+                      </div>
+                    </div>
+                  </label>
+                {% endfor %}
+              </div>
+            </div>
+            <div class="p-gift__control">
+              <button type="button" class="p-gift__button js-gift__button --next" disabled>次へ</button>
+            </div>
+          </section>
+
+          <section class="p-gift__section js-gift__section --page-2 --hidden">
+            {%- comment -%}ギフト商品選択{%- endcomment -%}
+            <div class="p-gift__select">
+              <div class="p-gift_select">
+                <h2 class="p-gift__head u-text--subhead">
+                  <span class="c-encircled_number">
+                    <span class="c-encircled_number__content">2</span>
+                  </span>
+                  <span class="p-gift__text">{{ 'orders.gift.gift_item.value' | t }}を選択してください</span>
+                </h2>
+                <ul class="p-gift_select__list">
+                  {% for gift in gifts %}
+                    <li class="p-gift_select__item u-text--body">
+                      <label class="p-gift_select__label">
+                        <span class="c-radio"><input type="radio" name="js-gift__form-ignore[gift-item][]" value="{{ gift.id }}" class="js-gift__item --gift-item"></span>
+                        <span class="p-gift_select__text --gift-name">{{ gift.name }}</span>
+                      </label>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
+              {%- comment -%}画像プレビューとSKU選択{%- endcomment -%}
+              <div class="p-gift_preview">
+                {% for gift in gifts %}
+                  {% if gift.product.variants.size > 0%}
+                    {%- assign variant_id = "" -%}
+                  {% else %}
+                    {%- assign variant_id = gift.master_id -%}
+                  {% endif %}
+                  <div class="p-gift_preview__container gift" data-gift-id={{ gift.id }}>
+                    <form action="/shop/cart/add" method="post" class="p-gift__form js-gift__form">
+                      {% authenticity_token_tag %}
+                      <input type="hidden" class="variant-id" name="variant_id" value="{{ variant_id }}">
+                      <input type="hidden" class="order-item-id-for-gift" name="gift[order_item_id_for_gift]" value="">
+                      <input type="hidden" class="gift-id" name="gift_id" value="{{ gift.id }}">
+                      <input type="hidden" class="gift-quantity" name="quantity" value="1">
+                      {% if gift.product.thumbnail.url %}
+                        {% assign src = gift.product.thumbnail.url %}
+                      {% else %}
+                        {% assign src = 'missing' | image_url %}
+                      {% endif %}
+                      {% if gift.noshi? %}
+                        <div class="p-gift_preview__annotation u-color__border--border u-text--body">
+                          <p class="p-gift_preview__text --part-of-noshi u-icon--check_circle">
+                            カート画面で名入れが指定できます
+                          </p>
+                        </div>
+                      {% endif %}
+                      <div class="p-gift_preview__description u-text--body">
+                        <div class="option_types">
+                          <div class="option_type option_template p-gift_preview__sku">
+                            <label></label>
+                            <div class="c-select">
+                              <select class="validate[required] js-gift__selectbox">
+                                <option value="">選択してください</option>
+                              </select>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="p-gift_preview__details u-text--body">
+                          {% if gift.noshi? and gift.description_part_of_noshi != blank %}
+                            <p class="p-gift_preview__text">表書き：{{ gift.description_part_of_noshi | truncate: 20 | escape }}</p>
+                          {% endif %}
+                          <p class="p-gift_preview__text --price js-gift__price">
+                            <span class="sales-price">{{ gift.product.first_price | number_to_currency }}</span>
+                            <span class="p-gift_preview__text">/ 個</span>
+                          </p>
+                        </div>
+                      </div>
+                      <div class="p-gift_preview__thumbnail">
+                        <p class="p-gift_preview__text u-text--body">※包装イメージ</p>
+                        <img class="gift-product-img" src="{{ src }}">
+                      </div>
+                    </form>
+                  </div>
+                {% endfor %}
+              </div>
+            </div>
+            <div class="p-gift__control">
+              <button type="button" class="p-gift__button js-gift__button --back">戻る</button>
+              <button type="button" id="js-gift__submit" class="p-gift__button js-gift__button --submit" disabled>設定する</button>
+              <button type="button" id="js-gift__out-of-stock" class="p-gift__button js-gift__button --out-of-stock" style="display: none;" disabled>在庫切れ</button>
+            </div>
+          </section>
+        </div>
+      </div>
+    </dialog>
+  </div>
+{% endif %}

@@ -1,0 +1,77 @@
+{{ 'shop/sets' | javascript_include_tag }}
+
+<main class="l-container js-main-container" role="main">
+  <div class="l-container__row u-margin__top--60">
+    <header class="p-list_header">
+      <div class="p-list_header__inner">
+        <h1 class="p-list_header__inner__title u-text--head">セット一覧</h1>
+        <div class="c-list_tool">
+          <div class="c-list_tool__num u-text--subhead">{{ 'general.searches.all_search_result.value' | t }}{{ sets.size }}{{ 'general.searches.search_result_count.value' | t }}</div>
+        </div>
+      </div>
+    </header>
+  </div>
+  <div class="l-container__row u-margin__top--60">
+    <div class="p-set_list">
+      <ul class="p-set_list__list">
+        {% for set in sets %}
+          <li class="c-set_item u-color__border--border">
+            <div class="c-set_item__inner">
+              <div class="title">
+                {{ set.name }}
+              </div>
+              <div class="price u-color__text--sub">
+                {% if set.set_sale_method_product_price? %}
+                  {% if set.product.master.list_price > set.lowest_price %}
+                    <span class="origin">&yen;{{ set.product.master.list_price | number_with_delimiter }}</span>
+                    <span class="sale u-color__text--alert">&yen;{{ set.lowest_price | number_with_delimiter }}~</span>
+                    <span>&nbsp;({{ 'products.price.tax_included.value' | t }}</span>
+                    <span id="sale u-color__text--alert">&yen;{{ set.lowest_price_include_tax | number_with_delimiter }}~</span>
+                    <span>)</span>
+                  {% else %}
+                    <span class="price">&yen;{{ set.lowest_price | number_with_delimiter }}~</span>
+                    <span>&nbsp;({{ 'products.price.tax_included.value' | t }}</span>
+                    <span id="price">&yen;{{ set.lowest_price_include_tax | number_with_delimiter }}~</span>
+                    <span>)</span>
+                  {% endif %}
+                {% elsif set.product.master.list_price > set.sales_price %}
+                    <span class="origin">&yen;{{ set.product.master.list_price | number_with_delimiter }}</span>
+                    <span class="sale u-color__text--alert">&yen;{{ set.sales_price | number_with_delimiter }}</span>
+                    <span>&nbsp;({{ 'products.price.tax_included.value' | t }}</span>
+                    <span id="sale u-color__text--alert">&yen;{{ set.sales_price_include_tax | number_with_delimiter }}</span>
+                    <span>)</span>
+                {% else %}
+                    <span class="price">&yen;{{ set.sales_price | number_with_delimiter }}</span>
+                    <span>&nbsp;({{ 'products.price.tax_included.value' | t }}</span>
+                    <span id="price">&yen;{{ set.sales_price_include_tax | number_with_delimiter }}</span>
+                    <span>)</span>
+                {% endif %}
+              </div>
+              <div class="desc">
+                {% if smartphone %}
+                  {{ set.description_mobile }}
+                {% else %}
+                  {{ set.description }}
+                {% endif %}
+              </div>
+            </div>
+            <div class="c-set_item__button">
+              <a href="/shop/sets/{{ set.id }}" class="u-color__bg--accent">
+                <span class="u-color__text--base">購入する</span>
+              </a>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</main>
+
+{% content_for meta_description %}
+{% endcontent_for %}
+
+{% content_for meta_keywords %}
+{% endcontent_for %}
+
+{% content_for title %}
+{% endcontent_for %}

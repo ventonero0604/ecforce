@@ -1,0 +1,108 @@
+{{ 'shop/info' | javascript_include_tag }}
+
+<main class="l-container" role="main">
+  <div class="l-container__row u-margin__top--60">
+    <header class="p-page_header">
+      <div class="p-page_header__inner">
+        <!-- カテゴリー名 -->
+        <h1 class="p-page_header__inner__title u-text--head">{{ information_category.name }}</h1>
+      </div>
+    </header>
+  </div>
+  <div class="l-container__row u-margin__top--60">
+    {% if information_category.slug == 'news' %}
+      <section class="p-news">
+        <div class="p-news__inner">
+          <div class="p-news__inner__list">
+            <!-- news一覧 -->
+            {% for information in informations %}
+              <article class="c-news_item u-color__border--border">
+                <a class="c-news_item__inner" href="/shop/information/{{ information.slug }}">
+                  <!-- 公開日 -->
+                  <time class="c-news_item__inner__date u-text--subhead">{{ information.published_at | date: '%Y.%m.%d' }}</time>
+                  <!-- タイトル -->
+                  <div class="c-news_item__inner__title u-text--subhead">{{ information.title }}</div>
+                </a>
+              </article>
+            {% endfor %}
+          </div>
+        </div>
+      </section>
+    {% else %}
+      <section class="p-column">
+        <div class="p-column__inner">
+          <ul class="p-column__inner__list">
+            <!-- column一覧 -->
+            {% for information in informations %}
+              <li class="p-column__inner__list__item medium-up--one-3">
+                <article class="c-column_item">
+                  <!-- サムネイル-->
+                  <a class="c-column_item__inner" href="/shop/information/{{ information.slug }}">
+                    {% if information.thumbnail.url %}
+                      <div class="c-column_item__inner__img" style="background-image:url('{{ information.thumbnail.url }}')"></div>
+                    {% else %}
+                      <div class="c-column_item__inner__img" style="background-image:url('{{ default_information_thumbnail_url }}')"></div>
+                    {% endif %}
+                    <!-- タイトル -->
+                    <div class="c-column_item__inner__title u-text--subhead">{{ information.title }}</div>
+                    <!-- 公開日 -->
+                    <time class="c-column_item__inner__date u-text--body">{{ information.published_at | date: '%Y.%m.%d' }}</time>
+                    <div class="c-column_item__inner__more u-text--link">{{ 'general.action.read_more.value' | t }}</div>
+                  </a>
+                </article>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+      </section>
+    {% endif %}
+  </div>
+  <!-- ページネーション -->
+  <!-- 「ショップ管理　>　基本情報設定　>　機能設定」にある「ニュースカテゴリー画面の1ページあたりの表示件数」で設定している表示件数と同じ数字を入力してください -->
+  {% paginate informations_all by 12 %}
+    <div class="l-container__row u-margin__top--80 u-margin__bottom--100">
+      <div class="c-pagination">
+        <ul class="c-pagination__list u-color__border--border u-color--head">
+          <!-- ページネーションリンク -->
+          {% if paginate.previous %}
+            <li class="c-pagination__list__item">
+              <a class="c-pagination__list__item__prev" href="{{ paginate.previous.url }}">
+                <i class="u-icon--arrow"></i>
+              </a>
+            </li>
+          {% endif %}
+          {% for page in paginate.parts %}
+            <li class="c-pagination__list__item u-color__border--main {% if paginate.current_page == page.title %} is-active{% endif %}">
+              {% if paginate.current_page == page.title %}
+                <span class="c-pagination__list__item__page">{{ page.title }}</span>
+              {% elsif page.is_link %}
+                <a class="c-pagination__list__item__page" href="{{ page.url }}">{{ page.title }}</a>
+              {% else %}
+                <span class="c-pagination__list__item__page">{{ page.title }}</span>
+              {% endif %}
+            </li>
+          {% endfor %}
+          {% if paginate.next %}
+            <li class="c-pagination__list__item">
+              <a class="c-pagination__list__item__next" href="{{ paginate.next.url }}">
+                <i class="u-icon--arrow"></i>
+              </a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  {% endpaginate %}
+</main>
+
+{% content_for title %}
+  {{ information_category.title }}
+{% endcontent_for %}
+
+{% content_for meta_description %}
+  {{ information_category.meta_description }}
+{% endcontent_for %}
+
+{% content_for meta_keywords %}
+  {{ information_category.meta_keywords }}
+{% endcontent_for %}

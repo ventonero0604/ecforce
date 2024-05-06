@@ -1,0 +1,228 @@
+{{ 'shop/orders' | javascript_include_tag }}
+<!-- 注文情報確認画面（カスタマイズ画面専用） -->
+<main id="confirm-view" class="l-container js-main-container" role="main">
+  <div class="l-container__row u-margin__top--80 u-margin_sp__top--40">
+    <div class="c-steps_to_order c-steps_to_order--theme">
+      <div class="c-steps_to_order__step c-steps_to_order__step--1">
+      <p class="c-steps_to_order__number u-font__en is-complete">1</p>
+        <p class="c-steps_to_order__text">ご注文内容の<br>入力</p>
+      </div>
+      <div class="c-steps_to_order__step c-steps_to_order__step--2">
+        <p class="c-steps_to_order__number u-font__en is-active">2</p>
+        <p class="c-steps_to_order__text">ご注文内容の<br>確認</p>
+      </div>
+      <div class="c-steps_to_order__step c-steps_to_order__step--3">
+        <p class="c-steps_to_order__number u-font__en">3</p>
+        <p class="c-steps_to_order__text">ご注文<br>完了</p>
+      </div>
+    </div>
+  </div>
+  <div class="l-container__row u-margin__top--60">
+    <header class="p-page_header">
+      <div class="p-page_header__inner">
+        <h1 class="p-page_header__inner__title u-text--head">{{ 'orders.general.confirm_title.value' | t }}</h1>
+      </div>
+    </header>
+  </div>
+  <div class="l-container__row u-margin__top--60 u-margin__bottom--100">
+    <div class="p-checkout_confirm">
+      <div class="p-checkout_confirm__inner">
+        <section class="p-checkout_confirm__inner__list">
+          <div class="p-checkout_confirm__inner__list__block">
+            <!-- お客様情報 -->
+            <h2 class="p-checkout_confirm__inner__list__block__title u-text--subhead">{{ 'account.general.customer_info.value' | t }}</h2>
+            <table class="c-form_table--confirm">
+              <tbody>
+                <!-- お名前 -->
+                <tr class="u-color__border--border">
+                  <th class="u-text--body">{{ 'customer.general.name.value' | t }}</th>
+                  <td class="u-text--body">{{ 'customer.placeholder.full_name.value' | t }}</td>
+                </tr>
+                <!-- フリガナ -->
+                <tr class="u-color__border--border">
+                  <th class="u-text--body">{{ 'customer.general.kana.value' | t }}</th>
+                  <td class="u-text--body">{{ 'customer.placeholder.full_kana_name.value' | t }}</td>
+                </tr>
+                <!-- 住所 -->
+                <tr class="u-color__border--border">
+                  <th class="u-text--body">{{ 'customer.general.address.value' | t | remove: "例）" }}</th>
+                  <td class="u-text--body">
+                    &#12306;
+                      {{ 'customer.placeholder.zip01.value' | t | remove: "例）" }} &ndash;
+                      {{ 'customer.placeholder.zip02.value' | t | remove: "例）" }}
+                    <br />
+                    {{ shop_form_settings['addr01_placeholder'] | remove: "例）" }}
+                  </td>
+                </tr>
+                <!-- 電話番号 -->
+                <tr class="u-color__border--border">
+                  <th class="u-text--body">{{ 'customer.general.tel.value' | t }}</th>
+                  <td class="u-text--body">
+                    {{ 'customer.placeholder.tel01.value' | t | remove: "例）" }} &ndash;
+                    {{ 'customer.placeholder.tel02.value' | t | remove: "例）" }} &ndash;
+                    {{ 'customer.placeholder.tel03.value' | t | remove: "例）" }}
+                  </td>
+                </tr>
+                <!-- メールアドレス -->
+                <tr class="u-color__border--border">
+                  <th class="u-text--body">{{ 'customer.general.email.value' | t }}</th>
+                  <td class="u-text--body">{{ 'customer.placeholder.email.value' | t | remove: "例）" }}</td>
+                </tr>
+                <!-- ショップからのお知らせ -->
+                <tr class="u-color__border--border">
+                  <th class="u-text--body">{{ 'customer.general.mail_magazine.value' | t }}</th>
+                  <td class="u-text--body">受信する</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="p-checkout_confirm__inner__list__block">
+            <!-- お届け先情報 -->
+            <h2 class="p-checkout_confirm__inner__list__block__title u-text--subhead">{{ 'orders.shipping_address.shipping_address.value' | t }}</h2>
+            <table class="c-form_table--confirm">
+              <tbody>
+                <!-- お名前 -->
+                <tr class="u-color__border--border">
+                  <th class="u-text--body">{{ 'customer.general.name.value' | t }}</th>
+                  <td class="u-text--body">{{ 'customer.placeholder.full_name.value' | t }}</td>
+                </tr>
+                <!-- フリガナ -->
+                <tr class="u-color__border--border">
+                  <th class="u-text--body">{{ 'customer.general.kana.value' | t }}</th>
+                  <td class="u-text--body">{{ 'customer.placeholder.full_kana_name.value' | t }}</td>
+                </tr>
+                <!-- 住所 -->
+                <tr class="u-color__border--border">
+                  <th class="u-text--body">{{ 'customer.general.address.value' | t | remove: "例）" }}</th>
+                  <td class="u-text--body">
+                    &#12306;
+                      {{ 'customer.placeholder.zip01.value' | t | remove: "例）" }} &ndash;
+                      {{ 'customer.placeholder.zip02.value' | t | remove: "例）" }}
+                    <br />
+                    {{ shop_form_settings['addr01_placeholder'] | remove: "例）" }}
+                  </td>
+                </tr>
+                <!-- 電話番号 -->
+                <tr class="u-color__border--border">
+                  <th class="u-text--body">{{ 'customer.general.tel.value' | t }}</th>
+                  <td class="u-text--body">
+                    {{ 'customer.placeholder.tel01.value' | t | remove: "例）" }} &ndash;
+                    {{ 'customer.placeholder.tel02.value' | t | remove: "例）" }} &ndash;
+                    {{ 'customer.placeholder.tel03.value' | t | remove: "例）" }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="p-checkout_confirm__inner__list__block">
+            <!-- お支払い情報 -->
+            <h2 class="p-checkout_confirm__inner__list__block__title u-text--subhead">{{ 'payments.general.payment_info.value' | t }}</h2>
+            <table class="c-form_table--confirm">
+              <tbody>
+                <!-- 支払い方法名 -->
+                <tr class="u-color__border--border">
+                  <th class="u-text--body">{{ 'payments.general.payment_method.value' | t }}</th>
+                  <td class="u-text--body">代金引換</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="p-checkout_confirm__inner__list__block">
+            <h2 class="p-checkout_confirm__inner__list__block__title u-text--subhead">{{ 'delivery.general.shipping_carrier.value' | t }}</h2>
+            <table class="c-form_table--confirm">
+              <tbody>
+                <!-- 配送業者名 -->
+                <tr class="u-color__border--border">
+                  <th class="u-text--body">{{ 'delivery.general.shipping_carrier.value' | t }}</th>
+                  <td class="u-text--body">ヤマト運輸</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- お届けサイクル -->
+          <div class="p-checkout_confirm__inner__list__block">
+            <h2 class="p-checkout_confirm__inner__list__block__title u-text--subhead">{{ 'delivery.general.delivery_dates.value' | t }}</h2>
+            <table class="c-form_table--confirm">
+              <tbody>
+                <tr class="u-color__border--border">
+                  <th class="u-text--body">{{ 'delivery.delivery_cycle.first_scheduled_to_be_delivered_at.value' | t }}</th>
+                  <td class="u-text--body">
+                    <!-- １回目お届け日 -->
+                    xxxx-xx-xx
+                  </td>
+                </tr>
+                <!-- １回目お届け時間 -->
+                <tr class="u-color__border--border">
+                  <th class="u-text--body">{{ 'delivery.delivery_cycle.first_scheduled_to_be_delivered_at_time.value' | t }}</th>
+                  <td class="u-text--body">
+                  </td>
+                </tr>
+                <!-- ２回目お届け日 -->
+                <tr class="u-color__border--border">
+                  <th class="u-text--body">{{ 'delivery.delivery_cycle.second_scheduled_to_be_delivered_at.value' | t }}</th>
+                  <td class="u-text--body">
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          {% section 'order_confirmation_button' %}
+        </section>
+        <section class="p-checkout_confirm__inner__side">
+          <div class="c-billing_list u-color__bg--bg">
+            <div class="c-billing_list__title u-text--subhead u-color__border--border">{{ 'orders.amount.order_amount.value' | t }}</div>
+            <ul class="c-billing_list__detail u-color__border--border">
+              <!-- 注文小計 -->
+              <li class="c-billing_list__detail__item">
+                <dl class="c-billing_list__detail__item__row">
+                  <dt class="c-billing_list__detail__item__row__title u-text--body">{{ 'orders.amount.product_price.value' | t }}</dt>
+                  <dd class="c-billing_list__detail__item__row__price u-text--body">&yen;x,xxx</dd>
+                </dl>
+              </li>
+              <!-- 消費税 -->
+              <li class="c-billing_list__detail__item">
+                <dl class="c-billing_list__detail__item__row">
+                  <dt class="c-billing_list__detail__item__row__title u-text--body">{{ 'orders.amount.tax.value' | t }}</dt>
+                  <dd class="c-billing_list__detail__item__row__price u-text--body">&yen;xxx</dd>
+                </dl>
+              </li>
+            </ul>
+            <!-- 合計 -->
+            <div class="c-billing_list__total">
+              <div class="c-billing_list__total__title u-text--subhead">{{ 'orders.amount.total.value' | t }}</div>
+              <div class="c-billing_list__total__price u-text--subhead">&yen;x,xxx</div>
+            </div>
+          </div>
+          <div class="c-cart_list">
+            <div class="c-cart_list__title u-text--subhead">{{ 'orders.general.cart.value' | t }}</div>
+            <ul class="c-cart_list__list u-color__border--border">
+              <!-- 注文商品一覧 -->
+              <li class="c-cart_list__list__item u-color__border--border">
+                <a class="c-cart_list__list__item__img">
+                  {% assign thumbnail = 'missing' | image_url %}
+                  <div class="c-cart_list__list__item__img__inner" style="background-image:url('{{ thumbnail }}')"></div>
+                </a>
+                <div class="c-cart_list__list__item__info">
+                  <div class="c-cart_list__list__item__info__category u-text--body">
+                    商品カテゴリー名
+                  </div>
+                  <!-- 商品名 -->
+                  <a class="c-cart_list__list__item__info__title u-text--link">商品名</a>
+                  <div class="c-cart_list__list__item__info__variant u-text--body">
+                    Size：x
+                  </div>
+                  <div class="c-cart_list__list__item__info__total">
+                    <!-- 数量 -->
+                    <div class="c-cart_list__list__item__info__total__quantity u-text--body">{{ 'products.stock.quantity.value' | t }}：x</div>
+                    <!-- 単価 (税抜)  -->
+                    <div class="c-cart_list__list__item__info__total__price u-text--body">&yen;x,xxx</div>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </section>
+      </div>
+    </form>
+  </div>
+</main>

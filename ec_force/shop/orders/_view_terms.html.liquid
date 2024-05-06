@@ -1,0 +1,20 @@
+<div class="p-checkout__list__block u-color__border--border">
+  <div class="p-checkout__list__block__inner">
+    <table class="c-form_table">
+      <tbody>
+        <tr>
+          <th></th>
+          <td>
+            <div class="c-form_table__newsletter">
+              <label class="c-form_table__checkbox checkbox-inline term_label check_agree" for='agree'>
+                <input id='agree' {% if shop_form_settings['terms'] %}checked{% endif %} class='u-color__border--input validate[required]' data-prompt-position='topLeft' data-errormessage='{{ 'orders.general.term_error_message.value' | t }}' name='agree' type='checkbox'>
+                <span class="c-form_table__checkbox__frame u-color__btn"></span>
+                <span class="c-form_table__checkbox__text u-text--body">{{ shop_form_settings['customer_term_text'] }}</span>
+              </label>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

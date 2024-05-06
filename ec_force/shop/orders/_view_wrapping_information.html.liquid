@@ -1,0 +1,32 @@
+{% if shop_form_settings['wrapping'] %}
+  <div class="p-checkout__list__block u-color__border--border" id='view-wrapping-information'>
+    <div class="p-checkout__list__block__inner">
+      <h2 class="p-checkout__list__block__inner__title u-text--subhead">{{ 'orders.wrapping.wrapping_title.value' | t }}</h2>
+      <table class="c-form_table">
+        <tbody>
+          <!-- ラッピングの選択 -->
+          <tr>
+            <th class="u-text--body">{{ 'orders.wrapping.wrapping.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+            <td>
+              <label class="c-form_table__select">
+                <select class="u-text--input u-color__input--bg u-color__border--input" id='wrapping-id' name='order[wrapping_id]'>
+                  <option value=''>{{ 'orders.wrapping.none.value' | t }}</option>
+                  {% for wrapping in wrappings %}
+                    {% if wrapping.active %}
+                      <option value="{{ wrapping.id }}" {% if order.wrapping_id == wrapping.id %}selected{% endif %} data-thumbnail-url="{{ wrapping.thumbnail.url }}">{{ wrapping.name }} {{ wrapping.price | number_with_delimiter }}円</option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
+              </label>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      {% comment %}
+        <div id='wrapping-thumbnail-box' style='display:none;'>
+          <img id='wrapping-thumbnail' src='' width='150'>
+        </div>
+      {% endcomment %}
+    </div>
+  </div>
+{% endif %}

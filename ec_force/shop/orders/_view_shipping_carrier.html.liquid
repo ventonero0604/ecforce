@@ -1,0 +1,30 @@
+{% if base_info.shipping_carrier_based_on == 'product' %}
+  {% if shop_form_settings['shipping_carrier'] == false %}
+    {% assign own_style = 'display: none;' %}
+  {% elsif pickup_store_is_available == true and delivery_to_address_is_checked == false %}
+    {% assign own_style = 'display: none;' %}
+  {% else %}
+    {% assign own_style = '' %}
+  {% endif %}
+
+  <div id='view-shipping-carrier' class="p-checkout__list__block u-color__border--border" style="{{ own_style }}">
+    <div class="p-checkout__list__block__inner">
+      <h2 class="p-checkout__list__block__inner__title u-text--subhead">{{ 'delivery.general.set_shipping_carrier.value' | t }}</h2>
+      <table class="c-form_table">
+        <tbody>
+          <tr>
+            <th class="u-text--body">{{ 'delivery.general.shipping_carrier.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+            <td>
+              <label class="c-form_table__select u-text--input u-color__input--bg u-color__border--input">
+                <select id='shipping_carrier_id' name='order[shipping_carrier_id]'>
+                  <option value="{{ order.shipping_carrier_id }}" {% if order.shipping_carrier_id %}selected{% endif %}>{{ order.shipping_carrier.name }}</option>
+                </select>
+              </label>
+              <div id='shipping_carrier_description' class="u-text--body"></div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endif %}

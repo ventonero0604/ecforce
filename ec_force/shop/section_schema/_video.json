@@ -1,0 +1,57 @@
+{
+  "id": "video",
+  "type": "video-section",
+  "name": {
+    "ja": "動画"
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "video_id",
+      "label": {
+        "ja": "YouTube 動画 ID"
+      }
+    },
+    {
+      "type": "selector",
+      "id": "video_height",
+      "label": {
+        "ja": "表示サイズ"
+      },
+      "options" : [
+        {
+          "value": "small",
+          "label": {
+            "ja": "小"
+          }
+        },
+        {
+          "value": "medium",
+          "label": {
+            "ja": "中"
+          }
+        },
+        {
+          "value": "large",
+          "label": {
+            "ja": "大"
+          }
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "id": "head",
+      "label": {
+        "ja": "見出し"
+      }
+    },
+    {
+      "type": "text",
+      "id": "subhead",
+      "label": {
+        "ja": "小見出し"
+      }
+    }
+  ]
+}

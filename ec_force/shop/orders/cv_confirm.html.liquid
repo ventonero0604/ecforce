@@ -1,0 +1,84 @@
+{%- comment -%}
+  To avoid layout shifts when loading asset files takes a long time!
+{%- endcomment -%}
+<style>.l-header { display: none; } </style>
+
+{{ 'shop/orders' | javascript_include_tag }}
+{{ 'shop/orders' | stylesheet_link_tag }}
+
+<!-- 注文情報確認画面 -->
+<main id="confirm-view" class="l-container cv-confirm-view" role="main">
+  <!-- 決済モジュールを呼び出すのに必要なタグ -->
+  <div id="ModuleJs"></div>
+
+  {%- capture countdown_timer -%}
+  <form action='/shop/order/cv_confirm' method='post' accept-charset="UTF-8" id="cv-confirm-form">
+    <input name="_method" type="hidden" value="put">
+    {% unless order.cv_upsell_page_timed_out? %}
+      {% if shop_form_settings['shop_cv_upsell_countdown'] %}
+        <div id="countdown-timer">
+          <center>
+            <h2>受付終了まで あと</h2>
+            <div class="timer-clock">
+              <div class="timer hour"></div>
+              <span class="hour">時間</span>
+              <div class="timer minute"></div>
+              <span class="minute">分</span>
+              <div class="timer second"></div>
+              <span class="second">秒</span>
+            </div>
+            </center>
+          </div>
+        {% endif %}
+        <br>
+        {% for item in order.order_items %}
+          {% if item.product_bundled_item_id == nil %}
+            <input id="cv_upsell_variant_id" name="order[order_items_attributes][][variant_id]" type="hidden" value="{{ item.variant.id }}">
+            <input name="order[order_items_attributes][][quantity]" type="hidden" value="{{ item.quantity }}">
+            <input name="order[order_items_attributes][][price]" type="hidden" value="{{ item.price }}">
+          {% endif %}
+        {% endfor %}
+
+        <input id="payment_method_id" name="order[payment_attributes][payment_method_id]" type="hidden" value="{{ order.payment.payment_method_id }}">
+        <input id="payment_times" name="order[payment_attributes][payment_times]" type="hidden" value="{{ order.payment.payment_times }}">
+        <input id="shipping_carrier_id" name="order[shipping_carrier_id]" type="hidden" value="{{ order.shipping_carrier_id }}">
+        <input id="payment_schedule" name="order[subs_order_attributes][payment_schedule]" type="hidden" value="{{ order.subs_order.payment_schedule }}">
+        <input id="payment_schedule_locked" name="order[subs_order_attributes][payment_schedule_locked]" type="hidden" value="{{ order.subs_order.payment_schedule_locked }}">
+
+        <input id="scheduled_to_be_delivered_every_x_month" name="order[subs_order_attributes][scheduled_to_be_delivered_every_x_month]" type="hidden" value="{{ order.subs_order.scheduled_to_be_delivered_every_x_month }}">
+        <input id="scheduled_to_be_delivered_on_xth_day" name="order[subs_order_attributes][scheduled_to_be_delivered_on_xth_day]" type="hidden" value="{{ order.subs_order.scheduled_to_be_delivered_on_xth_day }}">
+        <input id="scheduled_to_be_delivered_every_x_day" name="order[subs_order_attributes][scheduled_to_be_delivered_every_x_day]" type="hidden" value="{{ order.subs_order.scheduled_to_be_delivered_every_x_day }}">
+        <input id="scheduled_to_be_delivered_on_xth_day_of_week" name="order[subs_order_attributes][scheduled_to_be_delivered_on_xth_day_of_week]" type="hidden" value="{{ order.subs_order.scheduled_to_be_delivered_on_xth_day_of_week }}">
+        <input id="scheduled_to_be_delivered_every_x_day_of_week" name="order[subs_order_attributes][scheduled_to_be_delivered_every_x_day_of_week]" type="hidden" value="{{ order.subs_order.scheduled_to_be_delivered_every_x_day_of_week }}">
+        <input id="scheduled_2nd_delivery_date" name="order[subs_order_attributes][scheduled_to_be_delivered_at]" type="hidden" value="{{ order.subs_order.scheduled_to_be_delivered_at }}">
+        <input id="scheduled_2nd_delivery_time" name="order[subs_order_attributes][scheduled_delivery_time]" type="hidden" value="{{ order.subs_order.scheduled_delivery_time }}">
+        <input id="scheduled_1st_delivery_date" name="order[scheduled_to_be_delivered_at]" type="hidden" value="{{ order.scheduled_to_be_delivered_at }}">
+        <input id="scheduled_1st_delivery_time" name="order[scheduled_delivery_time]" type="hidden" value="{{ order.scheduled_delivery_time }}">
+        <input id="offer_name" name="order[offer_name]" type="hidden" value="{{ order.offer_name }}">
+        <input id="current_order_point_key" name="current_order_point_key" type="hidden" value="{{ preview_grant_plan_point_key }}">
+      {% endunless %}
+      <div id="expired_cv_confirm" style="display: none;">
+        <center>
+          <p>
+            有効期限を経過しました。
+            <br>
+            受付を終了させていただきます。
+            <br>
+          </p>
+        </center>
+      </div>
+  </form>
+  {%- endcapture -%}
+  
+  {% include 'ec_force/shop/orders/view_confirm.html' %}
+
+</main>
+
+{% content_for meta_description %}
+{% endcontent_for %}
+
+{% content_for meta_keywords %}
+{% endcontent_for %}
+
+{% content_for title %}
+{% endcontent_for %}

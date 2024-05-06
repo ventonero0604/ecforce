@@ -1,0 +1,277 @@
+{{ 'shop/customer/subs_orders/sets' | javascript_include_tag }}
+
+<main class="l-container js-main-container" role="main" id="set-edit-view">
+  <div class="l-container__row u-margin__top--60">
+    {{ 'notice' | flash: 'control-alert alert-success', 'text u-color__bg--bg u-color__text--alert' }}
+    {{ 'alert' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+    {{ 'error' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+    <header class="p-list_header">
+      <div class="p-list_header__inner">
+        <div class="p-list_header__inner__sub-container">
+          <h1 class="p-list_header__inner__title u-text--head">{{ set.name }}</h1>
+          <div class="c-list_tool">
+            <div class="c-list_tool__num u-text--subhead">{{ 'general.searches.all_search_result.value' | t }}{{ set_products.size }}{{ 'general.searches.search_result_count.value' | t }}</div>
+          </div>
+        </div>
+      </div>
+      {% if set.set_group? %}
+        <div class="p-list_header__inner">
+          <div class="p-list_header__inner__sub-container">
+            <div class='set_group_status p-list_header__inner__title u-text--head'></div>
+          </div>
+        </div>
+      {% endif %}
+    </header>
+  </div>
+  <div class="l-container__row u-margin__top--60">
+    <div class="p-set_selection">
+      <div class="p-set_selection__inner">
+        <div class="p-set_selection__content">
+          <div class="p-set_selection__content__list" id="menu_list">
+            {% for product in set_products %}
+              <div class="c-product_item product" id="filter-product-id-{{ product.id }}">
+                <form>
+                  <input class='variant-id set_group_item_variant_id' name='variant_id' type='hidden' value='{{ product.master.id }}'>
+                  <input class='product-id set_group_item_product_id' name='product_id' type='hidden' value='{{ product.id }}'>
+                  <div class="c-product_item__inner__eyecatch">
+                    {% if product.thumbnail.url %}
+                      {% assign thumbnail = product.thumbnail.url %}
+                    {% else %}
+                      {% assign thumbnail = 'missing' | image_url  %}
+                    {% endif %}
+                    <div class="c-product_item__inner__eyecatch__img" style="background-size:contain;background-image:url({{ thumbnail }})"></div>
+
+                    {% assign is_new = false %}
+                    {% if product.variants.size > 1 %}
+                      {% for variant in product.variants %}
+                        {% if variant.is_new %}
+                          {% assign is_new = true %}
+                        {% endif %}
+                      {% endfor %}
+                    {% else %}
+                      {% if product.master.is_new %}
+                        {% assign is_new = true %}
+                      {% endif %}
+                    {% endif %}
+
+                    {% assign is_sold = false %}
+                    {% if product.out_of_stock? %}
+                      {% assign is_sold = true %}
+                    {% endif %}
+
+                    {% if is_new or is_sold %}
+                      <div class="c-product_item__inner__eyecatch__tags">
+                        {% if is_new %}
+                          <div class="c-product_item__inner__eyecatch__tags__new u-color__bg--base">{{ 'products.general.new.value' | t }}</div>
+                        {% endif %}
+
+                        {% if is_sold %}
+                          <div class="c-product_item__inner__eyecatch__tags__soldout">{{ 'products.stock.sold_out.value' | t }}</div>
+                        {% endif %}
+                      </div>
+                    {% endif %}
+
+                  </div>
+                  <div class="c-product_item__inner__title u-text--subhead">{{ product.name }}</div>
+                  <div class="c-product_item__inner__category u-text--subhead">
+                    {% assign _category = '' %}
+                    {% for category in product.product_categories %}
+                      {% if category.product_category_visibility %}
+                        {% unless _category == '' %}
+                          {% assign _category = _category | append: ', ' %}
+                        {% endunless %}
+                        {% assign _category = _category | append: category.name %}
+                      {% endif %}
+                    {% endfor %}
+                    {{ _category }}
+                  </div>
+
+                  {% assign options = "" %}
+                  {% assign options = options | append: product.id | append: "," | append: subs_order.times %}
+                  {% assign options_array = options | split: "," %}
+                  {% assign recurring_time_price = options_array | liquid_recurring_time_price %}
+
+                  {% unless set.sale_method == 0 %}
+                    {% if product.master.list_price > recurring_time_price %}
+                      <div class="c-product_item__inner__price u-text--body">
+                        <span class="origin">&yen;{{ product.master.list_price | number_with_delimiter }}</span>
+                        <span class="sale u-color__text--alert">&yen;{{ recurring_time_price | number_with_delimiter }}</span>
+                        <span>&nbsp;({{ 'products.price.tax_included.value' | t }}</span>
+                        <span id="sale u-color__text--alert">&yen;{{ options_array | liquid_recurring_time_price_include_tax | number_with_delimiter }}</span>
+                        <span>)</span>
+                      </div>
+                    {% else %}
+                      <div class="c-product_item__inner__price u-text--body">
+                        <span class="price">&yen;{{ recurring_time_price | number_with_delimiter }}</span>
+                        <span>&nbsp;({{ 'products.price.tax_included.value' | t }}</span>
+                        <span id="price">&yen;{{ options_array | liquid_recurring_time_price_include_tax | number_with_delimiter }}</span>
+                        <span>)</span>
+                      </div>
+                    {% endif %}
+                  {% endunless %}
+                  <div class="fieldset">
+                    <div id="option_types">
+                      <div class="c-product_item__inner__variants option_template option_template_basic_theme" style='display:none'>
+                        <label class="label"></label>
+                        <div class="select_wrap u-color__border--input">
+                          <i class="u-icon--arrow"></i>
+                          <select>
+                            <option value=''>選択してください</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="c-product_item__inner__control">
+                    <span class="btn-cut u-color__text--sub u-color__border--input"><i class="u-icon--minus"></i><span>削除</span></span>
+                    <span class="btn-add u-color__text--sub u-color__border--input"><i class="u-icon--plus"></i><span>追加</span></span>
+                  </div>
+                </form>
+              </div>
+            {% endfor %}
+          </div>
+          {% if base_info.variant_changeable_on_mypage? and plan.recurring_set_product_changeable? %}
+            <form id="form-change-set" class="p-set_selection__content__change-sets" action="/shop/customer/subs_orders/{{ subs_order.number }}/sets/edit" accept-charset="UTF-8" method="get">
+              <div class="label_container">
+                <label class="set_label">
+                  {% if set.id == subs_order_set_id %}
+                    <input type="radio" name="set_id" id="set_id_{{ subs_order_set_id }}" value="{{ subs_order_set_id }}" checked="checked">
+                  {% else %}
+                    <input type="radio" name="set_id" id="set_id_{{ subs_order_set_id }}" value="{{ subs_order_set_id }}">
+                  {% endif %}
+                  <span class="u-color__border--accent u-color__bg--accent checkbox"></span>
+                  <span class="value">変更なし</span>
+                </label>
+              </div>
+              <div class="label_container">
+                {% for product in products %}
+                  {% if product.set.id != subs_order_set_id %}
+                    <label class="set_label">
+                      {% if set.id == product.set.id %}
+                        <input type="radio" name="set_id" id="set_id_{{ product.set.id }}" value="{{ product.set.id }}" checked="checked">
+                      {% else %}
+                        <input type="radio" name="set_id" id="set_id_{{ product.set.id }}" value="{{ product.set.id }}">
+                      {% endif %}
+                      <span class="u-color__border--accent u-color__bg--accent checkbox"></span>
+                      <span class="value">{{ product.name }}</span>
+                    </label>
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </form>
+          {% endif %}
+        </div>
+        <div class="p-set_selection__sidebar select_menu">
+          <div class="p-set_selection__sidebar__inner u-color__bg--base u-color__border--border">
+            <div class="p-set_selection__sidebar__header">
+              <div class='set_status u-color__text--sub'>
+                {% if set.quantity > 0 %}
+                  0/{{ set.quantity }}個を選択中
+                {% else %}
+                  {{ set.quantity_under_limit }}以上{{ set.quantity_upper_limit }}以下の件数を選んでください<br>0件
+                {% endif %}
+              </div>
+              <div class="button_container">
+                <div class='select_clear u-color__text--link'>
+                  <i class="u-icon--close"></i>
+                  <span>すべて削除する</span>
+                </div>
+                <div class="js-toggle-selections toggle_btn u-color__text--link">
+                  <span>選択中の商品を見る</span>
+                  <i class="u-icon--arrow"></i>
+                </div>
+              </div>
+            </div>
+            <form id="form" class="p-set_selection__sidebar__form" action="/shop/customer/subs_orders/{{ subs_order.number }}/sets" accept-charset="UTF-8" method="post">
+              <input name="utf8" type="hidden" value="&#x2713;" />
+              <input type="hidden" name="_method" value="patch" />
+              <input id="selected-filter" type="hidden" name="selected_filter" value="" />
+              <div class="p-set_selection__sidebar__form__inner js-selections-content">
+                <div class='js-select-clear-alt clear_btn_alt u-color__text--link'>
+                  <i class="u-icon--close"></i>
+                  <span>すべて削除する</span>
+                </div>
+                <div class='select_area p-set_selection__sidebar__list'>
+
+                  <!-- class:select_templateを基準に追加された商品が記載されます。-->
+                  <div class='select_template p-set_selection__sidebar__item u-color__border--border' style='display:none'>
+                    <div class="p-set_selection__sidebar__item__inner">
+                      <div class="thumbnail">
+                        <img class='thumbnail' src='' alt=''>
+                      </div>
+                      <div class="info">
+                        <p class='name u-font__both'>NoName</p>
+                        <div class="variant u-color__text--sub u-fXont__both option_values"></div>
+                        <div class="control u-color__border--border">
+                          <span class="cut"><i class="u-icon--minus u-color__text--sub"></i></span>
+                          <span class="quantity u-color__text--sub"></span>
+                          <span class="add"><i class="u-icon--plus u-color__text--sub"></i></span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="p-set_selection__sidebar__prices u-color__bg--bg js-selections-price" style="display:none">
+                <div class="price_title u-color__text--sub">
+                  ご注文金額
+                </div>
+                <div class="price_table u-color__border--border">
+                  <div class="price_part">
+                    <div class="price_label">小計</div>
+                    <div class="price_value u-font__en">
+                      <span>&yen;</span>
+                      <span class="subtotal_price">{{ set.set_subtotal_price }}</span>
+                    </div>
+                  </div>
+                  <div class="price_part">
+                    <div class="price_label">消費税</div>
+                    <div class="price_value u-font__en">
+                      <span>&yen;</span>
+                      <span class="tax_price">{{ set.set_tax_price }}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="price_total">
+                  <div class="price_label">合計</div>
+                  <div class="price_value u-font__en">
+                    <span>&yen;</span>
+                    <span class="total_price">{{ set.set_subtotal_price_include_tax }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="p-set_selection__sidebar__button" id="save-btn-content">
+                <input type="hidden" name="variant_id" value="{{ variant.id }}">
+                <input type="hidden" name="variant_product_id" value="{{ variant.product_id }}">
+                <input id="save-btn" class='submit u-color__bg--accent u-color__text--base' data-disable-with='保存中...' type='submit' value='更新する'>
+              </div>
+              {% if set.set_group? %}
+                <div class="p-set_selection__sidebar__button" id="set-group-next-btn-content" style="display:none">
+                  <input id="set-group-next-btn" class='u-color__bg--accent u-color__text--base' data-disable-with='選択中...' type='button' value='選択する' disabled>
+                </div>
+                <div class="p-set_selection__sidebar__button" id="set-group-before-btn-content" style="display:none">
+                  <input id="set-group-before-btn" class='u-color__bg--accent u-color__text--base' data-disable-with='選択中...' type='button' value='前を選択し直す'>
+                </div>
+              {% endif %}
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% if set.set_group? %}
+    {% include 'ec_force/shop/snippets/set_group_item.html' %}
+  {% endif %}
+</main>
+
+{% content_for meta_description %}
+{% endcontent_for %}
+
+{% content_for meta_keywords %}
+{% endcontent_for %}
+
+{% content_for title %}
+{% endcontent_for %}

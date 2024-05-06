@@ -1,0 +1,174 @@
+{{ 'shop/customer/base' | javascript_include_tag }}
+
+<main class="l-container" role="main">
+  <div class="l-container__row u-margin__top--60 u-margin__bottom--100">
+    <div class="p-account">
+      <div class="p-account__inner">
+        <div class="p-account__inner__menu u-color__border--border">
+          {% include 'ec_force/shop/snippets/sidebar.html' %}
+        </div>
+        <div class="p-account__inner__content">
+          <ul class="c-breadcrumbs">
+            <li class="c-breadcrumbs__item u-text--link">
+              <a class="c-breadcrumbs__item__inner" href="/shop/customer">{{ 'account.general.mypage.value' | t }}</a>
+            </li>
+            <li class="c-breadcrumbs__item u-text--body">
+              <span class="c-breadcrumbs__item__inner">{{ 'points.general.point_info.value' | t }}</span>
+            </li>
+          </ul>
+          <h1 class="p-account__inner__content__title u-text--head">{{ 'points.general.point_info.value' | t }}</h1>
+          {% if point_total == null or point_total == 0 %}
+            {% if current_customer.grant_plan_point == null or current_customer.grant_plan_point == 0 %}
+              <div class="u-text--body">
+                <br />
+                {{ 'points.general.point_no_available.value' | t }}
+                <br />
+              </div>
+            {% endif %}
+          {% endif %}
+          {% if point_total > 0 or current_customer.grant_plan_point > 0 %}
+            <div class="p-point_list">
+              <table class="c-account_table u-color__border--border">
+                <tbody>
+                  <tr class="u-color__border--border u-color__bg--bg">
+                    <th class="u-text--strong">{{ 'points.general.grant_plan_point.value' | t }}</th>
+                    <th class="u-text--strong">{{ 'points.general.customer_total_point.value' | t }}</th>
+                    {% if is_point_expired_date_taken_each_history == false and point_details.size <= 1 %}
+                      <th class="u-text--strong">{{ 'general.general.expired.value' | t }}</th>
+                    {% endif %}
+                  </tr>
+                    <td class="u-text--body" data-title="{{ 'points.general.grant_plan_point.value' | t }}：">{{ current_customer.grant_plan_point | number_with_delimiter }}</td>
+                    <td class="u-text--body" data-title="{{ 'points.general.customer_total_point.value' | t }}：">{{ current_customer.point_total | number_with_delimiter }}</td>
+                    {% if is_point_expired_date_taken_each_history == false and point_details.size <= 1 %}
+                      <td class="u-text--body" data-title="{{ 'general.general.expired.value' | t }}：">
+                        {% if current_customer.point_total == 0 %}
+                          -
+                        {% elsif latest_point_expiration == null %}
+                          {{ 'general.general.unlimited.value' | t }}
+                        {% else %}
+                          {{ latest_point_expiration | date: "%Y/%m/%d %H:%M:%S" }}
+                        {% endif %}
+                      </td>
+                    {% endif %}
+                </tbody>
+              </table>
+            </div>
+            {% if is_point_expired_date_taken_each_history or point_details.size > 1 %}
+              <h2 class="p-account__inner__content__title u-text--subhead">{{ 'general.general.expired_each.value' | t }}</h1>
+              <div class="p-point_list">
+                <table class="c-account_table u-color__border--border">
+                  <tr class="u-color__border--border u-color__bg--bg">
+                    <th class="u-text--strong">{{ 'points.general.customer_point.value' | t }}</th>
+                    <th class="u-text--strong">{{ 'general.general.expired.value' | t }}</th>
+                  </tr>
+                  {% for point_detail in point_details %}
+                    {% if point_detail.point_each and point_detail.point_each != 0 %}
+                      <tr>
+                        <td class="u-text--body" data-title="{{ 'points.general.customer_point.value' | t }}：">{{ point_detail.point_each }}</td>
+                        {% if point_detail.point_expired_at == null %}
+                          <td class="u-text--body" data-title="{{ 'general.general.expired.value' | t }}：">{{ 'general.general.unlimited.value' | t }}</td>
+                        {% else %}
+                          <td class="u-text--body" data-title="{{ 'general.general.expired.value' | t }}：">{{ point_detail.point_expired_at | date: "%Y/%m/%d %H:%M:%S" }}</td>
+                        {% endif %}
+                      </tr>
+                    {% endif %}
+                  {% endfor %}
+                </table>
+              </div>
+            {% endif %}
+          {% endif %}
+          {% if base_info.use_point_for_customer_invitation and base_info.point_event_invite %}
+            <h2 class="p-account__inner__content__title u-text--subhead">{{ 'customer.invite_code.invite_code.value' | t }}</h2>
+            <div class="p-point_list">
+              {{ 'notice' | flash: 'control-alert alert-success', 'text u-color__bg--bg u-color__text--alert' }}
+              {{ 'error' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+              {{ 'alert' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+              {% if current_customer.invite_codes != empty %}
+                <table class="c-account_table u-color__border--border">
+                  <tbody>
+                    <tr class="u-color__border--border u-color__bg--bg">
+                      <th class="u-text--strong">{{ 'customer.invite_code.invite_code.value' | t }}</th>
+                      <th class="u-text--strong">{{ 'customer.invite_code.used_times.value' | t }}</th>
+                      <th class="u-text--strong">{{ 'customer.invite_code.available_invited_times.value' | t }}</th>
+                      <th class="u-text--strong">{{ 'customer.invite_code.invite_codes_invitee_limit.value' | t }}</th>
+                    </tr>
+                    {% for invite_code in invite_codes %}
+                      <tr class="u-color__border--border">
+                        <td class="u-text--body" data-title="{{ 'customer.invite_code.invite_code.value' | t }}：">{{ invite_code.number }}</td>
+                        <td class="u-text--body" data-title="{{ 'customer.invite_code.used_times.value' | t }}：">{{ invite_code.invitees | size }}</td>
+                        <td class="u-text--body" data-title="{{ 'customer.invite_code.available_invited_times.value' | t }}：">
+                          {% if base_info.invite_codes_invitee_limit == 0 %}
+                            {{ 'general.general.unlimited.value' | t }}
+                          {% else %}
+                            {{ invite_code.available_invited_times }}
+                          {% endif %}
+                        </td>
+                        <td class="u-text--body" data-title="{{ 'customer.invite_code.invite_codes_invitee_limit.value' | t }}：">
+                          {% if base_info.invite_codes_invitee_limit == 0 %}
+                            {{ 'general.general.unlimited.value' | t }}
+                          {% else %}
+                            {{ base_info.invite_codes_invitee_limit }}
+                          {% endif %}
+                        </td>
+                      </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              {% endif %}
+              {% if current_customer.can_create_invite_code? %}
+                <!-- 招待コード発行ボタン -->
+                <a class="p-address_list__add u-text--btn u-color__btn--bg js-notransition" rel="nofollow" data-method="post" href="/shop/customer/points">{{ 'customer.invite_code.new_invite_code.value' | t }}</a>
+              {% else %}
+                <!-- 招待コード発行上限時メッセージ -->
+                <span class="u-text--body">{{ 'customer.invite_code.no_longer_issue_invitation_code.value' | t }}</span>
+              {% endif %}
+            </div>
+          {% endif %}
+          {% if points != null and points.size > 0 %}
+            <h2 class="p-account__inner__content__title u-text--subhead">{{ 'points.general.point_history.value' | t }}</h2>
+            <div class="p-point_list">
+              <table class="c-account_table u-color__border--border">
+                <tbody>
+                  <tr class="u-color__border--border u-color__bg--bg">
+                    <th class="u-text--strong">{{ 'general.general.updated_at.value' | t }}</th>
+                    <th class="u-text--strong">{{ 'points.general.point_event.value' | t }}</th>
+                    <th class="u-text--strong">{{ 'orders.general.order_number.value' | t }}</th>
+                    <th class="u-text--strong">{{ 'points.general.increase_decrease_points.value' | t }}</th>
+                    <th class="u-text--strong">{{ 'points.general.total_points.value' | t }}</th>
+                    {% if is_point_expired_date_taken_each_history or point_details.size > 1 %}
+                      <th class="u-text--strong">{{ 'general.general.expired.value' | t }}</th>
+                    {% endif %}
+                  </tr>
+                  {% for point in points %}
+                    {% if point.point != 0 %}
+                      <tr class="u-color__border--border">
+                        <td class="u-text--body" data-title="{{ 'general.general.updated_at.value' | t }}：">{{ point.created_at | date: "%Y/%m/%d" }}</td>
+                        <td class="u-text--body" data-title="{{ 'points.general.point_event.value' | t }}：">{{ point.point_event.name }}</td>
+                        <td class="u-text--body" data-title="{{ 'orders.general.order_number.value' | t }}：">
+                          {% if point.order.deleted_at != null or point.order.customer.id != current_customer.id or point.point_event.invite_coupon? or point.order == null %}
+                            -
+                          {% else %}
+                            <a class="u-text--link" href="/shop/customer/orders/{{ point.order.number }}">{{ point.order.number }}</a>
+                          {% endif %}
+                        </td>
+                        <td class="u-text--body" data-title="{{ 'points.general.increase_decrease_points.value' | t }}：">{{ point.point | number_with_delimiter }}</td>
+                        <td class="u-text--body" data-title="{{ 'points.general.total_points.value' | t }}：">{{ point.point_total | number_with_delimiter }}</td>
+                        {% if is_point_expired_date_taken_each_history or point_details.size > 1 %}
+                          {% if expirations[point.id] %}
+                            <td class="u-text--body" data-title="{{ 'general.general.expired.value' | t }}：">{{ expirations[point.id] }}</td>
+                          {% else %}
+                            <td></td>
+                          {% endif %}
+                        {% endif %}
+                      </tr>
+                    {% endif %}
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

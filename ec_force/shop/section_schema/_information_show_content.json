@@ -1,0 +1,30 @@
+{
+  "id": "information_show_content",
+  "type": "information_show_content-section",
+  "name": {
+    "ja": "コンテンツ"
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "date",
+      "label": {
+        "ja": "日付表示"
+      }
+    },
+    {
+      "type": "checkbox",
+      "id": "sns",
+      "label": {
+        "ja": "SNSシェア表示"
+      }
+    },
+    {
+      "type": "text",
+      "id": "share_title",
+      "label": {
+        "ja": "シェア見出し"
+      }
+    }
+  ]
+}

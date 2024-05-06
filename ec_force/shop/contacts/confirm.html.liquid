@@ -1,0 +1,59 @@
+{{ 'shop/contacts' | javascript_include_tag }}
+<main class="l-container" role="main">
+  <div class="l-container__row u-margin__top--60">
+    <header class="p-page_header">
+      <div class="p-page_header__inner">
+        <h1 class="p-page_header__inner__title u-text--head">{{ 'contact.general.contact_title.value' | t }}</h1>
+      </div>
+    </header>
+  </div>
+  <div class="l-container__row u-margin__top--60 u-margin__bottom--100">
+    <!-- フラッシュメッセージ -->
+    {{ 'notice' | flash: 'control-alert alert-success', 'text u-color__bg--bg u-color__text--alert' }}
+    {{ 'alert' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+    {{ 'error' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+    <form class="p-account_form" role="form" action="/shop/contact/confirm" method="post">
+      {% csrf_meta_tags %}
+      <input name="_method" type="hidden" value="put">
+      <div class="p-account_form__inner">
+        <table class="c-form_table--confirm">
+          <tbody>
+            <!-- お名前 -->
+            <tr class="u-color__border--border">
+              <th class="u-text--body">{{ 'customer.general.name.value' | t }}</th>
+              <td class="u-text--body">{{ contact.address.full_name }}</td>
+            </tr>
+            <!-- お名前（カナ） -->
+            <tr class="u-color__border--border">
+              <th class="u-text--body">{{ 'customer.general.kana.value' | t }}</th>
+              <td class="u-text--body">{{ contact.address.full_kana }}</td>
+            </tr>
+            <!-- 電話番号 -->
+            <tr class="u-color__border--border">
+              <th class="u-text--body">{{ 'customer.general.tel.value' | t }}</th>
+              <td class="u-text--body">{{ contact.address.full_tel }}</td>
+            </tr>
+            <!-- メールアドレス -->
+            <tr class="u-color__border--border">
+              <th class="u-text--body">{{ 'customer.general.email.value' | t }}</th>
+              <td class="u-text--body">{{ contact.customer.email }}</td>
+            </tr>
+            <!-- お問い合わせ種別 -->
+            <tr class="u-color__border--border">
+              <th class="u-text--body">{{ 'contact.general.contact_types.value' | t }}</th>
+              <td class="u-text--body">{{ contact.contact_types | map: 'name' | join: '' }}</td>
+            </tr>
+            <tr class="u-color__border--border">
+              <th class="u-text--body">{{ 'contact.general.content.value' | t }}</th>
+              <td class="u-text--body">{{ contact.content | escape }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="p-account_form__inner__bottom">
+          <button class="p-account_form__inner__bottom__btn u-text--btn u-color__btn--bg" type="submit">{{ 'general.action.submit.value' | t }}</button>
+          <a class="p-account_form__inner__bottom__link u-text--link" href="/shop/contact">{{ 'general.action.fix_input_content.value' | t }}</a>
+        </div>
+      </div>
+    </form>
+  </div>
+</main>

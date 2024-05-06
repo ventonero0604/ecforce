@@ -1,0 +1,25 @@
+<!-- 連携用顧客番号 -->
+{% if guest_flag and customer_signed_in != true and shop_form_settings['link_number'] %}
+  <div class="p-checkout__list__block u-color__border--border">
+    <div class="p-checkout__list__block__inner">
+      <table class="c-form_table">
+        <tbody>
+          <tr>
+            <th></th>
+            <td class="po-middle">
+              <label class='c-form_table__checkbox  checkbox-inline check-old'>
+                <input class='u-color__border--input' id="old" name="order[customer_attributes][link_number]" type="checkbox" {% if shop_form_settings['link_number_default_signup'] %}checked{% endif %} >
+                <span class="c-form_table__checkbox__frame u-color__btn"></span>
+                <span class="c-form_table__checkbox__text u-text--body">{{ shop_form_settings['link_number_checkbox_label'] }}</span>
+              </label>
+              <div class="c-form_table__fill-code" id="toggle">
+                <p class="u-text--input c-form_table__fill-code__text ">{{ shop_form_settings['link_number_description'] }}</p>
+                <input class="u-text--input u-color__input--bg u-color__border--input" type="text" name="order[customer_attributes][link_number]" placeholder="{{ shop_form_settings['link_number_placeholder'] }}">
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endif %}

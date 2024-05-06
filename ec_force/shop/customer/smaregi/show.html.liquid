@@ -1,0 +1,39 @@
+{{ 'shop/customer/smaregi' | javascript_include_tag }}
+<main class="l-container" role="main">
+  <div class="l-container__row u-margin__top--60 u-margin__bottom--100">
+    {{ 'notice' | flash: 'control-alert alert-success', 'text u-color__bg--bg u-color__text--alert' }}
+    {{ 'alert' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+    {{ 'error' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+    <div class="p-account">
+      <div class="p-account__inner">
+        <div class="p-account__inner__menu u-color__border--border">
+          {% include 'ec_force/shop/snippets/sidebar.html' %}
+        </div>
+        <div class="p-account__inner__content">
+          <ul class="c-breadcrumbs">
+            <li class="c-breadcrumbs__item u-text--link">
+              <a class="c-breadcrumbs__item__inner" href="/shop/customer">{{ 'account.general.mypage.value' | t }}</a>
+            </li>
+            <li class="c-breadcrumbs__item u-text--body">
+              <span class="c-breadcrumbs__item__inner">{{ 'account.smaregi.barcode_title.value' | t }}</span>
+            </li>
+          </ul>
+          <div class="p-smaregi" id="customer-smaregi-view">
+            <header class="p-smaregi__header">
+              <div class="p-list_header__inner">
+                <h1 class="p-list_header__inner__title u-text--head">{{ 'account.smaregi.barcode_title.value' | t }}</h1>
+              </div>
+            </header>
+            <div class="p-smaregi___barcode smaregi_barcode">
+              {% if barcode_url != null and barcode_url.size > 0 %}
+                <img src="{{ barcode_url }}">
+              {% elsif smaregi_message != null and smaregi_message.size > 0 %}
+                <span>{{ smaregi_message }}</span>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

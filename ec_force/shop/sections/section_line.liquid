@@ -1,0 +1,11 @@
+{% if section.disabled == "true" or section.disabled == true %}
+  <section data-section-id="{{id}}" data-section-type="{{section.type}}" style="display: none;">
+{% else %}
+  <section data-section-id="{{id}}" data-section-type="{{section.type}}">
+{% endif %}
+  <div class="l-container__row">
+    <div class="u-margin__top--80 u-margin__bottom--80">
+      <hr class="u-color__border--main section_line">
+    </div>
+  </div>
+</section>

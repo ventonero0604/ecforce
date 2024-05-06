@@ -1,0 +1,111 @@
+<section data-section-id='products_show_review' data-section-type='products_show_review-section' style='background: {{section.settings.color_products_show_review_bg}};'>
+  {% if section.settings.review == true or section.settings.review == 'true' %}
+    <div class="l-container__row u-margin__top--60 p-review u-color__border--border">
+      <div class="p-review__inner">
+        <h2 class="p-review__inner__title u-text--head">{{ section.settings.head | escape }}</h2>
+        {% comment %} review form {% endcomment %}
+        {% assign is_writable = product.id | check_review_writing_rule %}
+        {% assign is_writable_by_sign_in = customer_signed_in | can_review_write_by_sign_in %}
+        {% if is_writable %}
+          {% unless customize_preview_mode %}
+            {{ 'notice' | flash: 'control-alert alert-success', 'text u-color__bg--bg u-color__text--alert' }}
+            {{ 'alert' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+            {{ 'error' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+          {% endunless %}
+          <div class="p-review__inner__entry">
+            <button class="p-review__inner__entry__btn u-text--link">{{ 'products.reviews.review_post.value' | t }}</button>
+            <div class="p-review__inner__entry__content">
+              <div class="p-review__inner__entry__content__title u-text--head">{{ 'products.reviews.review_title.value' | t }}</div>
+              <div class="p-review__inner__entry__content__notes u-text--body"><span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span>{{ 'general.message.input_required.value' | t }}</div>
+              <form class="p-review__inner__entry__content__form" action="/shop/products/{{ product.id }}/review" method="post">
+                {% authenticity_token_tag %}
+                <table class="c-form_table">
+                  <tbody>
+                    <tr>
+                      <th class="u-text--body">{{ 'products.reviews.review_name.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+                      <td><input class="u-text--input u-color__input--bg u-color__border--input validate[required]" type="text" name="review[name]" id="review_name"></td>
+                    </tr>
+                    <tr>
+                      <th class="u-text--body">{{ 'customer.general.email.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+                      <td><input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[email]]" type="text" {% if customer_signed_in %}disabled{% endif %} name="email" value="{{ current_customer.email }}" id="review_email"></td>
+                    </tr>
+                    <tr>
+                      <th class="u-text--body" class="is-star">{{ 'products.reviews.recommended_level.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+                      <td>
+                        <div class="c-review_star" data-score="0">
+                          <label class="c-review_star__item">
+                            <i class="c-review_star__item__icon u-icon--star_blank"></i>
+                            <input class="c-review_star__item__input validate[required,custom[number]]" type="radio" name="review[star]" value="1">
+                          </label>
+                          <label class="c-review_star__item">
+                            <i class="c-review_star__item__icon u-icon--star_blank"></i>
+                            <input class="c-review_star__item__input validate[required,custom[number]]" type="radio" name="review[star]" value="2">
+                          </label>
+                          <label class="c-review_star__item">
+                            <i class="c-review_star__item__icon u-icon--star_blank"></i>
+                            <input class="c-review_star__item__input validate[required,custom[number]]" type="radio" name="review[star]" value="3">
+                          </label>
+                          <label class="c-review_star__item">
+                            <i class="c-review_star__item__icon u-icon--star_blank"></i>
+                            <input class="c-review_star__item__input validate[required,custom[number]]" type="radio" name="review[star]" value="4">
+                          </label>
+                          <label class="c-review_star__item">
+                            <i class="c-review_star__item__icon u-icon--star_blank"></i>
+                            <input class="c-review_star__item__input validate[required,custom[number]]" type="radio" name="review[star]" value="5">
+                          </label>
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <th class="u-text--body">{{ 'products.reviews.title.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+                      <td><input class="u-color--input u-color__input--bg u-color__border--input validate[required,maxSize[20]]" type="text" name="review[title]" id="review_title"></td>
+                    </tr>
+                    <tr>
+                      <th class="u-text--body">{{ 'products.reviews.comment.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+                      <td><textarea class="u-color--input u-color__input--bg u-color__border--input validate[required,maxSize[400]]" rows="5" name="review[comment]" id="review_comment"></textarea></td>
+                    </tr>
+                  </tbody>
+                </table>
+                <button class="p-review__inner__entry__content__form__cancel u-text--link" type="button">{{ 'general.action.cancel.value' | t }}</button>
+                <button class="p-review__inner__entry__content__form__submit u-text--btn u-color__btn--bg" type="submit">{{ 'products.reviews.post.value' | t }}</button>
+              </form>
+            </div>
+          </div>
+        {% elsif is_writable_by_sign_in %}
+          <div class="p-review__inner__entry">
+            <a class="p-review__inner__entry__btn u-text--link" href="/shop/customers/sign_in">{{ 'products.reviews.login_and_review.value' | t }}</a>
+          </div>
+        {% comment %}
+          書き込み権限なし：権限設定がない場合は出力不要
+        {% endcomment %}
+        {% endif %}
+
+        {% comment %} reviews {% endcomment %}
+        {% assign is_readable = product.id | check_review_reading_rule %}
+        {% if is_readable %}
+          {% if reviews.size > 0 %}
+            <ul class="p-review__inner__list">
+              {% for review in reviews %}
+                <li class="p-review__inner__list__item u-color__border--border">
+                  <div class="c-review_item_detail">
+                    <div class="c-review_item_detail__left">
+                      <div class="c-review_item_detail__title">{{ review.name }}</div>
+                      <div class="c-review_item_detail__time u-color__text--sub">{{ review.created_at | date:'%Y/%m/%d %H:%M:%S' }}</div>
+                    </div>
+                    <div class="c-review_item_detail__right">
+                      <div class="c-review_item_detail__star">{{ review.display_star }}</div>
+                      <div class="c-review_item_detail__text">{{ review.comment | simple_format }}</div>
+                    </div>
+                  </div>
+                </li>
+              {% endfor %}
+            </ul>
+            <button class="p-review__inner__all__btn u-text--btn u-color__btn--bg" type="button">{{ 'general.action.view_more.value' | t }}</button>
+          {% else %}
+            <p class="u-text--body" style="text-align:center;">{{ 'products.reviews.no_reviews.value' | t }}</p>
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+</section>

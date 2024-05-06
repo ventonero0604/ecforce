@@ -1,0 +1,34 @@
+{
+  "id": "carts_show_content",
+  "type": "carts_show_content-section",
+  "name": {
+    "ja": "コンテンツ"
+  },
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "login_form_on_top",
+      "label": {
+        "ja": "ログインフォームを上部に表示"
+      }
+    },
+    {
+      "type": "checkbox",
+      "id": "guest",
+      "label": {
+        "ja": "ゲスト購入有効"
+      }
+    },
+    {
+      "type": "link",
+      "id": "body",
+      "link_url": "/admin/themes/{theme.id}/languages?type=Account",
+      "link_text": {
+        "ja": "ショップ管理から設定してください"
+      },
+      "label": {
+        "ja": "ボタンの文言変更"
+      }
+    }
+  ]
+}

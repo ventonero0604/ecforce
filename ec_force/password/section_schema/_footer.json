@@ -1,0 +1,29 @@
+{
+  "id": "password_footer",
+  "type": "password_footer-section",
+  "name": {
+    "ja": "パスワード保護フッター"
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "text",
+      "label": {
+        "ja": "テキスト"
+      }
+    },
+    {
+      "type": "range",
+      "id": "text_font_size",
+      "label": {
+        "ja": "テキストフォントサイズ"
+      },
+      "min": 10,
+      "max": 15,
+      "step": 1,
+      "unit": {
+        "ja": "px"
+      }
+    }
+  ]
+}

@@ -1,0 +1,130 @@
+{% if section.disabled == true or section.disabled == 'true' %}
+  <section data-section-id="{{id}}" data-section-type="{{section.type}}" style="display: none;">
+{% else %}
+  <section data-section-id="{{id}}" data-section-type="{{section.type}}">
+{% endif %}
+{% if smartphone %}
+  {% assign slider_items = sliders_sp %}
+{% else %}
+  {% assign slider_items = sliders %}
+{% endif %}
+  {% if slider_items.size > 0 %}
+    <div class="p-kv_slider splide">
+      <div class="p-kv_slider__track splide__track">
+        {% if section.settings.slideshow_switch == true or section.settings.slideshow_switch == 'true' %}
+          <ul class="p-kv_slider__track__list splide__list" data-interval="{{section.settings.slideshow_switching_interval}}">
+        {% else %}
+          <ul class="p-kv_slider__track__list splide__list">
+        {% endif %}
+          {% for slider in slider_items %}
+            <li class="p-kv_slider__track__list__item splide__slide">
+              {% if slider.image.size > 0 %}
+                {% assign image_url = slider.image | generate_image_url: theme_file_root_path %}
+                <div class="p-kv_slider__track__list__item__inner" style="background-image:url('{{ image_url }}')">
+              {% else %}
+                <div class="p-kv_slider__track__list__item__inner" style="background-image:url('{{ missing_image }}')">
+              {% endif %}
+                <div class="p-kv_slider__track__list__item__inner__info">
+                  <div class="p-kv_slider__track__list__item__inner__info__label u-text--body--overlay">{{ slider.slide_subtitle | escape }}</div>
+                  <div class="p-kv_slider__track__list__item__inner__info__title u-text--head--overlay">{{ slider.slide_title | escape }}</div>
+                  {% if slider.slide_link.size > 0 and slider.button_label.size > 0 %}
+                    <a class="p-kv_slider__track__list__item__inner__info__btn u-color__btn--bg--overlay u-text--btn--overlay" href="{{ slider.slide_link }}">{{ slider.button_label | escape }}</a>
+                  {% endif %}
+                  <div class="p-kv_slider__track__list__item__inner__info">
+                  </div>
+                </div>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="p-kv_slider__nav splide__arrows">
+        <button class="p-kv_slider__nav__arrow p-kv_slider__nav__arrow--prev splide__arrow splide__arrow--prev">
+          <i class="u-icon--arrow u-text--color--overlay"></i>
+        </button>
+        <ul class="p-kv_slider__nav__pagination">
+          {% for slider in slider_items %}
+            {% if forloop.index == 1 %}
+              <li class="p-kv_slider__nav__pagination__dot is-current">
+            {% else %}
+              <li class="p-kv_slider__nav__pagination__dot">
+            {% endif %}
+              <button class="u-color__bg--base" type="button"></button>
+            </li>
+          {% endfor %}
+        </ul>
+        <button class="p-kv_slider__nav__arrow p-kv_slider__nav__arrow--next splide__arrow splide__arrow--next">
+          <i class="u-icon--arrow u-text--color--overlay"></i>
+        </button>
+      </div>
+    </div>
+  {% endif %}
+</section>
+
+{% schema %}
+{
+  "id": "slideshow",
+  "type": "slideshow-section",
+  "name": {
+    "ja": "スライドショー"
+  },
+  "settings": [
+    {
+      "type": "header",
+      "id": "slideshow_contents_header",
+      "label": {
+        "ja": "コンテンツ"
+      }
+    },
+    {
+      "type": "image_content",
+      "id": "slideshow_image_sliders",
+      "label": {
+        "ja": "画像スライド"
+      },
+      "image_block": {
+        "type": "image_block",
+        "settings": [
+          {
+            "type": "image_picker",
+            "id": "image",
+            "label": {
+              "ja": "画像"
+            }
+          },
+          {
+            "type": "text",
+            "id": "slide_title",
+            "label": {
+              "ja": "見出し"
+            },
+            "default": "画像スライド"
+          },
+          {
+            "type": "text",
+            "id": "slide_subtitle",
+            "label": {
+              "ja": "小見出し"
+            },
+            "default": "あなたのブランドのストーリーをビデオや画像で伝える"
+          },
+          {
+            "type": "text",
+            "id": "button_label",
+            "label": {
+              "ja": "ボタンラベル"
+            }
+          },
+          {
+            "type": "text",
+            "id": "slide_link",
+            "label": {
+              "ja": "ボタンリンク"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
+{% endschema %}

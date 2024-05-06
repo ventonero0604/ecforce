@@ -1,0 +1,149 @@
+<div id="view-free_columns" class="p-checkout__list__block u-color__border--border">
+  {% if base_info.use_free_columns? and shop_form_settings['free_column'] and liquid_custom_field != empty %}
+  <div class="p-checkout__list__block__inner">
+    <h2 class="p-checkout__list__block__inner__title u-text--subhead">{{ shop_form_settings['free_column_title'] }}</h2>
+    {% for custom_info_hash in liquid_custom_field %}
+    <div id="category-{{ custom_info_hash[0] }}" class="category-wrapper">
+      {% for seq_hash in custom_info_hash[1] %}
+      <div id="category-{{ custom_info_hash[0] }}-{{ seq_hash[0] }}" class="p-checkout__list__block__inner__category category-container">
+        {% assign info = seq_hash[1] %}
+          {% if info['category'] | escape %}
+          <div class="p-checkout__list__block__inner__category__title u-color__border--border">
+            <h3 class="u-text--subhead category-caption-text">{{ info['category'] }}</h3>
+            {% if info['category_multiple_answer'] %}
+              <button class="u-color__text--alert category-btn-wrapper category-minus" data-id="{{ custom_info_hash[0] }}" data-seq="{{ seq_hash[0] }}" style="display: none;" type="button">
+                <i class="u-icon--close"></i>
+                <span class="category-btn">削除</span>
+              </button>
+            {% endif %}
+          </div>
+          {% endif %}
+          <table class="c-form_table c-form_table--edit">
+            <tbody>
+            {% for i_hash in info['info'] %}
+              {% assign i = i_hash[1] %}
+              {%- capture required_class -%}
+                {%- if i['required'] -%} validate[required] {%- endif -%}
+              {%- endcapture -%}
+              {%- capture column_id -%}
+                order_free_columns_{{ custom_info_hash[0] }}_{{ seq_hash[0] }}_{{ i['free_column_id'] }}
+              {%- endcapture -%}
+              {%- capture column_name -%}
+                order[free_columns][{{ custom_info_hash[0] }}][{{ seq_hash[0] }}][{{ i['free_column_id'] }}]
+              {%- endcapture -%}
+              <tr>
+                <th class="u-text--body">
+                  <label for="{{ column_id }}">
+                    <span class="form_label_ec">{{ i['label'] | escape }}
+                    {%- if i['required'] -%}<span class="u-color__text--alert">*</span>{%- endif -%}
+                    </span>
+                    {% if i['maxlength'] and i['type'] == 'EcForce::FreeColumn::Textarea' %}
+                      <span>（残り<span data-feedback-maxlength="{{ column_id }}"></span>文字）</span>
+                    {% endif %}
+                  </label>
+                </th>
+                <td class="u-text--body">
+                {%- capture min -%} {{ i['minlength'] | default: ''  }} {%- endcapture -%}
+                {%- capture max -%} {{ i['maxlength'] | default: ''  }} {%- endcapture -%}
+                {% case i['type'] %}
+                  {% when 'EcForce::FreeColumn::Textarea' %}
+                    {% for v in i['value'] %}
+                      {% if i['is_valid_format'] == true %}{% assign value = v | escape %}{% else %}{% assign value = '' %}{% endif %}
+                      <textarea class="u-color__border--input free_columns form-control input-sm validate[minSize[{{ min }}],maxSize[{{ max }}]] send_feedback_maxlength {{ required_class }}" data-id="{{ i['free_column_id'] }}" data-prompt-position="topLeft" placeholder="{{ i['placeholder'] }}" rows="5" maxlength="{{ max }}" name="{{ column_name }}" id="{{ column_id }}">{{ value }}</textarea>
+                    {% endfor %}
+                  {% when 'EcForce::FreeColumn::Input' %}
+                    {% for v in i['value'] %}
+                      {% if i['is_valid_format'] == true %}{% assign value = v | escape %}{% else %}{% assign value = '' %}{% endif %}
+                      {% case i['input_type_name'] %}
+                        {% when 'メール' %}
+                          <input type="email" class="u-color__border--input free_columns form-control input-sm validate[custom[email],minSize[{{ min }}],maxSize[{{ max }}]] {{ required_class }}" data-id="{{ i['free_column_id'] }}" data-prompt-position="topLeft" value="{{ value }}" placeholder="{{ i['placeholder'] }}" name="{{ column_name }}" id="{{ column_id }}" maxlength="{{ max }}" size="{{ max }}">
+                        {% when '日付' %}
+                          <input type="text" class="u-color__border--input free_columns form-control input-sm datepicker validate[minSize[{{ min }}],maxSize[{{ max }}],custom[date]] {{ required_class }}" data-id="{{ i['free_column_id'] }}" data-prompt-position="topLeft" value="{{ value }}" placeholder="{{ i['placeholder'] }}" name="{{ column_name }}" id="{{ column_id }}" maxlength="{{ max }}" size="{{ max }}">
+                        {% when '数字' %}
+                          <input type="number" class="u-color__border--input free_columns form-control input-sm validate[custom[integer],min[{{ min }}],max[{{ max }}]] {{ required_class }}" data-id="{{ i['free_column_id'] }}" data-prompt-position="topLeft" value="{{ value }}" placeholder="{{ i['placeholder'] }}" name="{{ column_name }}" id="{{ column_id }}" maxlength="{{ max }}" size="{{ max }}">
+                        {% when 'テキスト' %}
+                          <input type="text" class="u-color__border--input free_columns form-control input-sm validate[minSize[{{ min }}],maxSize[{{ max }}]] {{ required_class }}" data-id="{{ i['free_column_id'] }}" data-prompt-position="topLeft" value="{{ value }}" placeholder="{{ i['placeholder'] }}" name="{{ column_name }}" id="{{ column_id }}" maxlength="{{ max }}" size="{{ max }}">
+                      {% endcase %}
+                    {% endfor %}
+                  {% else %}
+                    {% assign free_column_options = i['options'] %}
+                    {% case i['type'] %}
+                      {% when 'EcForce::FreeColumn::Checkbox' %}
+                        {% for option in free_column_options %}
+                          {% if option['default'] == true %}{% assign default = '1' %}{% else %}{% assign default = '0' %}{% endif %}
+                          {% if i['value'] contains option['value'] %}{% assign checked = 'checked="checked"' %}{% else %}{% assign checked = "" %}{% endif %}
+                          {% if i['value'].size == 1 and i['value'][0] == '' and option['default'] == true %}{% assign checked = 'checked="checked"' %}{% elsif i['is_valid_format'] == false and option['default'] == true %}{% assign checked = 'checked="checked"' %}{% endif %}
+                          <div class="c-form_table__newsletter checkbox-wrapper">
+                            <label class="c-form_table__checkbox checkbox__top" for="{{ column_id }}_{{ option['key'] }}">
+                              <input class="u-color__border--input free_columns {{ required_class }}" data-id="{{ i['free_column_id'] }}" data-prompt-position="topLeft" data-default="{{ default }}" type="checkbox" value="{{ option['key'] }}" {{ checked }} name="{{ column_name }}[]" id="{{ column_id }}_{{ option['key'] }}">
+                              <span class="c-form_table__checkbox__frame u-color__border--accent"></span>
+                              <span class="c-form_table__checkbox__text">{{ option['value'] | escape }}</span>
+                            </label>
+                          </div>
+                        {% endfor %}
+                      {% when 'EcForce::FreeColumn::Radio' %}
+                        {% if i['required'] %}
+                          <input class="free_columns" data-id="{{ i['free_column_id'] }}" data-prompt-position="topLeft" type="hidden" name="{{ column_name }}">
+                        {% else %}
+                          <div class="radio-wrapper">
+                            <label class="c-form_table__radio c-form_table__newsletter radio__top" for="{{ column_id }}_">
+                              <input class="u-color__border--input free_columns {{ required_class }}" data-id="{{ i['free_column_id'] }}" data-prompt-position="topLeft" data-default="0" type="radio" value="" checked="checked" name="{{ column_name }}" id="{{ column_id }}_">
+                              <span class="c-form_table__radio__frame u-color__bg--accent"></span>
+                              <span class="c-form_table__radio__text">未設定</span>
+                            </label>
+                          </div>
+                        {% endif %}
+                        {% for option in free_column_options %}
+                          {% if option['default'] == true %}{% assign default = '1' %}{% else %}{% assign default = '0' %}{% endif %}
+                          {% if i['value'] contains option['value'] %}{% assign checked = 'checked="checked"' %}{% else %}{% assign checked = "" %}{% endif %}
+                          {% if i['value'].size == 1 and i['value'][0] == '' and option['default'] == true %}{% assign checked = 'checked="checked"' %}{% elsif i['is_valid_format'] == false and option['default'] == true %}{% assign checked = 'checked="checked"' %}{% endif %}
+                          <div class="radio-wrapper">
+                            <label class="c-form_table__radio c-form_table__newsletter radio__top" for="{{ column_id }}_{{ option['key'] }}">
+                              <input class="u-color__border--input free_columns {{ required_class }}" data-id="{{ i['free_column_id'] }}" data-prompt-position="topLeft" data-default="{{ default }}" type="radio" value="{{ option['key'] }}" {{ checked }} name="{{ column_name }}" id="{{ column_id }}_{{ option['key'] }}">
+                              <span class="c-form_table__radio__frame u-color__bg--accent"></span>
+                              <span class="c-form_table__radio__text">{{ option['value'] | escape }}</span>
+                            </label>
+                          </div>
+                        {% endfor %}
+                      {% else %}
+                        {%- assign multiple = '' -%}
+                        {%- assign multiple_class = '' -%}
+                        {%- if i['multiple_flag'] -%}
+                          {%- assign multiple = 'multiple="multiple"' -%}
+                          {%- assign multiple_class = 'multiple' -%}
+                        {%- endif -%}
+                        <input class="free_columns" data-id="{{ i['free_column_id'] }}" data-prompt-position="topLeft" name="{{ column_name }}[]" type="hidden" value="">
+                        <label class="c-form_table__select {{ multiple_class }}">
+                          <select {{ multiple }} class="u-color__border--input free_columns form-control input-sm {{ required_class }}" data-id="{{ i['free_column_id'] }}" data-prompt-position="topLeft" style="resize: vertical;" name="{{ column_name }}[]" id="{{ column_id }}">
+                            {% unless i['multiple_flag'] %}
+                              <option data-default="0" value="{{ option['key'] }}" selected="selected">未設定</option>
+                            {% endunless %}
+                            {% for option in free_column_options %}
+                              {% if option['default'] == true %}{% assign default = '1' %}{% else %}{% assign default = '0' %}{% endif %}
+                              {% if i['value'] contains option['value'] %}{% assign selected = 'selected="selected"' %}{% else %}{% assign selected = "" %}{% endif %}
+                              {% if i['value'].size == 1 and i['value'][0] == '' and option['default'] == true %}{% assign selected = 'selected="selected"' %}{% elsif i['is_valid_format'] == false and option['default'] == true %}{% assign selected = 'selected="selected"' %}{% endif %}
+                              <option data-default="{{ default }}" value="{{ option['key'] }}"  {{ selected }}>{{ option['value'] | escape }}</option>
+                            {% endfor %}
+                          </select>
+                        </label>
+                    {% endcase %}
+                {% endcase %}
+
+                </td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+          {% if info['category'] and info['category_multiple_answer'] %}
+            <button class="category-btn-wrapper category-plus p-checkout__list__block__inner__button u-color__btn" data-id="{{ custom_info_hash[0] }}" data-seq="{{ seq_hash[0] }}" type="button" style="display: none;">
+              <i class="u-icon--plus"></i>
+              <span class="category-btn">入力欄追加</span>
+            </button>
+          {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>

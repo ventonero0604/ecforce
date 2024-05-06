@@ -1,0 +1,57 @@
+{{ 'shop/customer/passwords' | javascript_include_tag }}
+
+<main id="customers-password-edit-view" class="l-container" role="main">
+  <div class="l-container__row u-margin__top--60 u-margin__bottom--100">
+    {{ 'notice' | flash: 'control-alert alert-success', 'text u-color__bg--bg u-color__text--alert' }}
+    {{ 'error' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+    {{ 'alert' | flash: 'control-alert alert-danger', 'text u-color__bg--bg u-color__text--alert' }}
+    <div class="p-account">
+      <div class="p-account__inner">
+        <div class="p-account__inner__menu u-color__border--border">
+          {% include 'ec_force/shop/snippets/sidebar.html' %}
+        </div>
+        <div class="p-account__inner__content">
+          <ul class="c-breadcrumbs">
+            <li class="c-breadcrumbs__item u-text--link">
+              <a class="c-breadcrumbs__item__inner" href="/shop/customer">{{ 'account.general.mypage.value' | t }}</a>
+            </li>
+            <li class="c-breadcrumbs__item u-text--body">
+              <span class="c-breadcrumbs__item__inner">{{ 'account.password.password_change.value' | t }}</span>
+            </li>
+          </ul>
+          <h1 class="p-account__inner__content__title u-text--head">{{ 'account.password.password_change.value' | t }}</h1>
+          <form class="p-account__inner__content__form" action="/shop/customer/password" id="customer_form" method="post">
+            {% csrf_meta_tags %}
+            <input name="_method" type="hidden" value="put">
+            <input name="authenticity_token" type="hidden" value="form_authenticity_token">
+            <table class="c-form_table">
+              <tbody>
+                <!-- 現在のパスワード -->
+                {% if shop_form_settings['current_password'] %}
+                <tr>
+                  <th class="u-text--body">{{ 'account.password.current_password.value' | t }}</th>
+                  <td><input class="u-text--input u-color__input--bg u-color__border--input validate[required,minSize[8]]" id="current_password" maxlength="99" name="customer[current_password]" placeholder="{{ 'customer.placeholder.password.value' | t }}" type="password"></td>
+                </tr>
+                {% endif %}
+                <!-- 新しいパスワード -->
+                <tr>
+                  <th class="u-text--body">{{ 'account.password.new_password.value' | t }}</th>
+                  <td><input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[validatePasswordForCustomerByAdminSetting]]" id="password" maxlength="99" name="customer[password]" placeholder="{{ 'customer.placeholder.password.value' | t }}" type="password"></td>
+                </tr>
+                <!-- 新しいパスワード (確認) -->
+                <tr>
+                  <th class="u-text--body">{{ 'account.password.new_password_confirm.value' | t }}</th>
+                  <td><input class="u-text--input u-color__input--bg u-color__border--input validate[required,equals[password]]" maxlength="99" name="customer[password_confirmation]" placeholder="{{ 'customer.placeholder.password.value' | t }}" type="password"></td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="p-account__inner__content__form__bottom">
+              <!-- 送信ボタン -->
+              <button class="p-account__inner__content__form__bottom__btn u-text--btn u-color__btn--bg" type="submit">{{ 'general.action.save.value' | t }}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

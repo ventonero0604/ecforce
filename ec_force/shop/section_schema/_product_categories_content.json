@@ -1,0 +1,35 @@
+{
+  "id": "product_categories_content",
+  "type": "product_categories_content-section",
+  "name": {
+    "ja": "コンテンツ"
+  },
+  "settings": [
+    {
+      "type": "multiple_selectors",
+      "id": "product_categories_product_category",
+      "label": {
+        "ja": "表示するカテゴリー"
+      },
+      "option_model": "product_category",
+      "selector": {
+        "list": "product_categories_product_category_list",
+        "group": "product_categories_product_category_group",
+        "id": "product_categories_product_category_selector"
+      }
+    },
+    {
+      "type": "range",
+      "id": "product_category_size",
+      "label": {
+        "ja": "行あたりの表示件数"
+      },
+      "min": 1,
+      "max": 5,
+      "step": 1,
+      "unit": {
+        "ja": "件"
+      }
+    }
+  ]
+}

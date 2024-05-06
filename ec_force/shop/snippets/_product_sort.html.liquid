@@ -1,0 +1,70 @@
+<div data-section-id="product_sort" class="c-list_tool">
+  <div class="c-list_tool__num u-text--subhead">{{ 'general.searches.all_search_result.value' | t }}{{ paginate.items }}{{ 'general.searches.search_result_count.value' | t }}</div>
+  {% if settings.current %}
+    {% assign product_sort = settings.current.settings.product_sort.settings %}
+  {% else %}
+    {% assign product_sort = settings.settings.product_sort.settings %}
+  {% endif %}
+  {% assign visible_recommend_sort = false %}
+  {% assign visible_high_price_sort = false %}
+  {% assign visible_low_price_sort = false %}
+  {% assign visible_new_release_sort = false %}
+  {% assign visible_old_release_sort = false %}
+  {% assign visible_review_sort = false %}
+  {% assign visible_sale_sort = false %}
+  {% if product_sort.recommend_sort == true or product_sort.recommend_sort == 'true' %}
+    {% assign visible_recommend_sort = true %}
+  {% endif %}
+  {% if product_sort.high_price_sort == true or product_sort.high_price_sort == 'true' %}
+    {% assign visible_high_price_sort = true %}
+  {% endif %}
+  {% if product_sort.low_price_sort == true or product_sort.low_price_sort == 'true' %}
+    {% assign visible_low_price_sort = true %}
+  {% endif %}
+  {% if product_sort.new_release_sort == true or product_sort.new_release_sort == 'true' %}
+    {% assign visible_new_release_sort = true %}
+  {% endif %}
+  {% if product_sort.old_release_sort == true or product_sort.old_release_sort == 'true' %}
+    {% assign visible_old_release_sort = true %}
+  {% endif %}
+  {% if product_sort.review_sort == true or product_sort.review_sort == 'true' %}
+    {% assign visible_review_sort = true %}
+  {% endif %}
+  {% if product_sort.sale_sort == true or product_sort.sale_sort == 'true' %}
+    {% assign visible_sale_sort = true %}
+  {% endif %}
+
+  {% if visible_recommend_sort == true
+     or visible_high_price_sort == true
+     or visible_low_price_sort == true
+     or visible_new_release_sort == true
+     or visible_old_release_sort == true
+     or visible_review_sort == true
+     or visible_sale_sort == true%}
+    {% assign recommend_sort_value = 'general.searches.recommend_sort.value' | t %}
+    {% assign high_price_sort_value = 'general.searches.high_price_sort.value' | t %}
+    {% assign low_price_sort_value = 'general.searches.low_price_sort.value' | t %}
+    {% assign new_release_sort_value = 'general.searches.new_release_sort.value' | t %}
+    {% assign old_release_sort_value = 'general.searches.old_release_sort.value' | t %}
+    {% assign review_sort_value = 'general.searches.review_sort.value' | t %}
+    {% assign sale_sort_value = 'general.searches.sale_sort.value' | t %}
+    <div class="c-list_tool__sort__label u-text--subhead">{{ 'general.searches.sort_title.value' | t }}</div>
+    <label class="c-list_tool__sort__wrap u-text--subhead">
+      <select id="select_sort" class="c-list_tool__sort__wrap__select u-color__border--input">
+        {% if visible_recommend_sort == true %}
+          {% if recommend_sort %}
+            {{ recommend_sort | append: ' desc' | ransack_sort_link: recommend_sort_value }}
+          {% else %}
+            {{ 'position asc' | ransack_sort_link: recommend_sort_value }}
+          {% endif %}
+        {% endif %}
+        {% if visible_high_price_sort == true %}{{ 'master_sales_price desc' | ransack_sort_link: high_price_sort_value }}{% endif %}
+        {% if visible_low_price_sort == true %}{{ 'master_sales_price asc' | ransack_sort_link: low_price_sort_value }}{% endif %}
+        {% if visible_new_release_sort == true %}{{ 'released_at desc' | ransack_sort_link: new_release_sort_value }}{% endif %}
+        {% if visible_old_release_sort == true %}{{ 'released_at asc' | ransack_sort_link: old_release_sort_value }}{% endif %}
+        {% if visible_review_sort == true %}{{ 'product_reviews_average_score desc' | ransack_sort_link: review_sort_value }}{% endif %}
+        {% if visible_sale_sort == true %}{{ 'product_sale_summaries_total_sale desc' | ransack_sort_link: sale_sort_value }}{% endif %}
+      </select>
+    </label>
+  {% endif %}
+</div>

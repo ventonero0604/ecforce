@@ -1,0 +1,148 @@
+{{ 'shop/customer/subs_orders' | javascript_include_tag }}
+
+<main class="l-container" role="main">
+  <div class="l-container__row u-margin__top--60 u-margin__bottom--100">
+    <div class="p-account">
+      <div class="p-account__inner">
+        <div class="p-account__inner__menu u-color__border--border">
+          {% include 'ec_force/shop/snippets/sidebar.html' %}
+        </div>
+        <div class="p-account__inner__content">
+        {% paginate subs_orders_all by 10 %}
+          <ul class="c-breadcrumbs">
+            <li class="c-breadcrumbs__item u-text--link">
+              <a class="c-breadcrumbs__item__inner" href="/shop/customer">{{ 'account.general.mypage.value' | t }}</a>
+            </li>
+            <li class="c-breadcrumbs__item u-text--body">
+              <span class="c-breadcrumbs__item__inner">{{ 'subs_orders.general.subs_orders.value' | t }}</span>
+            </li>
+          </ul>
+          <header class="p-favorite__header">
+            <div class="p-list_header__inner">
+              <h1 class="p-list_header__inner__title u-text--head">{{ 'subs_orders.general.subs_orders.value' | t }}</h1>
+              <div class="c-list_tool">
+                <div class="c-list_tool__num u-text--subhead">{{ 'general.searches.all_search_result.value' | t }}{{ paginate.items }}{{ 'general.searches.search_result_count.value' | t }}</div>
+              </div>
+            </div>
+          </header>
+          <ul class="p-subscription_list">
+            {% if subs_orders.size == 0 %}
+              <li class="p-subscription_list__item u-text--body">{{ 'subs_orders.general.no_recurring_product.value' | t }}</li>
+            {% else %}
+              <li class="p-subscription_list__item">
+                <table class="c-account_table u-color__border--border">
+                  <tbody>
+                    <tr class="u-color__border--border u-color__bg--bg">
+                      <th class="u-text--strong">{{ 'orders.general.order_number.value' | t }}</th>
+                      <th class="u-text--strong">{{ 'subs_orders.general.subs_order_status.value' | t }}</th>
+                      <th class="u-text--strong">{{ 'orders.general.order_content.value' | t }}</th>
+                      <th class="u-text--strong">{{ 'delivery.delivery_cycle.delivery_cycle.value' | t }}</th>
+                      <th class="u-text--strong">{{ 'delivery.next.delivered_at.value' | t }}</th>
+                      <th class="u-text--strong">{{ 'orders.amount.subtotal.value' | t }}</th>
+                      <th class="u-text--strong"></th>
+                    </tr>
+                    {% for subs_order in subs_orders %}
+                        <tr class="u-color__border--border">
+                          <td class="u-text--body" data-title="{{ 'orders.general.order_number.value' | t }}：">{{ subs_order.number }}</td>
+                          <td class="u-text--body" data-title="{{ 'subs_orders.general.subs_order_status.value' | t }}：">{{ subs_order.human_state_name }}</td>
+                          <td class="u-text--body">
+                            {% for item in subs_order.order_items %}
+                              <div class="c-account_table__product">
+                                <div class="c-account_table__product__img">
+                                  {% if item.variant.thumbnails.first.url %}
+                                    {% assign thumbnail = item.variant.thumbnails.first.url  %}
+                                  {% elsif item.product.master.thumbnails.url %}
+                                    {% assign thumbnail = item.product.master.thumbnails.url  %}
+                                  {% elsif item.product.thumbnail.url %}
+                                    {% assign thumbnail = item.product.thumbnail.url  %}
+                                  {% else %}
+                                    {% assign thumbnail = 'missing' | image_url  %}
+                                  {% endif %}
+                                  <div class="c-account_table__product__img__inner" style="background-image:url('{{ thumbnail }}')"></div>
+                                </div>
+                                <div class="c-account_table__product__info">
+                                  <div class="c-account_table__product__info__title u-text--strong">{{ item.product.name }}</div>
+                                  <div class="c-account_table__product__info__price u-text--body">&yen;{{ item.subtotal_price_integer | number_with_delimiter }}</div>
+                                  <div class="c-account_table__product__info__quantity u-text--body">{{ 'products.stock.quantity.value' | t }}：{{ item.quantity }}</div>
+                                </div>
+                              </div>
+                            {% endfor %}
+                          </td>
+                          <td class="u-text--body" data-title="{{ 'delivery.delivery_cycle.delivery_cycle.value' | t }}：">
+                            {% if subs_order.payment_schedule == 'term' %}
+                              {{ subs_order.scheduled_to_be_delivered_every_x_day }}{{ 'delivery.delivery_cycle.delivered_every_other_day.value' | t }}
+                            {% elsif subs_order.payment_schedule == 'date' %}
+                              {{ subs_order.scheduled_to_be_delivered_every_x_month }}{{ 'delivery.delivery_cycle.every_other_month.value' | t }}
+                              {% if subs_order.scheduled_to_be_delivered_on_xth_day == 99 %}
+                                {{ 'delivery.delivery_cycle.last_day.value' | t }}{{ 'delivery.delivery_cycle.delivery_to.value' | t }}
+                              {% else %}
+                                {{ subs_order.scheduled_to_be_delivered_on_xth_day }}{{ 'delivery.delivery_cycle.delivery_to_day.value' | t }}
+                              {% endif %}
+                            {% elsif subs_order.payment_schedule == 'day_of_week' %}
+                              {{ subs_order.scheduled_to_be_delivered_every_x_month }}{{ 'delivery.delivery_cycle.every_other_month.value' | t }}<br />{{ subs_order.scheduled_to_be_delivered_on_xth_day_of_week }}{{ 'delivery.delivery_cycle.th.value' | t }}<br />{{ subs_order.human_scheduled_to_be_delivered_every_x_day_of_week }}{{ 'delivery.delivery_cycle.delivery_to_weekday.value' | t }}
+                            {% endif %}
+                          </td>
+                          {% if enabled_pre_order and subs_order.orders.first.unshipped_pre_order? %}
+                            <td class="u-text--body" data-title="{{ 'delivery.next.delivered_at.value' | t }}：">{{ 'subs_orders.general.pre_order_unshipped_text.value' | t }}</td>
+                          {% else %}
+                            <td class="u-text--body" data-title="{{ 'delivery.next.delivered_at.value' | t }}：">{{ subs_order.scheduled_to_be_delivered_at | date: "%Y/%m/%d" }}</td>
+                          {% endif %}
+                          <td class="u-text--body">{{ subs_order.subtotal | number_with_delimiter }}円</td>
+                          {% if enabled_pre_order and subs_order.orders.first.unshipped_pre_order? %}
+                            <td class="u-text--body">{{ 'subs_orders.general.pre_order_unshipped_text.value' | t }}</td>
+                          {% else %}
+                            <td class="u-text--body">
+                              <a class="c-account_table__edit u-color__text--accent u-text--link" href="/shop/customer/subs_orders/{{ subs_order.number }}">
+                                <span class="u-text--link">{{ 'general.action.view_detail.value' | t }}</span>
+                              </a>
+                            </td>
+                          {% endif %}
+                        </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </li>
+            {% endif %}
+          </ul>
+          {% if paginate.items != 0 %}
+            <span class="u-text--body">
+            {{ paginate.items }} {{ 'general.searches.page_all_search_result.value' | t }}
+            {% assign per_page = paginate.page_size | times: paginate.current_page %}
+            {{ per_page | minus: paginate.page_size | plus: 1 }} - {% if paginate.items < per_page %}{{ paginate.items }}{% else %}{{ per_page }}{% endif %} {{ 'general.searches.page_search_result_count.value' | t }}
+            </span>
+          {% endif %}
+          <div class="c-pagination">
+            <ul class="c-pagination__list u-color__border--border u-color--head">
+              {% if paginate.previous %}
+                <li class="c-pagination__list__item">
+                  <a class="c-pagination__list__item__prev" href="{{ paginate.previous.url }}">
+                    <i class="u-icon--arrow"></i>
+                  </a>
+                </li>
+              {% endif %}
+              {% for page in paginate.parts %}
+                <li class="c-pagination__list__item u-color__border--main {% if paginate.current_page == page.title %} is-active{% endif %}">
+                  {% if paginate.current_page == page.title %}
+                    <span class="c-pagination__list__item__page">{{ page.title }}</span>
+                  {% elsif page.is_link %}
+                    <a class="c-pagination__list__item__page" href="{{ page.url }}">{{ page.title }}</a>
+                  {% else %}
+                    <span class="c-pagination__list__item__page">{{ page.title }}</span>
+                  {% endif %}
+                </li>
+              {% endfor %}
+              {% if paginate.next %}
+                <li class="c-pagination__list__item">
+                  <a class="c-pagination__list__item__next" href="{{ paginate.next.url }}">
+                    <i class="u-icon--arrow"></i>
+                  </a>
+                </li>
+              {% endif %}
+            </ul>
+          </div>
+          {% endpaginate %}
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

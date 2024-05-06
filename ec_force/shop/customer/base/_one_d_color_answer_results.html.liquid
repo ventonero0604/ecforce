@@ -1,0 +1,88 @@
+<h1 class="p-account__inner__content__title u-text--head">
+  {{ 'survey.general.survey_answer_result.value' | t }}
+</h1>
+<table class="c-account_table u-color__border--border">
+  <tbody>
+    <tr class="u-color__border--border u-color__bg--bg">
+      <th class="u-text--strong">{{ 'survey.general.survey_id.value' | t }}</th>
+      <th class="u-text--strong">{{ 'survey.general.survey_name.value' | t }}</th>
+      <th class="u-text--strong">{{ 'survey.general.answer_id.value' | t }}</th>
+      <th class="u-text--strong">{{ 'survey.general.answer_started_at.value' | t }}</th>
+      <th class="u-text--strong">{{ 'survey.general.answer_completed_at.value' | t }}</th>
+      <th class="u-text--strong">{{ 'survey.general.score.value' | t }}</th>
+      <th class="u-text--strong">{{ 'survey.general.question_name.value' | t }}</th>
+      <th class="u-text--strong">{{ 'survey.general.choices.value' | t }}</th>
+      <th class="u-text--strong">{{ 'survey.general.answer.value' | t }}</th>
+    </tr>
+  
+    {% for one_d_color_answer in current_customer.one_d_color_answers %}
+      <tr class="u-color__border--border">
+        <!-- パーソナライズID -->
+        <td class="u-text--body" data-title="{{ 'survey.general.survey_id.value' | t }}：">
+          {{ one_d_color_answer.personalize_id }}
+        </td>
+        <!-- パーソナライズ名 -->
+        <td class="u-text--body" data-title="{{ 'survey.general.survey_name.value' | t }}：">
+          {{ one_d_color_answer.name }}
+        </td>
+        <!-- 回答ID -->
+        <td class="u-text--body" data-title="{{ 'survey.general.answer_id.value' | t }}：">
+          {{ one_d_color_answer.answer_id }}
+        </td>
+        <!-- 開始日 -->
+        <td class="u-text--body" data-title="{{ 'survey.general.answer_started_at.value' | t }}：">
+          {{ one_d_color_answer.answer_started_at | date: '%Y/%m/%d %H:%M:%S' }}
+        </td>
+        <!-- 完了日 -->
+        <td class="u-text--body" data-title="{{ 'survey.general.answer_completed_at.value' | t }}：">
+          {{ one_d_color_answer.answer_completed_at | date: '%Y/%m/%d %H:%M:%S' }}
+        </td>
+
+        <!-- スコア -->
+        <td class="u-text--body" data-title="{{ 'survey.general.score.value' | t }}：">
+          {% for score in one_d_color_answer.scores  %}
+            <!-- 種類：値 -->
+            {{ score.kind }}：{{ score.score }}<br />
+          {% endfor %}
+        </td>
+
+        <!-- 設問 -->
+        <td class="u-text--body" data-title="{{ 'survey.general.question_name.value' | t }}：">
+          {% for master_personalize_page in one_d_color_answer.master_personalize_pages  %}
+            {% for master_personalize_question in master_personalize_page.master_personalize_questions %}
+              {{ master_personalize_question.question }}<br />
+            {% endfor %}
+          {% endfor %}
+        </td>
+
+        <!-- 選択肢 -->
+        <td class="u-text--body" data-title="{{ 'survey.general.choices.value' | t }}：">
+          {% for master_personalize_page in one_d_color_answer.master_personalize_pages  %}
+            {% for master_personalize_question in master_personalize_page.master_personalize_questions %}
+              {% for master_personalize_value in master_personalize_question.master_personalize_values  %}
+                {{ master_personalize_value.value }}<br />
+              {% endfor %}
+            {% endfor %}
+          {% endfor %}
+        </td>
+
+        <!-- 回答 -->
+        <td class="u-text--body" data-title="{{ 'survey.general.answer.value' | t }}：">
+          {% for page in one_d_color_answer.pages  %}
+            {% for question in page.questions %}
+              {% for value in question.values  %}
+                {% if value.value_inputs == blank %}
+                  {{ value.value }}<br />
+                {% else %}
+                  {% for value_input in value.value_inputs  %}
+                    {{ value_input.value_input }}<br />
+                  {% endfor %}
+                {% endif %}
+              {% endfor %}
+            {% endfor %}
+          {% endfor %}
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>

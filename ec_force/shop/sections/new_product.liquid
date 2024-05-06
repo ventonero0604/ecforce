@@ -1,0 +1,214 @@
+{% if section.disabled == "true" or section.disabled == true %}
+  <section data-section-id="{{id}}" data-section-type="{{section.type}}" style="display: none;">
+{% else %}
+  <section data-section-id="{{id}}" data-section-type="{{section.type}}">
+{% endif %}
+  {% if new_products.size > 0 %}
+    <div class="l-container__row u-margin__top--80 u-margin__bottom--80">
+      <div class="p-new_product">
+        <header class="p-new_product__title">
+          <h2 class="p-new_product__title__en u-text--head">{{ section.settings.head | escape }}</h2>
+          <span class="p-new_product__title__jp u-text--subhead">{{ section.settings.subhead | escape }}</span>
+        </header>
+        {% if section.settings.new_product_display_design == 'carousel' %}
+          {% assign use_carousel = true %}
+        {% else %}
+          {% assign use_carousel = false %}
+        {% endif %}
+
+        {% assign new_product_size_int = section.settings.new_product_size | plus: 0 %}
+
+        {% capture product_slider_item %}
+          {% for product in new_products %}
+            {% if use_carousel %}
+              <li class="p-product_slider__item" id="new_product_{{ forloop.index }}">
+            {% else %}
+              <li class="p-new_product__slider__track__list__item medium-up--one-{{section.settings.new_product_size}}{% if new_products.size == 1 %} forced-single-row{% endif %}" id="new_product_{{ forloop.index }}">
+            {% endif %}
+              {% assign is_new = product.product_is_new? %}
+              {% assign is_sold = product.out_of_stock_for_sale? %}
+
+              <div class="c-product_item {% if use_carousel and new_product_size_int < 3 %}--row-style{% endif %}">
+                <a class="c-product_item__link" href="/shop/products/{{ product.master.sku }}"></a>
+                <div class="c-product_item__inner__eyecatch">
+                  {% if product.thumbnail.url %}
+                    {% assign thumbnail = product.thumbnail.url %}
+                  {% else %}
+                    {% assign thumbnail = 'missing' | image_url  %}
+                  {% endif %}
+                  <div class="c-product_item__inner__eyecatch__img" style="background-size:contain;background-image:url({{ thumbnail }})"></div>
+
+                  {% if is_new or is_sold %}
+                    <div class="c-product_item__inner__eyecatch__tags">
+                      {% if is_new %}
+                        <div class="c-product_item__inner__eyecatch__tags__new">{{ 'products.general.new.value' | t }}</div>
+                      {% endif %}
+
+                      {% if is_sold %}
+                        <div class="c-product_item__inner__eyecatch__tags__soldout">{{ 'products.stock.sold_out.value' | t }}</div>
+                      {% endif %}
+                    </div>
+                  {% endif %}
+
+                  <div class="c-product_item__actions">
+                    {% unless is_sold %}
+                      {% if settings.settings.icon.settings.add_cart_async and product.not_set? %}
+                        <button class="btn-add-async c-product_item__form--cart c-product_item__button c-product_item__button--cart u-color__btn--text u-color__btn--bg" data-variant-id="{{product.master.id}}" data-quantity="{{product.master.min_quantity}}">
+                          <i class="u-icon--cart"></i>
+                        </button>
+                      {% else %}
+                        <form class="c-product_item__form c-product_item__form--cart" action="/shop/cart/add" method="post">
+                          {% authenticity_token_tag %}
+                          <input name="variant_id" type="hidden" value="{{ product.master.id }}">
+                          <input name="quantity" type="hidden" value="{{ product.master.min_quantity }}">
+                          <button class="c-product_item__button c-product_item__button--cart u-color__btn--text u-color__btn--bg" type="submit">
+                            <i class="u-icon--cart"></i>
+                          </button>
+                        </form>
+                      {% endif %}
+                    {% endunless %}
+
+                    {% assign is_favorite = product.id | check_current_customer_favorite %}
+                    {% if is_favorite %}
+                      <form
+                        class="c-product_item__form c-product_item__form--favorite"
+                        action="/shop/products/{{ product.master.sku }}/unfavorite?customer_return_to=%2Fshop%2Fproducts%2F{{ product.master.sku }}"
+                        method="post">
+                        {% authenticity_token_tag %}
+                        <button class="c-product_item__button c-product_item__button--favorite u-color__btn u-color__btn--text--bg" type="submit">
+                          <i class="u-icon--heart"></i>
+                        </button>
+                      </form>
+                    {% else %}
+                      <form
+                        class="c-product_item__form c-product_item__form--favorite"
+                        action="/shop/products/{{ product.master.sku }}/favorite?customer_return_to=%2Fshop%2Fproducts%2F{{ product.master.sku }}"
+                        method="post">
+                        {% authenticity_token_tag %}
+                        <button class="c-product_item__button c-product_item__button--favorite u-color__btn--text u-color__btn--bg" type="submit">
+                          <i class="u-icon--heart"></i>
+                        </button>
+                      </form>
+                    {% endif %}
+                  </div>
+                </div>
+                <div class="c-product_item__inner__content">
+                  {% if section.settings.product_name == true or section.settings.product_name == 'true' %}
+                    <div class="c-product_item__inner__title u-text--subhead">{{ product.name }}</div>
+                  {% endif %}
+                  {% if section.settings.product_category_name == true or section.settings.product_category_name == 'true' %}
+                    <div class="c-product_item__inner__category u-text--subhead">
+                      {% assign _category = '' %}
+                      {% for category in product.product_categories %}
+                        {% if category.product_category_visibility %}
+                          {% unless _category == '' %}
+                            {% assign _category = _category | append: ', ' %}
+                          {% endunless %}
+                          {% assign _category = _category | append: category.name %}
+                        {% endif %}
+                      {% endfor %}
+                      {{ _category }}
+                    </div>
+                  {% endif %}
+                  {% if section.settings.product_price == true or section.settings.product_price == 'true' %}
+                    {% if product.master.list_price > product.first_price %}
+                      <div class="c-product_item__inner__price u-text--body">
+                        <span class="origin">&yen;{{ product.master.list_price | number_with_delimiter }}</span>
+                        <span class="sale u-color__text--alert">&yen;{{ product.first_price | number_with_delimiter }}</span>
+                        <span>&nbsp;({{ 'products.price.tax_included.value' | t }}</span>
+                        <span id="sale u-color__text--alert">&yen;{{ product.first_price_include_tax | number_with_delimiter }}</span>
+                        <span>)</span>
+                      </div>
+                    {% else %}
+                      <div class="c-product_item__inner__price u-text--body">
+                        <span class="price">&yen;{{ product.first_price | number_with_delimiter }}</span>
+                        <span>&nbsp;({{ 'products.price.tax_included.value' | t }}</span>
+                        <span id="price">&yen;{{ product.first_price_include_tax | number_with_delimiter }}</span>
+                        <span>)</span>
+                      </div>
+                    {% endif %}
+                  {% endif %}
+                  {% if section.settings.product_show == true or section.settings.product_show == 'true' %}
+                    {% if product.parsed_description %}
+                      <div class="c-product_item__inner__price u-text--body">
+                        <div class="product_description">
+                          {% if smartphone %}
+                            {{ product.parsed_description_mobile | strip_html | strip_newlines }}
+                          {% else %}
+                            {{ product.parsed_description | strip_html | strip_newlines }}
+                          {% endif %}
+                        </div>
+                      </div>
+                    {% endif %}
+                  {% endif %}
+                  {%- comment -%}バッジ表示開始{%- endcomment -%}
+                  <div class="c-product_item__inner__badge u-text--body">
+                    {% if pre_order_badge_flg_hash[product.master.id] or delivery_group_badge_flg_hash[product.id] or concurrent_purchase_group_badge_flg_hash[product.id] or product.labels.size > 0 %}
+                      <ul class="c-cart_item__badges">
+                        {% if pre_order_badge_flg_hash[product.master.id] %}
+                          <li class="c-badge">{{ 'products.pre_order.display_mark.value' | t }}</li>
+                        {% endif %}
+                        {% for delivery_group_name in product.delivery_group_names %}
+                          <li class="c-badge c-badge--delivery-group">{{ delivery_group_name }}</li>
+                        {% endfor %}
+                        {% for concurrent_purchase_badge_name in product.concurrent_purchase_badge_names %}
+                          <li class="c-badge c-badge--concurrent-purchase-group">{{ concurrent_purchase_badge_name }}</li>
+                        {% endfor %}
+                        {% if section.settings.product_tag_labels == true or section.settings.product_tag_labels == 'true' %}
+                          {% for product_label in product.labels %}
+                            <li class="c-badge">{{ product_label.name }}</li>
+                          {% endfor %}
+                        {% endif %}
+                      </ul>
+                    {% endif %}
+                  </div>
+                  {%- comment -%}バッジ表示終了{%- endcomment -%}
+                </div>
+              </div>
+            </li>
+          {% endfor %}
+        {% endcapture %}
+
+        {% if use_carousel %}
+          <div class="p-product_slider slick" {% if new_product_size_int == 1 %}data-force-row-style{% endif %}>
+            <ul class="p-product_slider__list" data-slides='{{ section.settings.new_product_size }}'>
+              {{ product_slider_item }}
+            </ul>
+            <div class="p-product_slider__nav"></div>
+          </div>
+        {% else %}
+          <div class="p-new_product__slider">
+            <div class="p-new_product__slider__track">
+              <ul class="p-new_product__slider__track__list temp-new_product_slider">
+                {{ product_slider_item }}
+              </ul>
+            </div>
+          </div>
+        {% endif %}
+
+        {% if section.settings.view_more == true or section.settings.view_more == 'true' %}
+          <div class="p-new_product__more">
+            {% assign _url = '/shop/products' %}
+            {% if section.settings.new == true or section.settings.new == 'true'
+                  or section.settings.sale == true or section.settings.sale == 'true'
+                  or section.settings.product_category %}
+              {% assign _url = '/shop/search?q%5Bname_cont%5D=' %}
+              {% if section.settings.new == true or section.settings.new == 'true' %}
+                {% assign _url = _url | append: '&new=true' %}
+              {% endif %}
+              {% if section.settings.sale == true or section.settings.sale == 'true' %}
+                {% assign _url = _url | append: '&sale=true' %}
+              {% endif %}
+              {% if section.settings.product_category != empty and section.settings.product_category != '0' %}
+                {% for product_category in section.settings.product_category %}
+                  {% assign _url = _url | append: '&category_id%5B%5D=' | append: product_category %}
+                {% endfor %}
+              {% endif %}
+            {% endif %}
+            <a class="p-new_product__more__btn u-text--btn u-color__btn--bg" href="{{_url}}">{{ 'general.action.view_more.value' | t }}</a>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  {% endif %}
+  </section>

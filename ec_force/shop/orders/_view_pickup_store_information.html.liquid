@@ -1,0 +1,37 @@
+{% unless pickup_store_is_available %}
+  <input type="hidden" id="pickup_store_id" name="order[pickup_store_id]">
+{% else %}
+  <div id="view-pickup-store-information" class="p-checkout__list__block u-color__border--border" style="{% unless pickup_at_store_is_checked %}display:none;{% endunless %}">
+    <div class="p-checkout__list__block__inner">
+      <h2 class="p-checkout__list__block__inner__title u-text--subhead">{{ 'orders.pickup_store.choice_of_pickup_stores.value' | t }}</h2>
+      <div class="p-checkout__list__block__inner__shipping--select">
+        <table class="c-form_table">
+          <tbody>
+            <!-- 受取店舗の選択 -->
+            <tr>
+              <th class="u-text--body">{{ 'orders.pickup_store.store_for_pickup.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+              <td>
+                <label class="c-form_table__select">
+                  <select id="pickup_store_id" class="u-text--input u-color__input--bg u-color__border--input validate[required]" name="order[pickup_store_id]">
+                    <option value="">選択してください</option>
+                    {% if pickup_at_store_is_checked == true and pickup_stores.size == 1 %}
+                      {% assign only_one = true %}
+                    {% else %}
+                      {% assign only_one = false %}
+                    {% endif %}
+
+                    {% for pickup_store in pickup_stores %}
+                      <option value='{{ pickup_store.id }}' {% if only_one == true or order.pickup_store_id == pickup_store.id %}selected{% endif %}>
+                        {{pickup_store.name}} | 〒{{pickup_store.full_zip}} {{pickup_store.full_address_with_space}}
+                      </option>
+                    {% endfor %}
+                  </select>
+                </label>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+{% endunless %}

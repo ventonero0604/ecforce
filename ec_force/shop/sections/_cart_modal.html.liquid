@@ -1,0 +1,21 @@
+{% if base_info.use_cart and base_info.use_cart_modal? %}
+<div class="p-cart_modal">
+  <div class="p-cart_modal__overlay js-close-menu"></div>
+  <div class="p-cart_modal__container u-color__bg--base">
+    {% if order.order_items.size == 0 or customize_preview_mode == true %}
+      <div class="p-cart_modal__empty">
+        <figure class="p-cart_modal__empty-content">
+          <img src="{{ theme_file_root_path }}/assets/icons/empty_cart.svg">
+          <figcaption class="u-text--body" style="text-align: center;">{{ 'orders.general.empty.value' | t }}</figcaption>
+        </figure>
+      </div>
+      <div id="cart-modal-view"></div>
+    {% else %}
+      {% include "ec_force/shop/snippets/cart_modal.html" %}
+    {% endif %}
+    <button class="p-cart_modal__close u-color--head js-close-menu">
+      <i class="u-icon--close"></i>
+    </button>
+  </div>
+</div>
+{% endif %}

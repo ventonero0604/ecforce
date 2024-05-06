@@ -1,0 +1,34 @@
+{% if customer_signed_in %}
+  {% if base_info.use_point? %}
+    {% if base_info.point_event_redeem %}
+      <div class="p-checkout__list__block u-color__border--border" id='view-point-redeem'>
+
+        {% if current_customer.point_total <= base_info.point_event_redeem.point_upper_limit %}
+          {% assign point_upper_limit = current_customer.point_total %}
+        {% else %}
+          {% assign point_upper_limit = base_info.point_event_redeem.point_upper_limit %}
+        {% endif %}
+
+        {% if current_customer.point_total <= base_info.point_event_redeem.point_lower_limit %}
+          {% assign point_lower_limit = current_customer.point_total %}
+        {% else %}
+          {% assign point_lower_limit = base_info.point_event_redeem.point_lower_limit %}
+        {% endif %}
+        <div class="p-checkout__list__block__inner">
+          <h2 class="p-checkout__list__block__inner__title u-text--subhead">{{ 'points.general.point_use.value' | t }}</h2>
+          <table class="c-form_table">
+            <tbody>
+              <tr>
+                <th class="u-text--body">{{ 'points.general.use_point.value' | t }}<span class="u-color__text--alert">{{ 'general.general.required.value' | t }}</span></th>
+                <td>
+                  <input class="u-text--input u-color__input--bg u-color__border--input validate[required,custom[integer],max[{{ point_upper_limit }}]]" name='order[point_redeem]' type='number' value='{{ order.point_redeem or 0 }}'>
+                  <div class="c-form_table__notes u-text--body">{{ 'points.general.current_customer_point.value' | t }}{{ current_customer.point_total | number_with_delimiter }}</div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    {% endif %}
+  {% endif %}
+{% endif %}
